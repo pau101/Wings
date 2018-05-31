@@ -1,0 +1,14 @@
+[{
+	"modid": "wings",
+	"name": "Wings",
+	"description": "",
+	"version": "${version}",
+	"mcversion": "${mcversion}",
+	"url": "",
+	"updateUrl": "",
+	"authorList": [ "pau101", "LDShadowLady" ],
+	"credits": "",
+	"logoFile": "",
+	"screenshots": [],
+	"dependencies": []
+}]

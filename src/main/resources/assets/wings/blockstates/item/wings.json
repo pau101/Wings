@@ -1,0 +1,56 @@
+{
+	"forge_marker": 1,
+	"defaults": {
+		"model": "builtin/generated",
+		"transform": "forge:default-item"
+	},
+	"variants": {
+		"type": {
+			"angel": {
+				"textures": {
+					"layer0": "wings:items/wings/angel"
+				}
+			},
+			"slime": {
+				"textures": {
+					"layer0": "wings:items/wings/slime"
+				}
+			},
+			"blue_butterfly": {
+				"textures": {
+					"layer0": "wings:items/wings/blue_butterfly"
+				}
+			},
+			"monarch_butterfly": {
+				"textures": {
+					"layer0": "wings:items/wings/monarch_butterfly"
+				}
+			},
+			"fire": {
+				"textures": {
+					"layer0": "wings:items/wings/fire"
+				}
+			},
+			"bat": {
+				"textures": {
+					"layer0": "wings:items/wings/bat"
+				}
+			},
+			"fairy": {
+				"textures": {
+					"layer0": "wings:items/wings/fairy"
+				}
+			},
+			"evil": {
+				"textures": {
+					"layer0": "wings:items/wings/evil"
+				}
+			},
+			"dragon": {
+				"textures": {
+					"layer0": "wings:items/wings/dragon"
+				}
+			}
+		}
+	}
+}

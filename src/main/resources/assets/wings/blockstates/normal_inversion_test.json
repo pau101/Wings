@@ -1,0 +1,5 @@
+{
+	"variants": {
+		"normal": { "model": "wings:normal_inversion_test", "y": 0 }
+	}
+}

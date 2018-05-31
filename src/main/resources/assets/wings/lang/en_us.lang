@@ -1,0 +1,22 @@
+itemGroup.wings=Wings
+
+key.categories.wings=Wings
+key.wings.fly=Fly
+
+tile.fairyDustOre.name=Fairy Dust Ore
+tile.amethystOre.name=Amethyst Ore
+
+item.wings.name=%s Wings
+item.fairyDust.name=Fairy Dust
+item.amethyst.name=Amethyst
+item.batBlood.name=Bat Blood
+
+wing.angel.name=Angel
+wing.slime.name=Slime
+wing.blueButterfly.name=Blue Butterfly
+wing.monarchButterfly.name=Monarch Butterfly
+wing.fire.name=Fire
+wing.bat.name=Bat
+wing.fairy.name=Fairy
+wing.evil.name=Evil
+wing.dragon.name=Dragon

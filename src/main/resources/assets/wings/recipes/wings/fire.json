@@ -1,0 +1,18 @@
+{
+	"type": "forge:ore_shaped",
+	"pattern": [
+		"BGB",
+		"GAG",
+		"D D"
+	],
+	"key": {
+		"B": { "item": "minecraft:blaze_powder" },
+		"G": { "type": "forge:ore_dict", "ore": "ingotGold" },
+		"A": { "item": "wings:fairy_dust" },
+		"D": { "type": "forge:ore_dict", "ore": "gemDiamond" }
+	},
+	"result": {
+		"item": "wings",
+		"data": 4
+	}
+}

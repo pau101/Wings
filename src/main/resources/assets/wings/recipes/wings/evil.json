@@ -1,0 +1,19 @@
+{
+	"type": "forge:ore_shaped",
+	"pattern": [
+		"EGM",
+		"GAG",
+		"D D"
+	],
+	"key": {
+		"E": { "item": "minecraft:emerald" },
+		"M": { "item": "wings:amethyst" },
+		"G": { "type": "forge:ore_dict", "ore": "ingotGold" },
+		"A": { "item": "wings:fairy_dust" },
+		"D": { "type": "forge:ore_dict", "ore": "gemDiamond" }
+	},
+	"result": {
+		"item": "wings",
+		"data": 7
+	}
+}

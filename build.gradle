@@ -1,0 +1,58 @@
+buildscript {
+	repositories {
+		jcenter()
+		maven {
+			url "http://files.minecraftforge.net/maven"
+		}
+	}
+	dependencies {
+		classpath "net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT"
+	}
+}
+
+repositories {
+	flatDir {
+		dirs "libs"
+	}
+	maven {
+		url "https://maven.mcmoddev.com"
+	}
+	maven {
+		url "http://dvs1.progwml6.com/files/maven"
+	}
+}
+
+apply plugin: "net.minecraftforge.gradle.forge"
+
+ext.modVersion = "1.0.0"
+ext.llibraryVersion = "1.7.9"
+version = "${modVersion}-1.12"
+group= "com.pau101.wings"
+archivesBaseName = "wings"
+sourceCompatibility = targetCompatibility = JavaVersion.VERSION_1_8
+
+minecraft {
+	version = "1.12.2-14.23.1.2594"
+	runDir = "run"
+	mappings = "snapshot_20171003"
+	makeObfSourceJar = false
+}
+
+dependencies {
+	deobfCompile name: "Baubles-1.12-1.5.3"
+	compile "net.ilexiconn:llibrary:$project.llibraryVersion-1.12.2:dev"
+	deobfCompile "mezz.jei:jei_1.12.2:4.8.5.159:api"
+	runtime "mezz.jei:jei_1.12.2:4.8.5.159"
+}
+
+processResources {
+	inputs.property "version", project.modVersion
+	inputs.property "mcversion", project.minecraft.version
+	from (sourceSets.main.resources.srcDirs) {
+		include "mcmod.info"
+		expand "version": project.modVersion, "mcversion": project.minecraft.version
+	}
+	from (sourceSets.main.resources.srcDirs) {
+		exclude "mcmod.info"
+	}
+}
