@@ -1,5 +1,9 @@
 package com.pau101.wings.server.capability;
 
+import java.util.function.Consumer;
+import java.util.function.Function;
+import javax.annotation.Nullable;
+
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.PacketBuffer;
@@ -7,10 +11,6 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilitySerializable;
-
-import javax.annotation.Nullable;
-import java.util.function.Consumer;
-import java.util.function.Function;
 
 public interface Flight extends ICapabilitySerializable<NBTTagCompound> {
 	default void setIsFlying(boolean isFlying) {
@@ -103,9 +103,5 @@ public interface Flight extends ICapabilitySerializable<NBTTagCompound> {
 		public final void send(Flight flight) {
 			flight.sync(this);
 		}
-	}
-
-	enum AnimationType {
-		FALL, GLIDE, IDLE, LIFT;
 	}
 }

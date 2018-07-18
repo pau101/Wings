@@ -6,8 +6,6 @@ import baubles.api.render.IRenderBauble;
 import com.pau101.wings.WingsMod;
 import com.pau101.wings.server.capability.Flight;
 import com.pau101.wings.server.capability.FlightCapability;
-import com.pau101.wings.server.item.group.ItemGroupWings;
-import com.pau101.wings.util.Util;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -18,10 +16,8 @@ import net.minecraft.util.text.translation.I18n;
 
 public final class ItemWings extends Item implements IBauble, IRenderBauble {
 	public ItemWings() {
-		setCreativeTab(ItemGroupWings.INSTANCE);
 		setMaxStackSize(1);
 		setHasSubtypes(true);
-		Util.name(this, "wings");
 	}
 
 	public ItemStack createStack(StandardWing type) {

@@ -15,10 +15,10 @@ import net.minecraftforge.registries.IForgeRegistryEntry;
 public final class Util {
 	private Util() {}
 
-	private static final Converter<String, String> UNDRSCR_TO_CML = CaseFormat.LOWER_UNDERSCORE.converterTo(CaseFormat.LOWER_CAMEL);
+	private static final Converter<String, String> UNDERSCORE_TO_CAMEL = CaseFormat.LOWER_UNDERSCORE.converterTo(CaseFormat.LOWER_CAMEL);
 
 	public static String underScoreToCamel(String value) {
-		return UNDRSCR_TO_CML.convert(value);
+		return UNDERSCORE_TO_CAMEL.convert(value);
 	}
 
 	public static <I extends Item> I name(I item, String registryName) {
@@ -36,18 +36,18 @@ public final class Util {
 	}
 
 	public static <S> void ifPlayer(@Nullable S object, Consumer<? super EntityPlayer> action) {
-		ifIs(object, EntityPlayer.class, action);
+		ifOfType(object, EntityPlayer.class, action);
 	}
 
 	public static <S> void ifPlayer(@Nullable S object, Predicate<S> condition, Consumer<? super EntityPlayer> action) {
-		ifIs(object, condition, EntityPlayer.class, action);
+		ifOfType(object, condition, EntityPlayer.class, action);
 	}
 
-	public static <S, T> void ifIs(@Nullable S object, Class<T> typeClass, Consumer<? super T> action) {
-		ifIs(object, s -> true, typeClass, action);
+	public static <S, T> void ifOfType(@Nullable S object, Class<T> typeClass, Consumer<? super T> action) {
+		ifOfType(object, s -> true, typeClass, action);
 	}
 
-	public static <S, T> void ifIs(@Nullable S object, Predicate<S> condition, Class<T> typeClass, Consumer<? super T> action) {
+	public static <S, T> void ifOfType(@Nullable S object, Predicate<S> condition, Class<T> typeClass, Consumer<? super T> action) {
 		if (object != null && typeClass.isAssignableFrom(object.getClass()) && condition.test(object)) {
 			//noinspection unchecked
 			action.accept((T) object);

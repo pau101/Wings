@@ -33,7 +33,9 @@ public final class WingsItems {
 		event.getRegistry().registerAll(
 			asItem(WingsBlocks.FAIRY_DUST_ORE),
 			asItem(WingsBlocks.AMETHYST_ORE),
-			new ItemWings(),
+			Util.name(new ItemWings()
+				.setCreativeTab(ItemGroupWings.INSTANCE),"wings"
+			),
 			Util.name(new Item()
 				.setCreativeTab(ItemGroupWings.INSTANCE), "fairy_dust"
 			),
@@ -47,8 +49,8 @@ public final class WingsItems {
 		);
 	}
 
-	@SuppressWarnings("ConstantConditions")
 	private static Item asItem(Block block) {
+		//noinspection ConstantConditions
 		return new ItemBlock(block)
 			.setRegistryName(block.getRegistryName());
 	}

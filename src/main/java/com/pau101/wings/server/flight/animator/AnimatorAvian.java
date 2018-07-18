@@ -277,7 +277,7 @@ public final class AnimatorAvian implements Animator {
 			float flap = Mth.lerp(flapStart, flapEnd, (float) time / duration);
 			if (time < duration) {
 				time++;
-			} else if (isActive && time >= duration) {
+			} else if (isActive) {
 				setMovement(end);
 			}
 			return flap;

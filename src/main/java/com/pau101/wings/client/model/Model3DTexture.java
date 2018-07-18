@@ -20,18 +20,14 @@ public final class Model3DTexture extends ModelBox {
 
 	private final float v2;
 
-	public Model3DTexture(ModelRenderer model, int textureOffsetX, int textureOffsetY, float posX, float posY, float posZ, int width, int height) {
+	private Model3DTexture(ModelRenderer model, float posX, float posY, float posZ, int width, int height, float u1, float v1, float u2, float v2) {
 		super(model, 0, 0, posX, posY, posZ, 0, 0, 0, 0);
 		this.width = width;
 		this.height = height;
-		u1 = textureOffsetX / model.textureWidth;
-		v1 = textureOffsetY / model.textureHeight;
-		u2 = (textureOffsetX + width) / model.textureWidth;
-		v2 = (textureOffsetY + height) / model.textureHeight;
-	}
-
-	public Model3DTexture(ModelRenderer model, int textureOffsetX, int textureOffsetY, int width, int height) {
-		this(model, textureOffsetX, textureOffsetY, 0, 0, 0, width, height);
+		this.u1 = u1;
+		this.v1 = v1;
+		this.u2 = u2;
+		this.v2 = v2;
 	}
 
 	@Override
@@ -87,5 +83,15 @@ public final class Model3DTexture extends ModelBox {
 			buf.pos(x1, f7, z1).tex(u2, f8).normal(0, -1, 0).endVertex();
 		}
 		tessellator.draw();
+	}
+
+	public static Model3DTexture create(ModelRenderer model, float posX, float posY, float posZ, int width, int height, int u, int v) {
+		return new Model3DTexture(
+			model,
+			posX, posY, posZ,
+			width, height,
+			u / model.textureWidth, v / model.textureHeight,
+			(u + width) / model.textureWidth, (v + height) / model.textureHeight
+		);
 	}
 }

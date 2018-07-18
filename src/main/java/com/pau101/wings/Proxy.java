@@ -74,13 +74,6 @@ public abstract class Proxy {
 					}
 				});
 			});
-		/*ConcurrentHashMap<Object, ArrayList<IEventListener>> listeners = ReflectionHelper.getPrivateValue(EventBus.class, MinecraftForge.EVENT_BUS, "listeners");
-		for (Map.Entry<Object, ArrayList<IEventListener>> entry : listeners.entrySet()) {
-			if (entry.getKey() instanceof EventHandlerEntity) {
-				entry.getValue().stream()
-					.filter(h -> h.toString().contains(" playerDeath("));
-			}	
-		}*/
 	}
 
 	public void init() {}

@@ -3,7 +3,6 @@ package com.pau101.wings.server.block;
 import java.util.Random;
 import java.util.function.Supplier;
 
-import com.pau101.wings.server.item.group.ItemGroupWings;
 import com.pau101.wings.util.HarvestClass;
 import com.pau101.wings.util.HarvestLevel;
 import com.pau101.wings.util.Util;
@@ -31,7 +30,6 @@ public final class BlockWingsOre extends Block {
 		setHardness(3.0F);
 		setResistance(5.0F);
 		Util.setHarvestLevel(this, HarvestClass.PICKAXE, harvestLevel);
-		setCreativeTab(ItemGroupWings.INSTANCE);
 	}
 
 	@Override

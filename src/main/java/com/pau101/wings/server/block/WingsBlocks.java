@@ -2,6 +2,7 @@ package com.pau101.wings.server.block;
 
 import com.pau101.wings.WingsMod;
 import com.pau101.wings.server.item.WingsItems;
+import com.pau101.wings.server.item.group.ItemGroupWings;
 import com.pau101.wings.util.HarvestLevel;
 import com.pau101.wings.util.Util;
 import net.minecraft.block.Block;
@@ -25,8 +26,14 @@ public final class WingsBlocks {
 	@SubscribeEvent
 	public static void register(RegistryEvent.Register<Block> event) {
 		event.getRegistry().registerAll(
-			Util.name(new BlockWingsOre(() -> WingsItems.FAIRY_DUST, 0, 2, HarvestLevel.STONE), "fairy_dust_ore"),
-			Util.name(new BlockWingsOre(() -> WingsItems.AMETHYST, 3, 7, HarvestLevel.IRON), "amethyst_ore")
+			Util.name(new BlockWingsOre(() -> WingsItems.FAIRY_DUST, 0, 2, HarvestLevel.STONE)
+				.setCreativeTab(ItemGroupWings.INSTANCE),
+				"fairy_dust_ore"
+			),
+			Util.name(new BlockWingsOre(() -> WingsItems.AMETHYST, 3, 7, HarvestLevel.IRON)
+				.setCreativeTab(ItemGroupWings.INSTANCE),
+				"amethyst_ore"
+			)
 		);
 	}
 }

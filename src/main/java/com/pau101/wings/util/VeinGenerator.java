@@ -1,10 +1,10 @@
 package com.pau101.wings.util;
 
 import java.util.Random;
+import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.function.UnaryOperator;
 
-import com.google.common.base.Predicate;
 import net.minecraft.block.BlockStone;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
@@ -13,7 +13,6 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import net.minecraft.world.gen.feature.WorldGenerator;
 
-@SuppressWarnings("Guava")
 public final class VeinGenerator extends WorldGenerator {
 	private final UnaryOperator<IBlockState> block;
 
@@ -71,7 +70,7 @@ public final class VeinGenerator extends WorldGenerator {
 								if (xDist * xDist + yDist * yDist + zDist * zDist < 1.0D) {
 									BlockPos setPos = new BlockPos(dx, dy, dz);
 									IBlockState state = world.getBlockState(setPos);
-									if (state.getBlock().isReplaceableOreGen(state, world, setPos, canReplace)) {
+									if (state.getBlock().isReplaceableOreGen(state, world, setPos, canReplace::test)) {
 										world.setBlockState(setPos, block.apply(state), 2);
 									}
 								}
@@ -88,7 +87,7 @@ public final class VeinGenerator extends WorldGenerator {
 		private StonePredicate() {}
 
 		@Override
-		public boolean apply(IBlockState state) {
+		public boolean test(IBlockState state) {
 			return state != null && state.getBlock() == Blocks.STONE && state.getValue(BlockStone.VARIANT).isNatural();
 		}
 

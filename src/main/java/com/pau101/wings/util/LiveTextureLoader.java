@@ -2,6 +2,7 @@ package com.pau101.wings.util;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.UncheckedIOException;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -88,7 +89,9 @@ public final class LiveTextureLoader {
 
 	private Refresher createRefresher() {
 		try {
-			LiveRefresher refresher = new LiveRefresher();
+			LiveRefresher refresher = new LiveRefresher(FileSystems.getDefault().newWatchService());
+			refresher.setName(LiveTexture.class.getSimpleName() + " Refresher");
+			refresher.setDaemon(true);
 			refresher.start();
 			return refresher;
 		} catch (Exception e) {
@@ -180,32 +183,25 @@ public final class LiveTextureLoader {
 
 		private final Multimap<WatchKey, WatchBehavior> keys = HashMultimap.create();
 
-		private LiveRefresher() {
-			super(LiveTexture.class.getSimpleName() + " Refresher");
-			setDaemon(true);
-			try {
-				watcher = FileSystems.getDefault().newWatchService();
-			} catch (IOException e) {
-				throw new RuntimeException(e);
-			}
-
+		private LiveRefresher(WatchService watcher) {
+			this.watcher = watcher;
 		}
 
 		private boolean watch(Path directory, WatchBehavior behavior) {
 			try {
 				keys.put(directories.computeIfAbsent(directory, this::register), behavior);
 				return true;
-			} catch (Exception e) {
-				instance().log(Level.INFO, "Skipping registration of \"{}\"", directory, e);
+			} catch (UncheckedIOException e) {
+				instance().log(Level.WARN, "Skipping registration of \"{}\"", directory, e);
 			}
 			return false;
 		}
 
-		private WatchKey register(Path directory) {
+		private WatchKey register(Path directory) throws UncheckedIOException {
 			try {
 				return directory.register(watcher, StandardWatchEventKinds.ENTRY_CREATE, StandardWatchEventKinds.ENTRY_MODIFY);
 			} catch (IOException e) {
-				throw new RuntimeException(e);
+				throw new UncheckedIOException(e);
 			}
 		}
 
@@ -219,7 +215,7 @@ public final class LiveTextureLoader {
 			if (canWatch) {
 				textures.put(texture.getFile(), texture);
 			} else {
-				instance().log(Level.INFO, "Unable to watch \"{}\"", texture.getResource());
+				instance().log(Level.WARN, "Unable to watch \"{}\"", texture.getResource());
 			}
 		}
 
@@ -257,8 +253,8 @@ public final class LiveTextureLoader {
 			}
 		}
 
-		@SuppressWarnings("unchecked")
 		private <T> WatchEvent<T> castEvent(WatchEvent<?> event) {
+			//noinspection unchecked
 			return (WatchEvent<T>) event;
 		}
 
@@ -278,7 +274,7 @@ public final class LiveTextureLoader {
 					fail = !watch(parent, new RecaptureDirectoryBehavior(parent, directory.getFileName(), this));
 				}
 				if (fail) {
-					instance().log(Level.INFO, "Unable to watch for return of \"{}\"", directory);
+					instance().log(Level.WARN, "Unable to watch for return of \"{}\"", directory);
 				}
 			}
 		}

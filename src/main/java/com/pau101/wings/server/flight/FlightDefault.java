@@ -1,5 +1,9 @@
 package com.pau101.wings.server.flight;
 
+import java.util.List;
+
+import baubles.api.BaublesApi;
+import baubles.api.cap.IBaublesItemHandler;
 import com.google.common.collect.Lists;
 import com.pau101.wings.server.capability.Flight;
 import com.pau101.wings.server.flight.state.State;
@@ -14,11 +18,6 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
-
-import java.util.List;
-
-import baubles.api.BaublesApi;
-import baubles.api.cap.IBaublesItemHandler;
 
 public final class FlightDefault implements Flight {
 	private static final String IS_FLYING  = "isFlying";

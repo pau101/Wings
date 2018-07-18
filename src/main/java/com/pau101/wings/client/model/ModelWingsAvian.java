@@ -2,11 +2,9 @@ package com.pau101.wings.client.model;
 
 import com.google.common.collect.ImmutableList;
 import com.pau101.wings.server.capability.Flight;
-import com.pau101.wings.util.Mth;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.math.Vec3d;
 
 public final class ModelWingsAvian extends ModelWings {
 	private final ModelRenderer coracoidLeft;
@@ -104,6 +102,6 @@ public final class ModelWingsAvian extends ModelWings {
 	}
 
 	private static void add3DTexture(ModelRenderer model, int u, int v, float offX, float offY, float offZ, int width, int height) {
-		model.cubeList.add(new Model3DTexture(model, u, v, offX, offY, offZ, width, height));
+		model.cubeList.add(Model3DTexture.create(model, offX, offY, offZ, width, height, u, v));
 	}
 }
