@@ -59,7 +59,7 @@ public final class FlightDefault implements Flight {
 	private Animator animator = Animator.ABSENT;
 
 	@Override
-	public void setIsFlying(boolean isFlying, PlayerScope notificationScope) {
+	public void setIsFlying(boolean isFlying, PlayerSet players) {
 		if (this.isFlying != isFlying) {
 			this.isFlying = isFlying;
 			flyingListeners.forEach(FlyingListener.onChangeUsing(isFlying));
@@ -67,7 +67,7 @@ public final class FlightDefault implements Flight {
 				setPrevTimeFlying(INITIAL_TIME_FLYING);
 				setTimeFlying(INITIAL_TIME_FLYING);
 			}
-			notificationScope.send(this);
+			sync(players);
 		}
 	}
 
@@ -188,15 +188,15 @@ public final class FlightDefault implements Flight {
 	}
 
 	@Override
-	public void clone(Flight other, PlayerScope notificationScope) {
+	public void clone(Flight other, PlayerSet players) {
 		setIsFlying(other.isFlying());
 		setTimeFlying(other.getTimeFlying());
-		notificationScope.send(this);
+		sync(players);
 	}
 
 	@Override
-	public void sync(PlayerSet toPlayers) {
-		syncListeners.forEach(SyncListener.onSyncUsing(toPlayers));
+	public void sync(PlayerSet players) {
+		syncListeners.forEach(SyncListener.onSyncUsing(players));
 	}
 
 	@Override

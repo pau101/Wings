@@ -1,7 +1,6 @@
 package com.pau101.wings.server.capability;
 
 import java.util.function.Consumer;
-import java.util.function.Function;
 import javax.annotation.Nullable;
 
 import net.minecraft.entity.player.EntityPlayer;
@@ -17,12 +16,12 @@ public interface Flight extends ICapabilitySerializable<NBTTagCompound> {
 		setIsFlying(isFlying, PlayerSet.NONE);
 	}
 
-	void setIsFlying(boolean isFlying, PlayerScope notificationScope);
+	void setIsFlying(boolean isFlying, PlayerSet players);
 
 	boolean isFlying();
 
-	default void toggleIsFlying(PlayerScope notificationScope) {
-		setIsFlying(!isFlying(), notificationScope);
+	default void toggleIsFlying(PlayerSet players) {
+		setIsFlying(!isFlying(), players);
 	}
 
 	void setTimeFlying(int timeFlying);
@@ -43,9 +42,9 @@ public interface Flight extends ICapabilitySerializable<NBTTagCompound> {
 
 	void update(EntityPlayer player);
 
-	void clone(Flight other, PlayerScope notificationScope);
+	void clone(Flight other, PlayerSet players);
 
-	void sync(PlayerSet toPlayers);
+	void sync(PlayerSet players);
 
 	void serialize(PacketBuffer buf);
 
@@ -71,37 +70,38 @@ public interface Flight extends ICapabilitySerializable<NBTTagCompound> {
 	}
 
 	interface SyncListener {
-		void onSync(PlayerSet toPlayers);
+		void onSync(PlayerSet players);
 
-		static Consumer<SyncListener> onSyncUsing(PlayerSet toPlayers) {
-			return l -> l.onSync(toPlayers);
+		static Consumer<SyncListener> onSyncUsing(PlayerSet players) {
+			return l -> l.onSync(players);
 		}
 	}
 
-	interface PlayerScope {
-		PlayerScope NONE = flight -> {};
+	enum PlayerSet {
+		NONE {
+			@Override
+			public boolean includes(PlayerTarget player) {
+				return false;
+			}
+		},
+		OTHERS {
+			@Override
+			public boolean includes(PlayerTarget player) {
+				return player == PlayerTarget.OTHERS;
+			}
+		},
+		ALL {
+			@Override
+			public boolean includes(PlayerTarget player) {
+				return true;
+			}
+		};
 
-		void send(Flight flight);
+		public abstract boolean includes(PlayerTarget player);
 	}
 
-	enum PlayerSet implements PlayerScope {
-		OTHERS(p -> new EntityPlayer[] { p }),
-		ALL(p -> null);
-
-		private final Function<EntityPlayer, EntityPlayer[]> excluder;
-
-		PlayerSet(Function<EntityPlayer, EntityPlayer[]> excluder) {
-			this.excluder = excluder;
-		}
-
-		@Nullable
-		public final EntityPlayer[] getExclusions(EntityPlayer owner) {
-			return excluder.apply(owner);
-		}
-
-		@Override
-		public final void send(Flight flight) {
-			flight.sync(this);
-		}
+	enum PlayerTarget {
+		SELF,
+		OTHERS
 	}
 }

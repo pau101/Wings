@@ -29,7 +29,11 @@ public final class ClientProxy extends Proxy {
 	@Override
 	public void addFlightListeners(EntityPlayer player, Flight flight) {
 		if (player.isUser()) {
-			flight.registerSyncListener(toPlayers -> network.sendToServer(new MessageControlFlying(flight.isFlying())));
+			flight.registerSyncListener(players -> {
+				if (players.includes(Flight.PlayerTarget.OTHERS)) {
+					network.sendToServer(new MessageControlFlying(flight.isFlying()));	
+				}
+			});
 		}
 	}
 

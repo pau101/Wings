@@ -29,6 +29,7 @@ public final class MessageControlFlying extends Message {
 	protected void deserialize(PacketBuffer buf) {
 		isFlying = buf.readBoolean();
 	}
+
 	@Override
 	protected void process(MessageContext ctx) {
 		EntityPlayer player = ctx.getServerHandler().player;

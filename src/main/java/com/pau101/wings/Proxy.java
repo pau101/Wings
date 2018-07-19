@@ -10,6 +10,7 @@ import baubles.api.render.IRenderBauble;
 import com.pau101.wings.server.capability.Flight;
 import com.pau101.wings.server.capability.FlightCapability;
 import com.pau101.wings.server.flight.FlightDefault;
+import com.pau101.wings.server.net.Message;
 import com.pau101.wings.server.net.Network;
 import com.pau101.wings.server.net.clientbound.MessageSyncFlight;
 import com.pau101.wings.util.Mth;
@@ -89,9 +90,15 @@ public abstract class Proxy {
 					player.dismountRidingEntity();
 				}
 			});
-			flight.registerSyncListener(toPlayers ->
-				network.sendToAllWatching(new MessageSyncFlight(player, flight), player, toPlayers.getExclusions(player))
-			);
+			flight.registerSyncListener(players -> {
+				if (players.includes(Flight.PlayerTarget.SELF) || players.includes(Flight.PlayerTarget.OTHERS)) {
+					Message message = new MessageSyncFlight(player, flight);
+					if (players.includes(Flight.PlayerTarget.SELF)) {
+						network.sendToPlayer(message, (EntityPlayerMP) player);	
+					}
+					network.sendToAllTracking(message, player);
+				}
+			});
 		}
 		addFlightListeners(player, flight);
 		return flight;
