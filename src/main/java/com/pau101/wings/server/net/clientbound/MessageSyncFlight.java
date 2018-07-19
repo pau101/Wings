@@ -42,7 +42,7 @@ public final class MessageSyncFlight extends Message {
 	@Override
 	protected void process(MessageContext ctx) {
 		FlightCapability.ifPlayer(FMLClientHandler.instance().getWorldClient().getEntityByID(playerId),
-			(player, flight) -> flight.clone(this.flight, Flight.PlayerSet.NONE)
+			(player, flight) -> flight.clone(this.flight, Flight.PlayerSet.empty())
 		);
 	}
 }

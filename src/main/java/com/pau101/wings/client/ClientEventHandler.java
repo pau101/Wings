@@ -19,9 +19,10 @@ import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.InputEvent;
+import net.minecraftforge.fml.relauncher.Side;
 import org.lwjgl.input.Keyboard;
 
-@Mod.EventBusSubscriber(modid = WingsMod.ID)
+@Mod.EventBusSubscriber(value = Side.CLIENT, modid = WingsMod.ID)
 public final class ClientEventHandler {
 	private ClientEventHandler() {}
 
@@ -33,7 +34,7 @@ public final class ClientEventHandler {
 			EntityPlayer player = Minecraft.getMinecraft().player;
 			Flight flight = FlightCapability.get(player);
 			if (flight.canFly(player)) {
-				flight.toggleIsFlying(Flight.PlayerSet.OTHERS);
+				flight.toggleIsFlying(Flight.PlayerSet.ofOthers());
 			}
 		}
 	}

@@ -35,7 +35,7 @@ public final class MessageControlFlying extends Message {
 		EntityPlayer player = ctx.getServerHandler().player;
 		Flight flight = FlightCapability.get(player);
 		if (flight.canFly(player)) {
-			flight.setIsFlying(isFlying(), Flight.PlayerSet.OTHERS);
+			flight.setIsFlying(isFlying(), Flight.PlayerSet.ofOthers());
 		}
 	}
 }

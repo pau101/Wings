@@ -159,7 +159,7 @@ public final class FlightDefault implements Flight {
 			if (getTimeFlying() < MAX_TIME_FLYING) {
 				setTimeFlying(getTimeFlying() + 1);
 			} else if (isUser && getTimeFlying() == MAX_TIME_FLYING && player.onGround) {
-				setIsFlying(false, PlayerSet.OTHERS);
+				setIsFlying(false, PlayerSet.ofOthers());
 			}
 			//player.eyeHeight = FLYING_EYE_HEIGHT;
 		} else {
@@ -182,7 +182,7 @@ public final class FlightDefault implements Flight {
 			}
 			this.state = state;
 		} else if (player.ticksExisted % CHECK_FLIGHT_ABILITY_RATE == 0 && !canFly(player)) {
-			setIsFlying(false, PlayerSet.ALL);
+			setIsFlying(false, PlayerSet.ofAll());
 		}
 		player.fallDistance = 0;
 	}

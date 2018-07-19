@@ -8,6 +8,7 @@ import com.pau101.wings.server.flight.FlightDefault;
 import com.pau101.wings.util.Util;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
@@ -58,26 +59,30 @@ public final class FlightCapability {
 
 	@SubscribeEvent
 	public static void onPlayerClone(PlayerEvent.Clone event) {
-		get(event.getEntityPlayer()).clone(get(event.getOriginal()), Flight.PlayerSet.ALL);
+		get(event.getEntityPlayer()).clone(get(event.getOriginal()), Flight.PlayerSet.empty());
 	}
 
 	@SubscribeEvent
 	public static void onPlayerRespawn(PlayerRespawnEvent event) {
-		sync(event.player);
+		get(event.player).sync(Flight.PlayerSet.ofSelf());
 	}
 
 	@SubscribeEvent
 	public static void onPlayerChangedDimension(PlayerChangedDimensionEvent event) {
-		sync(event.player);
+		get(event.player).sync(Flight.PlayerSet.ofSelf());
 	}
 
 	@SubscribeEvent
 	public static void onPlayerLoggedIn(PlayerLoggedInEvent event) {
-		sync(event.player);
+		get(event.player).sync(Flight.PlayerSet.ofSelf());
 	}
 
-	private static void sync(EntityPlayer player) {
-		get(player).sync(Flight.PlayerSet.ALL);
+	@SubscribeEvent
+	public static void onPlayerStartTracking(PlayerEvent.StartTracking event) {
+		Entity target = event.getTarget();
+		if (target instanceof EntityPlayerMP) {
+			get((EntityPlayerMP) target).sync(Flight.PlayerSet.ofPlayer((EntityPlayerMP) event.getEntityPlayer()));
+		}
 	}
 
 	private static final class FlightStorage implements Capability.IStorage<Flight> {

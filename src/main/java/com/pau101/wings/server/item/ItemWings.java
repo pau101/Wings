@@ -46,7 +46,7 @@ public final class ItemWings extends Item implements IBauble, IRenderBauble {
 
 	private void resetIsFlying(EntityLivingBase entity) {
 		FlightCapability.ifPlayer(entity, e -> !e.world.isRemote, (player, flight) ->
-			flight.setIsFlying(false, Flight.PlayerSet.ALL)
+			flight.setIsFlying(false, Flight.PlayerSet.ofAll())
 		);
 	}
 

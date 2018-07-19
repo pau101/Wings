@@ -4,6 +4,7 @@ import java.util.function.Consumer;
 import javax.annotation.Nullable;
 
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.EnumFacing;
@@ -13,7 +14,7 @@ import net.minecraftforge.common.capabilities.ICapabilitySerializable;
 
 public interface Flight extends ICapabilitySerializable<NBTTagCompound> {
 	default void setIsFlying(boolean isFlying) {
-		setIsFlying(isFlying, PlayerSet.NONE);
+		setIsFlying(isFlying, PlayerSet.empty());
 	}
 
 	void setIsFlying(boolean isFlying, PlayerSet players);
@@ -77,31 +78,57 @@ public interface Flight extends ICapabilitySerializable<NBTTagCompound> {
 		}
 	}
 
-	enum PlayerSet {
-		NONE {
-			@Override
-			public boolean includes(PlayerTarget player) {
-				return false;
-			}
-		},
-		OTHERS {
-			@Override
-			public boolean includes(PlayerTarget player) {
-				return player == PlayerTarget.OTHERS;
-			}
-		},
-		ALL {
-			@Override
-			public boolean includes(PlayerTarget player) {
-				return true;
-			}
-		};
+	interface PlayerSet {
+		void notify(Notifier notifier);
 
-		public abstract boolean includes(PlayerTarget player);
+		static PlayerSet empty() {
+			return n -> {};
+		}
+
+		static PlayerSet ofSelf() {
+			return Notifier::notifySelf;
+		}
+
+		static PlayerSet ofPlayer(EntityPlayerMP player) {
+			return n -> n.notifyPlayer(player);
+		}
+
+		static PlayerSet ofOthers() {
+			return Notifier::notifyOthers;
+		}
+
+		static PlayerSet ofAll() {
+			return n -> {
+				n.notifySelf();
+				n.notifyOthers();
+			};
+		}
 	}
 
-	enum PlayerTarget {
-		SELF,
-		OTHERS
+	interface Notifier {
+		void notifySelf();
+
+		void notifyPlayer(EntityPlayerMP player);
+
+		void notifyOthers();
+
+		static Notifier of(Runnable notifySelf, Consumer<EntityPlayerMP> notifyPlayer, Runnable notifyOthers) {
+			return new Notifier() {
+				@Override
+				public void notifySelf() {
+					notifySelf.run();
+				}
+
+				@Override
+				public void notifyPlayer(EntityPlayerMP player) {
+					notifyPlayer.accept(player);
+				}
+
+				@Override
+				public void notifyOthers() {
+					notifyOthers.run();
+				}
+			};
+		}
 	}
 }
