@@ -2,6 +2,7 @@ package com.pau101.wings.server;
 
 import com.pau101.wings.WingsMod;
 import com.pau101.wings.server.asm.PlayerFlightCheckEvent;
+import com.pau101.wings.server.capability.Flight;
 import com.pau101.wings.server.capability.FlightCapability;
 import com.pau101.wings.server.item.WingsItems;
 import net.minecraft.entity.passive.EntityBat;
@@ -15,6 +16,7 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.SoundCategory;
 import net.minecraftforge.event.ForgeEventFactory;
 import net.minecraftforge.event.entity.EntityMountEvent;
+import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.Event;
@@ -64,6 +66,13 @@ public final class ServerEventHandler {
 		if (event.phase == TickEvent.Phase.END) {
 			FlightCapability.get(event.player).onUpdate(event.player);
 		}
+	}
+
+	@SubscribeEvent
+	public static void onPlayerDeath(LivingDeathEvent event) {
+		FlightCapability.ifPlayer(event.getEntityLiving(), (p, f) ->
+			f.setIsFlying(false, Flight.PlayerSet.ofAll())
+		);
 	}
 
 	@SubscribeEvent

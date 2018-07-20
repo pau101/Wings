@@ -143,9 +143,6 @@ public final class FlightDefault implements Flight {
 				player.motionX += ys * pc * speed;
 				player.motionY += ps * speed + Y_BOOST * (player.rotationPitch > 0 ? elevationBoost : 1);
 				player.motionZ += yc * pc * speed;
-				if (getTimeFlying() == MAX_TIME_FLYING && player.onGround) {
-					setIsFlying(false, PlayerSet.ofOthers());
-				}
 			}
 			if (player.motionY < 0) {
 				player.motionY *= FALL_REDUCTION;
@@ -162,18 +159,22 @@ public final class FlightDefault implements Flight {
 				state.beginAnimation(animator);
 			}
 			this.state = state;
-		} else if (player.ticksExisted % CHECK_FLIGHT_ABILITY_RATE == 0 && !canFly(player)) {
-			setIsFlying(false, PlayerSet.ofAll());
 		}
 		player.fallDistance = 0;
 	}
 
 	@Override
 	public void onUpdate(EntityPlayer player) {
+		boolean isClient = player.world.isRemote, isUser = player.isUser();
 		setPrevTimeFlying(getTimeFlying());
 		if (isFlying()) {
 			if (getTimeFlying() < MAX_TIME_FLYING) {
 				setTimeFlying(getTimeFlying() + 1);
+			} else if (isUser && player.onGround) {
+				setIsFlying(false, PlayerSet.ofOthers());
+			}
+			if (!isClient && player.ticksExisted % CHECK_FLIGHT_ABILITY_RATE == 0 && !canFly(player)) {
+				setIsFlying(false, PlayerSet.ofAll());
 			}
 		} else {
 			if (getTimeFlying() > INITIAL_TIME_FLYING) {
