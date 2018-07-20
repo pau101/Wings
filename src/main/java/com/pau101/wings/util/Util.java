@@ -11,7 +11,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraftforge.registries.IForgeRegistryEntry;
 
-@SuppressWarnings({ "unused", "WeakerAccess" })
 public final class Util {
 	private Util() {}
 
@@ -43,11 +42,11 @@ public final class Util {
 		ifOfType(object, condition, EntityPlayer.class, action);
 	}
 
-	public static <S, T> void ifOfType(@Nullable S object, Class<T> typeClass, Consumer<? super T> action) {
+	private static <S, T> void ifOfType(@Nullable S object, Class<T> typeClass, Consumer<? super T> action) {
 		ifOfType(object, s -> true, typeClass, action);
 	}
 
-	public static <S, T> void ifOfType(@Nullable S object, Predicate<S> condition, Class<T> typeClass, Consumer<? super T> action) {
+	private static <S, T> void ifOfType(@Nullable S object, Predicate<S> condition, Class<T> typeClass, Consumer<? super T> action) {
 		if (object != null && typeClass.isAssignableFrom(object.getClass()) && condition.test(object)) {
 			//noinspection unchecked
 			action.accept((T) object);

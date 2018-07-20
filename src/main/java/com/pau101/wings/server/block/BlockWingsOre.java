@@ -22,14 +22,11 @@ public final class BlockWingsOre extends Block {
 
 	private final int maxExp;
 
-	public BlockWingsOre(Supplier<Item> drop, int minExp, int maxExp, HarvestLevel harvestLevel) {
+	private BlockWingsOre(Supplier<Item> drop, int minExp, int maxExp) {
 		super(Material.ROCK);
 		this.drop = drop;
 		this.minExp = minExp;
 		this.maxExp = maxExp;
-		setHardness(3.0F);
-		setResistance(5.0F);
-		Util.setHarvestLevel(this, HarvestClass.PICKAXE, harvestLevel);
 	}
 
 	@Override
@@ -48,5 +45,13 @@ public final class BlockWingsOre extends Block {
 	@Override
 	public int getExpDrop(IBlockState state, IBlockAccess world, BlockPos pos, int fortune) {
 		return MathHelper.getInt(world instanceof World ? ((World) world).rand : new Random(), minExp, maxExp);
+	}
+
+	public static BlockWingsOre create(Supplier<Item> drop, int minExp, int maxExp, HarvestLevel harvestLevel) {
+		BlockWingsOre block = new BlockWingsOre(drop, minExp, maxExp);
+		block.setHardness(3.0F);
+		block.setResistance(5.0F);
+		Util.setHarvestLevel(block, HarvestClass.PICKAXE, harvestLevel);
+		return block;
 	}
 }

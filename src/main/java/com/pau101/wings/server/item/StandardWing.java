@@ -24,7 +24,7 @@ public enum StandardWing implements WingType {
 	EVIL(AVIAN, "evil"),
 	DRAGON(AVIAN, "dragon");
 
-	private static final String UNLOCALIZED_FORMAT = "wing.%s.name";
+	private static final String TRANSLATION_KEY_FORMAT = "wing.%s.name";
 
 	private static final String TEXTURE_FORMAT = "textures/entity/wings/%s.png";
 
@@ -34,18 +34,18 @@ public enum StandardWing implements WingType {
 
 	private final String name;
 
-	private final String unlocalizedName;
+	private final String translationKey;
 
 	private final ResourceLocation texture;
 
 	StandardWing(AnimatorFactory animatorFactory, String name) {
-		this(animatorFactory, name, String.format(UNLOCALIZED_FORMAT, Util.underScoreToCamel(name)), new ResourceLocation(WingsMod.ID, String.format(TEXTURE_FORMAT, name)));
+		this(animatorFactory, name, String.format(TRANSLATION_KEY_FORMAT, Util.underScoreToCamel(name)), new ResourceLocation(WingsMod.ID, String.format(TEXTURE_FORMAT, name)));
 	}
 
-	StandardWing(AnimatorFactory animatorFactory, String name, String unlocalizedName, ResourceLocation texture) {
+	StandardWing(AnimatorFactory animatorFactory, String name, String translationKey, ResourceLocation texture) {
 		this.animatorFactory = animatorFactory;
 		this.name = name;
-		this.unlocalizedName = unlocalizedName;
+		this.translationKey = translationKey;
 		this.texture = texture;
 	}
 
@@ -53,8 +53,8 @@ public enum StandardWing implements WingType {
 		return name;
 	}
 
-	public String getUnlocalizedName() {
-		return unlocalizedName;
+	public String getTranslationKey() {
+		return translationKey;
 	}
 
 	public int getMeta() {

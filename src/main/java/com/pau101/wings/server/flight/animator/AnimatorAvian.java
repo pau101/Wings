@@ -305,21 +305,21 @@ public final class AnimatorAvian implements Animator {
 			return rotations.getOrDefault(index, Vec3d.ZERO);
 		}
 
-		public static Builder builder() {
+		private static Builder builder() {
 			return new Builder();
 		}
 
-		public static final class Builder {
+		private static final class Builder {
 			private final ImmutableMap.Builder<Integer, Vec3d> rotations = ImmutableMap.builder();
 
 			private Builder() {}
 
-			public Builder with(int index, double x, double y, double z) {
+			private Builder with(int index, double x, double y, double z) {
 				rotations.put(index, new Vec3d(x, y, z));
 				return this;
 			}
 
-			public WingPose build() {
+			private WingPose build() {
 				return new WingPose(rotations.build());
 			}
 		}

@@ -20,7 +20,7 @@ public final class WingsItems {
 
 	private static final Item NIL = Items.AIR;
 
-	public static final ItemWings WINGS = new ItemWings();
+	public static final ItemWings WINGS = ItemWings.nil();
 
 	public static final Item FAIRY_DUST = NIL;
 
@@ -33,17 +33,17 @@ public final class WingsItems {
 		event.getRegistry().registerAll(
 			asItem(WingsBlocks.FAIRY_DUST_ORE),
 			asItem(WingsBlocks.AMETHYST_ORE),
-			Util.name(new ItemWings()
-				.setCreativeTab(ItemGroupWings.INSTANCE),"wings"
+			Util.name(ItemWings.create()
+				.setCreativeTab(ItemGroupWings.instance()), "wings"
 			),
 			Util.name(new Item()
-				.setCreativeTab(ItemGroupWings.INSTANCE), "fairy_dust"
+				.setCreativeTab(ItemGroupWings.instance()), "fairy_dust"
 			),
 			Util.name(new Item()
-				.setCreativeTab(ItemGroupWings.INSTANCE), "amethyst"
+				.setCreativeTab(ItemGroupWings.instance()), "amethyst"
 			),
 			Util.name(new Item()
-				.setCreativeTab(ItemGroupWings.INSTANCE)
+				.setCreativeTab(ItemGroupWings.instance())
 				.setContainerItem(Items.GLASS_BOTTLE), "bat_blood"
 			)
 		);

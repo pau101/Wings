@@ -22,10 +22,7 @@ import net.minecraft.util.text.translation.I18n;
 import net.minecraft.world.World;
 
 public final class ItemWings extends Item implements IBauble, IRenderBauble {
-	public ItemWings() {
-		setMaxStackSize(1);
-		setHasSubtypes(true);
-	}
+	private ItemWings() {}
 
 	public ItemStack createStack(StandardWing type) {
 		return new ItemStack(this, 1, type.getMeta());
@@ -61,7 +58,7 @@ public final class ItemWings extends Item implements IBauble, IRenderBauble {
 	@Override
 	public String getItemStackDisplayName(ItemStack stack) {
 		//noinspection deprecation
-		return I18n.translateToLocalFormatted(super.getItemStackDisplayName(stack), I18n.translateToLocal(StandardWing.fromMeta(stack).getUnlocalizedName()));
+		return I18n.translateToLocalFormatted(super.getItemStackDisplayName(stack), I18n.translateToLocal(StandardWing.fromMeta(stack).getTranslationKey()));
 	}
 
 	@Override
@@ -85,5 +82,16 @@ public final class ItemWings extends Item implements IBauble, IRenderBauble {
 			}
 		}
 		return new ActionResult<>(EnumActionResult.FAIL, stack);
+	}
+
+	public static ItemWings create() {
+		ItemWings item = new ItemWings();
+		item.setMaxStackSize(1);
+		item.setHasSubtypes(true);
+		return item;
+	}
+
+	static ItemWings nil() {
+		return new ItemWings();
 	}
 }

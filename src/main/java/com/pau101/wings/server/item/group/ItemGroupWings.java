@@ -7,7 +7,9 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.ItemStack;
 
 public final class ItemGroupWings extends CreativeTabs {
-	public static final ItemGroupWings INSTANCE = new ItemGroupWings();
+	private static final class Holder {
+		private static final ItemGroupWings INSTANCE = new ItemGroupWings();	
+	}
 
 	private ItemGroupWings() {
 		super(WingsMod.ID);
@@ -16,5 +18,9 @@ public final class ItemGroupWings extends CreativeTabs {
 	@Override
 	public ItemStack createIcon() {
 		return WingsItems.WINGS.createStack(StandardWing.FAIRY);
+	}
+
+	public static ItemGroupWings instance() {
+		return Holder.INSTANCE;
 	}
 }

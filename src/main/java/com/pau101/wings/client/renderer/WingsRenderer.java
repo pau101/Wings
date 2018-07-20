@@ -7,7 +7,6 @@ import com.pau101.wings.client.model.ModelWingsAvian;
 import com.pau101.wings.client.model.ModelWingsInsectoid;
 import com.pau101.wings.server.capability.FlightCapability;
 import com.pau101.wings.server.item.StandardWing;
-import com.pau101.wings.util.LiveTextureLoader;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;

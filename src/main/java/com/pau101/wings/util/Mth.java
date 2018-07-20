@@ -54,7 +54,7 @@ public final class Mth {
 	}
 
 	public static float easeInOut(float t) {
-		return -(MathHelper.cos(Mth.PI * t) - 1) / 2;
+		return -(MathHelper.cos(PI * t) - 1) / 2;
 	}
 
 	public static float easeOutCirc(float t) {
