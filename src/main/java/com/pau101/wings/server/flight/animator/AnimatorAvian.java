@@ -126,7 +126,7 @@ public final class AnimatorAvian implements Animator {
 			float cycle = time - pos * 1.2F;
 			double x = (Math.sin(cycle + Mth.PI / 2) - 1) / 2 * 20 + (1 - pos) * 50;
 			double y = (Math.sin(cycle) * 20 + (1 - pos) * 14) * (1 - pos * (Math.min(Math.sin(cycle + Mth.PI), 0) / 2 + 1) * Math.sin(time));
-			return restPosition.getWingRotation(index, delta).addVector(x, y, 4);
+			return restPosition.getWingRotation(index, delta).add(x, y, 4);
 		}
 
 		@Override
@@ -150,13 +150,13 @@ public final class AnimatorAvian implements Animator {
 			float pos = getWeight(index);
 			float time = getFlapTime(delta);
 			double y = (Math.sin(time) * 5 - 14) * pos;
-			return restPosition.getWingRotation(index, delta).addVector(0, y, 0);
+			return restPosition.getWingRotation(index, delta).add(0, y, 0);
 		}
 
 		@Override
 		public Vec3d getFeatherRotation(int index, float delta) {
 			double x = noise.getValue((time + delta) * 0.17F, index * 0.13F) * 1.25F;
-			return restPosition.getFeatherRotation(index, delta).addVector(x, 0, 0);
+			return restPosition.getFeatherRotation(index, delta).add(x, 0, 0);
 		}
 
 		@Override
@@ -185,14 +185,14 @@ public final class AnimatorAvian implements Animator {
 		public Vec3d getWingRotation(int index, float delta) {
 			float pos = getWeight(index);
 			float time = getFlapTime(delta);
-			return wing.get(index).addVector(0, Math.sin(time) * 3 * pos, 0);
+			return wing.get(index).add(0, Math.sin(time) * 3 * pos, 0);
 		}
 
 		@Override
 		public Vec3d getFeatherRotation(int index, float delta) {
 			float pos = getWeight(index);
 			float time = getFlapTime(delta);
-			return feather.get(index).addVector(0, -Math.sin(time) * 5 * pos, 0);
+			return feather.get(index).add(0, -Math.sin(time) * 5 * pos, 0);
 		}
 
 		@Override
@@ -213,7 +213,7 @@ public final class AnimatorAvian implements Animator {
 			float cycle = time - pos * 1.2F;
 			double x = (Math.sin(cycle + Mth.PI / 2) - 1) / 2 * 16 + 8;
 			double y = (Math.sin(cycle) * 26 + 12) * (1 - pos * (Math.min(Math.sin(cycle + Mth.PI), 0) / 2 + 1) * Math.sin(time));
-			return restPosition.getWingRotation(index, delta).addVector(x, y, 0);
+			return restPosition.getWingRotation(index, delta).add(x, y, 0);
 		}
 
 		@Override

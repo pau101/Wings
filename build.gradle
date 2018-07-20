@@ -24,7 +24,8 @@ repositories {
 
 apply plugin: "net.minecraftforge.gradle.forge"
 
-ext.modVersion = "1.0.0"
+ext.corePlugin = "com.pau101.wings.asm.plugin.WingsPlugin"
+ext.modVersion = "1.0.1"
 ext.llibraryVersion = "1.7.9"
 version = "${modVersion}-1.12"
 group= "com.pau101.wings"
@@ -36,11 +37,19 @@ minecraft {
 	runDir = "run"
 	mappings = "snapshot_20180718"
 	makeObfSourceJar = false
+	clientJvmArgs = serverJvmArgs = [ "-Dfml.coreMods.load=$project.corePlugin" ]
+}
+
+jar {
+	manifest {
+		attributes "FMLCorePlugin": project.corePlugin
+		attributes "FMLCorePluginContainsFMLMod": "true"
+	}
 }
 
 dependencies {
 	deobfCompile name: "Baubles-1.12-1.5.3"
-	compile "net.ilexiconn:llibrary:$project.llibraryVersion-1.12.2:dev"
+	deobfCompile "net.ilexiconn:llibrary:$project.llibraryVersion-1.12.2"
 	deobfCompile "mezz.jei:jei_1.12.2:4.8.5.159:api"
 	runtime "mezz.jei:jei_1.12.2:4.8.5.159"
 }

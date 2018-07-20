@@ -22,16 +22,16 @@ public final class Util {
 	}
 
 	public static <I extends Item> I name(I item, String registryName) {
-		return name(item, registryName, item::setUnlocalizedName);
+		return name(item, registryName, item::setTranslationKey);
 	}
 
 	public static <B extends Block> B name(B block, String registryName) {
-		return name(block, registryName, block::setUnlocalizedName);
+		return name(block, registryName, block::setTranslationKey);
 	}
 
-	private static <T extends IForgeRegistryEntry.Impl<? super T>> T name(T entry, String registryName, Consumer<String> unlocalizedNameSetter) {
+	private static <T extends IForgeRegistryEntry.Impl<? super T>> T name(T entry, String registryName, Consumer<String> translationKeySetter) {
 		entry.setRegistryName(registryName);
-		unlocalizedNameSetter.accept(underScoreToCamel(registryName));
+		translationKeySetter.accept(underScoreToCamel(registryName));
 		return entry;
 	}
 

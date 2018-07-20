@@ -77,7 +77,7 @@ public final class LiveTextureLoader {
 	}
 
 	private Path getPath(ResourceLocation resource) {
-		return root.resolve(Paths.get("assets", resource.getResourceDomain(), resource.getResourcePath()));
+		return root.resolve(Paths.get("assets", resource.getNamespace(), resource.getPath()));
 	}
 
 	private Refresher getRefresher() {

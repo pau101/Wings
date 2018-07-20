@@ -14,7 +14,7 @@ public final class ItemGroupWings extends CreativeTabs {
 	}
 
 	@Override
-	public ItemStack getTabIconItem() {
+	public ItemStack createIcon() {
 		return WingsItems.WINGS.createStack(StandardWing.FAIRY);
 	}
 }

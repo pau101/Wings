@@ -43,7 +43,7 @@ public final class WingsModels {
 
 	private static void registerItemState(Item item, int meta, String variant) {
 		ResourceLocation name = item.getRegistryName();
-		register(item, meta, name.getResourceDomain() + ":item/" + name.getResourcePath(), variant);
+		register(item, meta, name.getNamespace() + ":item/" + name.getPath(), variant);
 	}
 
 	private static void register(Item item, int meta, String location, String variant) {
