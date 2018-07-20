@@ -161,13 +161,9 @@ public final class FlightDefault implements Flight {
 			} else if (isUser && getTimeFlying() == MAX_TIME_FLYING && player.onGround) {
 				setIsFlying(false, PlayerSet.ofOthers());
 			}
-			//player.eyeHeight = FLYING_EYE_HEIGHT;
 		} else {
 			if (getTimeFlying() > INITIAL_TIME_FLYING) {
 				setTimeFlying(getTimeFlying() - 1);
-			}
-			if (player.eyeHeight == FLYING_EYE_HEIGHT) {
-				player.eyeHeight = player.getDefaultEyeHeight();
 			}
 		}
 		if (isClient) {

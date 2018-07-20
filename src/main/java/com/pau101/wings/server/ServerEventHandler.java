@@ -1,6 +1,7 @@
 package com.pau101.wings.server;
 
 import com.pau101.wings.WingsMod;
+import com.pau101.wings.server.asm.PlayerFlightCheckEvent;
 import com.pau101.wings.server.capability.FlightCapability;
 import com.pau101.wings.server.item.WingsItems;
 import net.minecraft.entity.passive.EntityBat;
@@ -16,6 +17,7 @@ import net.minecraftforge.event.ForgeEventFactory;
 import net.minecraftforge.event.entity.EntityMountEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.eventhandler.Event;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 @Mod.EventBusSubscriber(modid = WingsMod.ID)
@@ -55,4 +57,11 @@ public final class ServerEventHandler {
 			});
 		}
 	}
+
+	@SubscribeEvent
+	public static void onFlightCheck(PlayerFlightCheckEvent event) {
+		if (FlightCapability.get(event.getEntityPlayer()).isFlying()) {
+			event.setResult(Event.Result.ALLOW);
+		}
+	} 
 }

@@ -24,7 +24,7 @@ repositories {
 
 apply plugin: "net.minecraftforge.gradle.forge"
 
-ext.corePlugin = "com.pau101.wings.asm.plugin.WingsPlugin"
+ext.corePlugin = "com.pau101.wings.server.asm.plugin.WingsPlugin"
 ext.modVersion = "1.0.1"
 ext.llibraryVersion = "1.7.9"
 version = "${modVersion}-1.12"

@@ -57,6 +57,10 @@ public final class Mth {
 		return -(MathHelper.cos(Mth.PI * t) - 1) / 2;
 	}
 
+	public static float easeOutCirc(float t) {
+		return MathHelper.sqrt(1 - (t - 1) * (t - 1));
+	}
+
 	public static float transform(float x, float domainMin, float domainMax, float rangeMin, float rangeMax) {
 		if (x <= domainMin) {
 			return rangeMin;

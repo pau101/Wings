@@ -10,11 +10,11 @@ import net.minecraftforge.fml.relauncher.IFMLLoadingPlugin;
 @IFMLLoadingPlugin.Name(WingsMod.ID)
 @IFMLLoadingPlugin.MCVersion(MinecraftForge.MC_VERSION)
 @IFMLLoadingPlugin.SortingIndex(1002)
-@IFMLLoadingPlugin.TransformerExclusions("com.pau101.wings.asm.plugin.")
-public final class WingsPlugin implements IFMLLoadingPlugin {
+@IFMLLoadingPlugin.TransformerExclusions("com.pau101.wings.server.asm.plugin.")
+public final class WingsLoadingPlugin implements IFMLLoadingPlugin {
 	@Override
 	public String[] getASMTransformerClass() {
-		return new String[] { "com.pau101.wings.asm.WingsRuntimePatcher" };
+		return new String[] { "com.pau101.wings.server.asm.WingsRuntimePatcher" };
 	}
 
 	@Override
