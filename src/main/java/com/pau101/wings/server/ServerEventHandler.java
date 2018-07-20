@@ -19,6 +19,7 @@ import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.Event;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent;
 
 @Mod.EventBusSubscriber(modid = WingsMod.ID)
 public final class ServerEventHandler {
@@ -55,6 +56,13 @@ public final class ServerEventHandler {
 					event.setCanceled(true);
 				}
 			});
+		}
+	}
+
+	@SubscribeEvent
+	public static void onPlayerUpdate(TickEvent.PlayerTickEvent event) {
+		if (event.phase == TickEvent.Phase.END) {
+			FlightCapability.get(event.player).onUpdate(event.player);
 		}
 	}
 

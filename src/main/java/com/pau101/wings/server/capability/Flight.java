@@ -41,7 +41,9 @@ public interface Flight extends ICapabilitySerializable<NBTTagCompound> {
 
 	boolean canFly(EntityPlayer player);
 
-	void update(EntityPlayer player);
+	void onWornUpdate(EntityPlayer player);
+
+	void onUpdate(EntityPlayer player);
 
 	void clone(Flight other, PlayerSet players);
 

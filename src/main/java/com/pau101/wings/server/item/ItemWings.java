@@ -31,7 +31,7 @@ public final class ItemWings extends Item implements IBauble, IRenderBauble {
 
 	@Override
 	public void onWornTick(ItemStack stack, EntityLivingBase entity) {
-		FlightCapability.ifPlayer(entity, (player, flight) -> flight.update(player));
+		FlightCapability.ifPlayer(entity, (player, flight) -> flight.onWornUpdate(player));
 	}
 
 	@Override

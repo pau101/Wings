@@ -40,8 +40,6 @@ public final class FlightDefault implements Flight {
 
 	private static final float PITCH_OFFSET = 30;
 
-	private static final float FLYING_EYE_HEIGHT = 0.4F;
-
 	private static final int CHECK_FLIGHT_ABILITY_RATE = 640;
 
 	private final List<FlyingListener> flyingListeners = Lists.newArrayList();
@@ -63,10 +61,6 @@ public final class FlightDefault implements Flight {
 		if (this.isFlying != isFlying) {
 			this.isFlying = isFlying;
 			flyingListeners.forEach(FlyingListener.onChangeUsing(isFlying));
-			if (isFlying) {
-				setPrevTimeFlying(INITIAL_TIME_FLYING);
-				setTimeFlying(INITIAL_TIME_FLYING);
-			}
 			sync(players);
 		}
 	}
@@ -136,7 +130,7 @@ public final class FlightDefault implements Flight {
 	}
 
 	@Override
-	public void update(EntityPlayer player) {
+	public void onWornUpdate(EntityPlayer player) {
 		boolean isClient = player.world.isRemote, isUser = player.isUser();
 		if (isUser) {
 			if (isFlying()) {
@@ -149,21 +143,12 @@ public final class FlightDefault implements Flight {
 				player.motionX += ys * pc * speed;
 				player.motionY += ps * speed + Y_BOOST * (player.rotationPitch > 0 ? elevationBoost : 1);
 				player.motionZ += yc * pc * speed;
+				if (getTimeFlying() == MAX_TIME_FLYING && player.onGround) {
+					setIsFlying(false, PlayerSet.ofOthers());
+				}
 			}
 			if (player.motionY < 0) {
 				player.motionY *= FALL_REDUCTION;
-			}
-		}
-		setPrevTimeFlying(getTimeFlying());
-		if (isFlying()) {
-			if (getTimeFlying() < MAX_TIME_FLYING) {
-				setTimeFlying(getTimeFlying() + 1);
-			} else if (isUser && getTimeFlying() == MAX_TIME_FLYING && player.onGround) {
-				setIsFlying(false, PlayerSet.ofOthers());
-			}
-		} else {
-			if (getTimeFlying() > INITIAL_TIME_FLYING) {
-				setTimeFlying(getTimeFlying() - 1);
 			}
 		}
 		if (isClient) {
@@ -181,6 +166,20 @@ public final class FlightDefault implements Flight {
 			setIsFlying(false, PlayerSet.ofAll());
 		}
 		player.fallDistance = 0;
+	}
+
+	@Override
+	public void onUpdate(EntityPlayer player) {
+		setPrevTimeFlying(getTimeFlying());
+		if (isFlying()) {
+			if (getTimeFlying() < MAX_TIME_FLYING) {
+				setTimeFlying(getTimeFlying() + 1);
+			}
+		} else {
+			if (getTimeFlying() > INITIAL_TIME_FLYING) {
+				setTimeFlying(getTimeFlying() - 1);
+			}
+		}
 	}
 
 	@Override

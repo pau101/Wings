@@ -56,7 +56,8 @@ public final class ClientProxy extends Proxy {
 			//player.posZ = 889;
 			player.prevPosY = 63;
 			player.rotationPitch = player.prevRotationPitch = 0;
-			FlightCapability.get(player).update(player);
+			FlightCapability.get(player).onWornUpdate(player);
+			FlightCapability.get(player).onUpdate(player);
 		}
 	}
 
