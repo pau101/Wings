@@ -9,6 +9,7 @@ import com.google.common.base.Converter;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.registries.IForgeRegistryEntry;
 
 public final class Util {
@@ -32,6 +33,14 @@ public final class Util {
 		entry.setRegistryName(registryName);
 		translationKeySetter.accept(underScoreToCamel(registryName));
 		return entry;
+	}
+
+	public static ResourceLocation getName(IForgeRegistryEntry<?> entry) {
+		ResourceLocation name = entry.getRegistryName();
+		if (name == null) {
+			throw new NullPointerException("Missing registry name: " + entry);
+		}
+		return name;
 	}
 
 	public static <S> void ifPlayer(@Nullable S object, Consumer<? super EntityPlayer> action) {

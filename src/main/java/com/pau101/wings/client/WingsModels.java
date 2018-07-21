@@ -4,6 +4,7 @@ import com.pau101.wings.WingsMod;
 import com.pau101.wings.server.block.WingsBlocks;
 import com.pau101.wings.server.item.StandardWing;
 import com.pau101.wings.server.item.WingsItems;
+import com.pau101.wings.util.Util;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.item.Item;
@@ -30,7 +31,7 @@ public final class WingsModels {
 	}
 
 	private static void register(Block block) {
-		register(ForgeRegistries.ITEMS.getValue(block.getRegistryName()));
+		register(ForgeRegistries.ITEMS.getValue(Util.getName(block)));
 	}
 
 	private static void register(Item item) {
@@ -38,11 +39,11 @@ public final class WingsModels {
 	}
 
 	private static void register(Item item, int meta, String variant) {
-		register(item, meta, item.getRegistryName().toString(), variant);
+		register(item, meta, Util.getName(item).toString(), variant);
 	}
 
 	private static void registerItemState(Item item, int meta, String variant) {
-		ResourceLocation name = item.getRegistryName();
+		ResourceLocation name = Util.getName(item);
 		register(item, meta, name.getNamespace() + ":item/" + name.getPath(), variant);
 	}
 
