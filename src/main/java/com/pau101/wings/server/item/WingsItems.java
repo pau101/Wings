@@ -33,16 +33,16 @@ public final class WingsItems {
 		event.getRegistry().registerAll(
 			asItem(WingsBlocks.FAIRY_DUST_ORE),
 			asItem(WingsBlocks.AMETHYST_ORE),
-			Util.name(ItemWings.create()
+			Util.withName(ItemWings.create()
 				.setCreativeTab(ItemGroupWings.instance()), "wings"
 			),
-			Util.name(new Item()
+			Util.withName(new Item()
 				.setCreativeTab(ItemGroupWings.instance()), "fairy_dust"
 			),
-			Util.name(new Item()
+			Util.withName(new Item()
 				.setCreativeTab(ItemGroupWings.instance()), "amethyst"
 			),
-			Util.name(new Item()
+			Util.withName(new Item()
 				.setCreativeTab(ItemGroupWings.instance())
 				.setContainerItem(Items.GLASS_BOTTLE), "bat_blood"
 			)

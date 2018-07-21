@@ -26,11 +26,11 @@ public final class WingsBlocks {
 	@SubscribeEvent
 	public static void register(RegistryEvent.Register<Block> event) {
 		event.getRegistry().registerAll(
-			Util.name(BlockWingsOre.create(() -> WingsItems.FAIRY_DUST, 0, 2, HarvestLevel.STONE)
+			Util.withName(BlockWingsOre.create(() -> WingsItems.FAIRY_DUST, 0, 2, HarvestLevel.STONE)
 				.setCreativeTab(ItemGroupWings.instance()),
 				"fairy_dust_ore"
 			),
-			Util.name(BlockWingsOre.create(() -> WingsItems.AMETHYST, 3, 7, HarvestLevel.IRON)
+			Util.withName(BlockWingsOre.create(() -> WingsItems.AMETHYST, 3, 7, HarvestLevel.IRON)
 				.setCreativeTab(ItemGroupWings.instance()),
 				"amethyst_ore"
 			)

@@ -21,15 +21,15 @@ public final class Util {
 		return UNDERSCORE_TO_CAMEL.convert(value);
 	}
 
-	public static <I extends Item> I name(I item, String registryName) {
-		return name(item, registryName, item::setTranslationKey);
+	public static <I extends Item> I withName(I item, String registryName) {
+		return withName(item, registryName, item::setTranslationKey);
 	}
 
-	public static <B extends Block> B name(B block, String registryName) {
-		return name(block, registryName, block::setTranslationKey);
+	public static <B extends Block> B withName(B block, String registryName) {
+		return withName(block, registryName, block::setTranslationKey);
 	}
 
-	private static <T extends IForgeRegistryEntry.Impl<? super T>> T name(T entry, String registryName, Consumer<String> translationKeySetter) {
+	private static <T extends IForgeRegistryEntry.Impl<? super T>> T withName(T entry, String registryName, Consumer<String> translationKeySetter) {
 		entry.setRegistryName(registryName);
 		translationKeySetter.accept(underScoreToCamel(registryName));
 		return entry;
