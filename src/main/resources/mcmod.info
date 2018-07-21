@@ -1,13 +1,13 @@
 [{
 	"modid": "wings",
 	"name": "Wings",
-	"description": "",
+	"description": "The Wings mod introduces an assortment of avian and insectoid wings for all of your arial travel needs.",
 	"version": "${version}",
 	"mcversion": "${mcversion}",
 	"url": "",
 	"updateUrl": "",
-	"authorList": [ "pau101", "LDShadowLady" ],
-	"credits": "",
+	"authorList": [ "pau101" ],
+	"credits": "LDShadowLady for concept design",
 	"logoFile": "",
 	"screenshots": [],
 	"dependencies": []
