@@ -1,4 +1,4 @@
-package com.pau101.wings.client;
+package com.pau101.wings.client.debug;
 
 import java.util.UUID;
 import java.util.stream.IntStream;
