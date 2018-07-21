@@ -1,18 +1,15 @@
 package com.pau101.wings.server.capability;
 
 import java.util.function.Consumer;
-import javax.annotation.Nullable;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.Vec3d;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.ICapabilitySerializable;
+import net.minecraftforge.common.util.INBTSerializable;
 
-public interface Flight extends ICapabilitySerializable<NBTTagCompound> {
+public interface Flight extends INBTSerializable<NBTTagCompound> {
 	default void setIsFlying(boolean isFlying) {
 		setIsFlying(isFlying, PlayerSet.empty());
 	}
@@ -52,17 +49,6 @@ public interface Flight extends ICapabilitySerializable<NBTTagCompound> {
 	void serialize(PacketBuffer buf);
 
 	void deserialize(PacketBuffer buf);
-
-	@Override
-	default boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing) {
-		return capability == FlightCapability.CAPABILITY;
-	}
-
-	@Nullable
-	@Override
-	default <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing) {
-		return hasCapability(capability, facing) ? FlightCapability.CAPABILITY.cast(this) : null;
-	}
 
 	interface FlyingListener {
 		void onChange(boolean isFlying);

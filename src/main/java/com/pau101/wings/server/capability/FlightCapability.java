@@ -31,7 +31,7 @@ public final class FlightCapability {
 	private static final ResourceLocation FLIGHT_ID = new ResourceLocation(WingsMod.ID, "flight");
 
 	@CapabilityInject(Flight.class)
-	public static final Capability<Flight> CAPABILITY = null;
+	static final Capability<Flight> CAPABILITY = null;
 
 	public static void register() {
 		CapabilityManager.INSTANCE.register(Flight.class, new FlightStorage(), FlightDefault::new);
@@ -54,7 +54,7 @@ public final class FlightCapability {
 
 	@SubscribeEvent
 	public static void onAttachCapabilities(AttachCapabilitiesEvent<Entity> event) {
-		Util.ifPlayer(event.getObject(), player -> event.addCapability(FLIGHT_ID, WingsMod.instance().newFlight(player)));
+		Util.ifPlayer(event.getObject(), player -> event.addCapability(FLIGHT_ID, new FlightProvider(WingsMod.instance().newFlight(player))));
 	}
 
 	@SubscribeEvent
