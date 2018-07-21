@@ -50,8 +50,6 @@ public final class WingsItems {
 	}
 
 	private static Item asItem(Block block) {
-		//noinspection ConstantConditions
-		return new ItemBlock(block)
-			.setRegistryName(Util.getName(block));
+		return new ItemBlock(block).setRegistryName(Util.getName(block));
 	}
 }
