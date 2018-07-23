@@ -42,5 +42,25 @@ public final class WingsRuntimePatcher extends RuntimePatcher {
 					.var(FLOAD, 1)
 					.method(INVOKESTATIC, WingsHooks.class, "onGetCameraEyeHeight", Entity.class, float.class, float.class)
 				);
+		patchClass(EntityLivingBase.class)
+			.patchMethod("updateDistance", float.class, float.class, float.class)
+				.apply(Patch.REPLACE, m -> m
+					.var(ALOAD, 0)
+					.var(FLOAD, 1)
+					.method(INVOKESTATIC, WingsHooks.class, "onUpdateBodyRotation", EntityLivingBase.class, float.class, void.class)
+					.var(BIPUSH, 0)
+					.node(I2F)
+					.node(FRETURN)
+				);
+		patchClass(Entity.class)
+			.patchMethod("turn", float.class, float.class, void.class)
+				.apply(Patch.BEFORE, data -> data.node.getOpcode() == RETURN, m -> m
+					.var(ALOAD, 0)
+					.node(DUP)
+					.field(GETFIELD, Entity.class, "rotationYaw", float.class)
+					.var(FLOAD, 4)
+					.node(FSUB)
+					.method(INVOKESTATIC, WingsHooks.class, "onTurn", Entity.class, float.class, void.class)
+				);
 	}
 }

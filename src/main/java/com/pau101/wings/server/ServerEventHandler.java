@@ -1,10 +1,12 @@
 package com.pau101.wings.server;
 
 import com.pau101.wings.WingsMod;
+import com.pau101.wings.server.asm.GetLivingHeadLimitEvent;
 import com.pau101.wings.server.asm.PlayerFlightCheckEvent;
 import com.pau101.wings.server.capability.Flight;
 import com.pau101.wings.server.capability.FlightCapability;
 import com.pau101.wings.server.item.WingsItems;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.passive.EntityBat;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
@@ -80,5 +82,14 @@ public final class ServerEventHandler {
 		if (FlightCapability.get(event.getEntityPlayer()).isFlying()) {
 			event.setResult(Event.Result.ALLOW);
 		}
-	} 
+	}
+
+	@SubscribeEvent
+	public static void onGetLivingHeadLimit(GetLivingHeadLimitEvent event) {
+		EntityLivingBase living = event.getEntityLiving();
+		if (living instanceof EntityPlayer && FlightCapability.get((EntityPlayer) living).isFlying()) {
+			event.setHardLimit(50.0F);
+			event.disableSoftLimit();
+		}
+	}
 }

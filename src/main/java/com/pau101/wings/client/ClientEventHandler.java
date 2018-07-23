@@ -16,6 +16,7 @@ import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraftforge.client.event.EntityViewRenderEvent;
 import net.minecraftforge.client.settings.KeyConflictContext;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.Mod;
@@ -93,6 +94,20 @@ public final class ClientEventHandler {
 				float a = GetCameraEyeHeightEvent.getGroundEyeHeight(player);
 				float b = GetCameraEyeHeightEvent.getFlightEyeHeight(player);
 				event.setValue(a + (b - a) * Mth.easeOutCirc(Mth.easeInOut(amt)));
+			}
+		}
+	}
+
+	@SubscribeEvent
+	public static void onCameraSetup(EntityViewRenderEvent.CameraSetup event) {
+		Entity entity = event.getEntity();
+		if (entity instanceof EntityPlayer) {
+			EntityPlayer player = (EntityPlayer) entity;
+			float delta = (float) event.getRenderPartialTicks();
+			float amt = FlightCapability.get(player).getFlyingAmount(delta);
+			if (amt > 0) {
+				float roll = Mth.lerpDegrees(player.prevRenderYawOffset - player.prevRotationYaw, player.renderYawOffset - player.rotationYaw, delta);
+				event.setRoll(Mth.lerpDegrees(0, -roll * 0.25F, amt));
 			}
 		}
 	}
