@@ -3,11 +3,9 @@ package com.pau101.wings.server.item;
 import com.pau101.wings.WingsMod;
 import com.pau101.wings.server.block.WingsBlocks;
 import com.pau101.wings.server.item.group.ItemGroupWings;
-import com.pau101.wings.util.Util;
-import net.minecraft.block.Block;
+import com.pau101.wings.util.Reg;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemBlock;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -31,25 +29,21 @@ public final class WingsItems {
 	@SubscribeEvent
 	public static void register(RegistryEvent.Register<Item> event) {
 		event.getRegistry().registerAll(
-			asItem(WingsBlocks.FAIRY_DUST_ORE),
-			asItem(WingsBlocks.AMETHYST_ORE),
-			Util.withName(ItemWings.create()
+			Reg.asItem(WingsBlocks.FAIRY_DUST_ORE),
+			Reg.asItem(WingsBlocks.AMETHYST_ORE),
+			Reg.withName(ItemWings.create()
 				.setCreativeTab(ItemGroupWings.instance()), "wings"
 			),
-			Util.withName(new Item()
+			Reg.withName(new Item()
 				.setCreativeTab(ItemGroupWings.instance()), "fairy_dust"
 			),
-			Util.withName(new Item()
+			Reg.withName(new Item()
 				.setCreativeTab(ItemGroupWings.instance()), "amethyst"
 			),
-			Util.withName(new Item()
+			Reg.withName(new Item()
 				.setCreativeTab(ItemGroupWings.instance())
-				.setContainerItem(Items.GLASS_BOTTLE), "bat_blood"
+				.setContainerItem(Items.GLASS_BOTTLE),"bat_blood"
 			)
 		);
-	}
-
-	private static Item asItem(Block block) {
-		return new ItemBlock(block).setRegistryName(Util.getName(block));
 	}
 }

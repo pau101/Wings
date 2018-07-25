@@ -4,7 +4,7 @@ import com.pau101.wings.WingsMod;
 import com.pau101.wings.server.item.WingsItems;
 import com.pau101.wings.server.item.group.ItemGroupWings;
 import com.pau101.wings.util.HarvestLevel;
-import com.pau101.wings.util.Util;
+import com.pau101.wings.util.Reg;
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraftforge.event.RegistryEvent;
@@ -26,11 +26,11 @@ public final class WingsBlocks {
 	@SubscribeEvent
 	public static void register(RegistryEvent.Register<Block> event) {
 		event.getRegistry().registerAll(
-			Util.withName(BlockWingsOre.create(() -> WingsItems.FAIRY_DUST, 0, 2, HarvestLevel.STONE)
+			Reg.withName(BlockWingsOre.create(() -> WingsItems.FAIRY_DUST, 0, 2, HarvestLevel.STONE)
 				.setCreativeTab(ItemGroupWings.instance()),
 				"fairy_dust_ore"
 			),
-			Util.withName(BlockWingsOre.create(() -> WingsItems.AMETHYST, 3, 7, HarvestLevel.IRON)
+			Reg.withName(BlockWingsOre.create(() -> WingsItems.AMETHYST, 3, 7, HarvestLevel.IRON)
 				.setCreativeTab(ItemGroupWings.instance()),
 				"amethyst_ore"
 			)
