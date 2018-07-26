@@ -7,9 +7,12 @@ import com.pau101.wings.client.model.ModelWingsAvian;
 import com.pau101.wings.client.model.ModelWingsInsectoid;
 import com.pau101.wings.server.capability.FlightCapability;
 import com.pau101.wings.server.item.StandardWing;
+import com.pau101.wings.util.Mth;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.math.MathHelper;
 
 public final class WingsRenderer {
 	private final ModelWings AVIAN = new ModelWingsAvian();
@@ -32,8 +35,14 @@ public final class WingsRenderer {
 		if (renderType == IRenderBauble.RenderType.BODY) {
 			StandardWing type = StandardWing.fromMeta(stack);
 			Minecraft.getMinecraft().getTextureManager().bindTexture(type.getTexture());
+			GlStateManager.pushMatrix();
+			float swing = player.getSwingProgress(delta);
+			if (swing > 0.0F) {
+				GlStateManager.rotate(Mth.toDegrees(MathHelper.sin(MathHelper.sqrt(swing) * Mth.TAU) * 0.2F), 0.0F, 1.0F, 0.0F);
+			}
 			IRenderBauble.Helper.rotateIfSneaking(player);
 			models.getOrDefault(type, ModelWings.NONE).render(stack, player, FlightCapability.get(player), delta);
+			GlStateManager.popMatrix();
 		}
 	}
 }
