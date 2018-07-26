@@ -6,7 +6,7 @@ import net.ilexiconn.llibrary.server.asm.MappingHandler;
 import net.ilexiconn.llibrary.server.asm.MethodPatcher;
 import org.objectweb.asm.tree.MethodInsnNode;
 
-// Temporary until release for https://github.com/gegy1000/LLibraryCore/commit/e44ed25
+// FIXME: temporary until release for https://github.com/gegy1000/LLibraryCore/commit/e44ed25
 public final class MethodExt extends InsnPredicate.Method {
 	private final String owner;
 	private final String desc;
