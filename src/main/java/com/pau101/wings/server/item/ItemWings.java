@@ -73,7 +73,7 @@ public final class ItemWings extends Item implements IBauble, IRenderBauble {
 		ItemStack stack = player.getHeldItem(hand);
 		IBaublesItemHandler handler = BaublesApi.getBaublesHandler(player);
 		for (int slot : getBaubleType(stack).getValidSlots()) {
-			if (handler.isItemValidForSlot(slot, stack, player)) {
+			if (handler.getStackInSlot(slot).isEmpty() && handler.isItemValidForSlot(slot, stack, player)) {
 				ItemStack copy = stack.copy();
 				handler.setStackInSlot(slot, copy);
 				onEquipped(copy, player);
