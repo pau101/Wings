@@ -51,30 +51,7 @@ public final class WingsRuntimePatcher extends RuntimePatcher {
 					.var(BIPUSH, 0)
 					.node(I2F)
 					.node(FRETURN)
-				).pop()
-			.patchMethod("travel", float.class, float.class, float.class, void.class)
-				.apply(Patch.REPLACE, m -> m
-					.var(ALOAD, 0)
-					.var(FLOAD, 1)
-					.var(FLOAD, 2)
-					.var(FLOAD, 3)
-					.method(INVOKESTATIC, WingsHooks.class, "onTravel", EntityLivingBase.class, float.class, float.class, float.class, void.class)
-					.node(RETURN)
-				).apply(((cls, node) -> {
-					// FIXME: temporary until release for https://github.com/gegy1000/LLibraryCore/commit/4519b76
-					if (node.tryCatchBlocks != null) {
-						node.tryCatchBlocks.clear();
-					}
-					if (node.localVariables != null) {
-						node.localVariables.clear();	
-					}
-					if (node.visibleLocalVariableAnnotations != null) {
-						node.visibleLocalVariableAnnotations.clear();	
-					}
-					if (node.invisibleLocalVariableAnnotations != null) {
-						node.invisibleLocalVariableAnnotations.clear();	
-					}
-				}));
+				);
 		patchClass(Entity.class)
 			.patchMethod("turn", float.class, float.class, void.class)
 				.apply(Patch.BEFORE, data -> data.node.getOpcode() == RETURN, m -> m

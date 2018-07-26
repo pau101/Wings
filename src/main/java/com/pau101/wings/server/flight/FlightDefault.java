@@ -1,7 +1,5 @@
 package com.pau101.wings.server.flight;
 
-import java.util.List;
-
 import baubles.api.BaublesApi;
 import baubles.api.cap.IBaublesItemHandler;
 import com.google.common.collect.Lists;
@@ -18,6 +16,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
+import java.util.List;
 
 public final class FlightDefault implements Flight {
 	private static final String IS_FLYING  = "isFlying";
@@ -131,8 +130,7 @@ public final class FlightDefault implements Flight {
 
 	@Override
 	public void onWornUpdate(EntityPlayer player) {
-		boolean isClient = player.world.isRemote, isUser = player.isUser();
-		if (isUser) {
+		if (player.isServerWorld()) {
 			if (isFlying()) {
 				float speed = (float) MathHelper.clampedLerp(MIN_SPEED, MAX_SPEED, player.moveForward);
 				float elevationBoost = Mth.transform(Math.abs(player.rotationPitch), 45, 90, 1, 0);
@@ -147,8 +145,9 @@ public final class FlightDefault implements Flight {
 			if (player.motionY < 0) {
 				player.motionY *= FALL_REDUCTION;
 			}
+			player.fallDistance = 0.0F;
 		}
-		if (isClient) {
+		if (player.world.isRemote) {
 			double dx = player.posX - player.prevPosX;
 			double dy = player.posY - player.prevPosY;
 			double dz = player.posZ - player.prevPosZ;
@@ -160,7 +159,6 @@ public final class FlightDefault implements Flight {
 			}
 			this.state = state;
 		}
-		player.fallDistance = 0;
 	}
 
 	@Override
