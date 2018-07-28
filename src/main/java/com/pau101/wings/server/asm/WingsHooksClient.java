@@ -1,6 +1,5 @@
-package com.pau101.wings.client;
+package com.pau101.wings.server.asm;
 
-import com.pau101.wings.server.asm.EmptyOffHandPresentEvent;
 import com.pau101.wings.util.Access;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;

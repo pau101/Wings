@@ -1,6 +1,5 @@
 package com.pau101.wings.server.asm;
 
-import com.pau101.wings.client.WingsHooksClient;
 import com.pau101.wings.server.asm.plugin.MethodExt;
 import net.ilexiconn.llibrary.server.asm.InsnPredicate;
 import net.ilexiconn.llibrary.server.asm.MethodPatcher;
