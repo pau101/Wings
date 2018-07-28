@@ -4,6 +4,7 @@ import net.ilexiconn.llibrary.server.asm.Descriptors;
 import net.ilexiconn.llibrary.server.asm.InsnPredicate;
 import net.ilexiconn.llibrary.server.asm.MappingHandler;
 import net.ilexiconn.llibrary.server.asm.MethodPatcher;
+import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.MethodInsnNode;
 
 // FIXME: temporary until release for https://github.com/gegy1000/LLibraryCore/commit/e44ed25
@@ -28,9 +29,13 @@ public final class MethodExt extends InsnPredicate.Method {
 
 	@Override
 	public boolean test(MethodPatcher.PredicateData predicateData) {
-		if (predicateData.node instanceof MethodInsnNode) {
-			MethodInsnNode node = (MethodInsnNode) predicateData.node;
-			return this.opcodePredicate.test(predicateData.node.getOpcode()) && this.owner.equals(node.owner) && this.desc.equals(node.desc) && this.name.equals(node.name);
+		return test(predicateData.node);
+	}
+
+	public boolean test(AbstractInsnNode node) {
+		if (node instanceof MethodInsnNode) {
+			MethodInsnNode mNode = (MethodInsnNode) node;
+			return this.opcodePredicate.test(mNode.getOpcode()) && this.owner.equals(mNode.owner) && this.desc.equals(mNode.desc) && this.name.equals(mNode.name);
 		} else {
 			return false;
 		}

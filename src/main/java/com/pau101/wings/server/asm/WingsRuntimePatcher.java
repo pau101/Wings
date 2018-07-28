@@ -1,15 +1,23 @@
 package com.pau101.wings.server.asm;
 
+import com.pau101.wings.client.WingsHooksClient;
 import com.pau101.wings.server.asm.plugin.MethodExt;
 import net.ilexiconn.llibrary.server.asm.InsnPredicate;
+import net.ilexiconn.llibrary.server.asm.MethodPatcher;
 import net.ilexiconn.llibrary.server.asm.RuntimePatcher;
+import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.renderer.EntityRenderer;
+import net.minecraft.client.renderer.ItemRenderer;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.item.ItemStack;
 import net.minecraft.network.NetHandlerPlayServer;
 import net.minecraft.network.play.client.CPacketPlayer;
+import net.minecraft.util.EnumHand;
+import net.minecraftforge.client.ForgeHooksClient;
+import java.util.function.Predicate;
 
 public final class WingsRuntimePatcher extends RuntimePatcher {
 	@Override
@@ -54,7 +62,7 @@ public final class WingsRuntimePatcher extends RuntimePatcher {
 				);
 		patchClass(Entity.class)
 			.patchMethod("turn", float.class, float.class, void.class)
-				.apply(Patch.BEFORE, data -> data.node.getOpcode() == RETURN, m -> m
+				.apply(Patch.BEFORE, new InsnPredicate.Op().opcode(RETURN), m -> m
 					.var(ALOAD, 0)
 					.node(DUP)
 					.field(GETFIELD, Entity.class, "rotationYaw", float.class)
@@ -62,5 +70,30 @@ public final class WingsRuntimePatcher extends RuntimePatcher {
 					.node(FSUB)
 					.method(INVOKESTATIC, WingsHooks.class, "onTurn", Entity.class, float.class, void.class)
 				);
+		patchClass(ItemRenderer.class)
+			.patchMethod("renderItemInFirstPerson", AbstractClientPlayer.class, float.class, float.class, EnumHand.class, float.class, ItemStack.class, float.class, void.class)
+				.apply(Patch.AFTER, renderFirstPersonHandTarget(), m -> m
+					.var(ALOAD, 0)
+					.field(GETFIELD, ItemRenderer.class, "itemStackMainHand", ItemStack.class)
+					.method(INVOKESTATIC, WingsHooksClient.class, "onCheckRenderEmptyHand", boolean.class, ItemStack.class, boolean.class)
+				);
+		patchClass(ForgeHooksClient.class)
+			.patchMethod("shouldCauseReequipAnimation", ItemStack.class, ItemStack.class, int.class, boolean.class)
+				.apply(Patch.REPLACE, m -> m
+					.var(ALOAD, 0)
+					.var(ALOAD, 1)
+					.var(ILOAD, 2)
+					.method(INVOKESTATIC, WingsHooksClient.class, "onCheckDoReequipAnimation", ItemStack.class, ItemStack.class, int.class, boolean.class)
+					.node(IRETURN)
+				);
+	}
+
+	private static Predicate<MethodPatcher.PredicateData> renderFirstPersonHandTarget() {
+		InsnPredicate iload8 = new InsnPredicate.Var().var(8).opcode(ILOAD); 
+		MethodExt isInvisible = new MethodExt(AbstractClientPlayer.class, "isInvisible", boolean.class);
+		return iload8.and(data -> data.node.getNext() != null &&
+			data.node.getNext().getNext() != null &&
+			isInvisible.test(data.node.getNext().getNext().getNext())
+		);
 	}
 }

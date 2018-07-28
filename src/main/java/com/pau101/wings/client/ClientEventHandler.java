@@ -2,6 +2,7 @@ package com.pau101.wings.client;
 
 import com.pau101.wings.WingsMod;
 import com.pau101.wings.server.asm.GetCameraEyeHeightEvent;
+import com.pau101.wings.server.asm.EmptyOffHandPresentEvent;
 import com.pau101.wings.server.capability.Flight;
 import com.pau101.wings.server.capability.FlightCapability;
 import com.pau101.wings.util.Mth;
@@ -20,6 +21,7 @@ import net.minecraftforge.client.event.EntityViewRenderEvent;
 import net.minecraftforge.client.settings.KeyConflictContext;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.eventhandler.Event;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.InputEvent;
 import net.minecraftforge.fml.relauncher.Side;
@@ -109,6 +111,13 @@ public final class ClientEventHandler {
 				float roll = Mth.lerpDegrees(player.prevRenderYawOffset - player.prevRotationYaw, player.renderYawOffset - player.rotationYaw, delta);
 				event.setRoll(Mth.lerpDegrees(0, -roll * 0.25F, amt));
 			}
+		}
+	}
+
+	@SubscribeEvent
+	public static void onRenderEmptyHandCheckEvent(EmptyOffHandPresentEvent event) {
+		if (FlightCapability.get(event.getPlayer()).getFlyingAmount(1.0F) > 0.0F) {
+			event.setResult(Event.Result.ALLOW);
 		}
 	}
 

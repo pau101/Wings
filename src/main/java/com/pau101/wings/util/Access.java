@@ -1,65 +1,89 @@
 package com.pau101.wings.util;
 
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
+import it.unimi.dsi.fastutil.objects.ObjectArrays;
+import it.unimi.dsi.fastutil.objects.ObjectListIterator;
+import net.minecraftforge.fml.relauncher.ReflectionHelper;
 import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
 import java.lang.invoke.MethodType;
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-
-import it.unimi.dsi.fastutil.objects.ObjectArrayList;
-import it.unimi.dsi.fastutil.objects.ObjectArrays;
-import it.unimi.dsi.fastutil.objects.ObjectList;
-import it.unimi.dsi.fastutil.objects.ObjectListIterator;
-import net.minecraftforge.fml.relauncher.ReflectionHelper;
+import java.util.function.BiFunction;
 
 public final class Access {
 	private Access() {}
 
 	private static final MethodHandles.Lookup LOOKUP = MethodHandles.lookup();
 
-	public static <T> BuilderAcceptingName<T> builder(Class<? super T> refc) {
-		return new BuilderAcceptingName<>(refc);
+	public static <T> NameAcceptingVirtualHandleBuilder<T> virtual(Class<T> refc) {
+		return new NameAcceptingVirtualHandleBuilder<>(refc);
 	}
 
-	public static final class BuilderAcceptingName<T> {
-		private final Class<? super T> refc;
+	public static <T> NameAcceptingGetterHandleBuilder<T> getter(Class<T> refc) {
+		return new NameAcceptingGetterHandleBuilder<>(refc);
+	}
 
-		private BuilderAcceptingName(Class<? super T> refc) {
+	private static abstract class BuilderAcceptingName<T, F> {
+		private final BiFunction<Class<T>, ObjectArrayList<String>, F> factory;
+
+		private final Class<T> refc;
+
+		private BuilderAcceptingName(BiFunction<Class<T>, ObjectArrayList<String>, F> factory, Class<T> refc) {
+			this.factory = factory;
 			this.refc = refc;
 		}
 
-		public HandleBuilder<T> name(String name, String... others) {
-			ObjectList<String> names = ObjectArrayList.wrap(new String[others.length + 1], 0);
+		F name(String name, String... others) {
+			ObjectArrayList<String> names = ObjectArrayList.wrap(new String[others.length + 1], 0);
 			names.add(name);
 			names.addElements(names.size(), others);
-			return new HandleBuilder<>(this.refc, names);
+			return this.factory.apply(this.refc, names);
 		}
 	}
 
-	public static final class HandleBuilder<T> {
-		private final Class<? super T> refc;
+	private static abstract class HandleBuilder<T> {
+		final Class<T> refc;
 
-		private final ObjectList<String> names;
+		final ObjectArrayList<String> names;
 
-		private final ObjectArrayList<Class<?>> ptypes;
-
-		private HandleBuilder(Class<? super T> refc, ObjectList<String> names) {
+		private HandleBuilder(Class<T> refc, ObjectArrayList<String> names) {
 			this.refc = refc;
 			this.names = names;
+		}
+	}
+
+	public static final class NameAcceptingVirtualHandleBuilder<T> extends BuilderAcceptingName<T, VirtualHandleBuilder<T>> {
+		private NameAcceptingVirtualHandleBuilder(Class<T> refc) {
+			super(VirtualHandleBuilder::new, refc);
+		}
+
+		@Override
+		public VirtualHandleBuilder<T> name(String name, String... others) {
+			return super.name(name, others);
+		}
+	}
+
+	public static final class VirtualHandleBuilder<T> extends HandleBuilder<T> {
+		private final ObjectArrayList<Class<?>> ptypes;
+
+		private VirtualHandleBuilder(Class<T> refc, ObjectArrayList<String> names) {
+			super(refc, names);
 			this.ptypes = new ObjectArrayList<Class<?>>(new Class<?>[4], false) {
 				// create a trim that preserves type
 				@Override
 				public void trim() {
-					a = ObjectArrays.trim(a, size);
+					this.a = ObjectArrays.trim(this.a, this.size);
 				}
 			};
 		}
 
-		public HandleBuilder<T> ptype(Class<?> ptype) {
+		public VirtualHandleBuilder<T> ptype(Class<?> ptype) {
 			this.ptypes.add(ptype);
 			return this;
 		}
 
-		public HandleBuilder<T> ptypes(Class<?>... ptypes) {
+		public VirtualHandleBuilder<T> ptypes(Class<?>... ptypes) {
 			this.ptypes.addElements(this.ptypes.size(), ptypes);
 			return this;
 		}
@@ -69,7 +93,7 @@ public final class Access {
 			return find(this.refc, this.names, MethodType.methodType(rtype, this.ptypes.elements()));
 		}
 
-		private static MethodHandle find(Class<?> refc, ObjectList<String> names, MethodType type) {
+		private static MethodHandle find(Class<?> refc, ObjectArrayList<String> names, MethodType type) {
 			Class<?>[] parameterTypes = type.parameterArray();
 			for (ObjectListIterator<String> it = names.iterator(); ; ) {
 				String name = it.next();
@@ -83,7 +107,47 @@ public final class Access {
 					return LOOKUP.unreflect(m);
 				} catch (NoSuchMethodException | IllegalAccessException e) {
 					if (!it.hasNext()) {
-						throw new ReflectionHelper.UnableToFindMethodException(e);
+						throw new ReflectionHelper.UnableToFindMethodException(names.elements(), e);
+					}
+				}
+			}
+		}
+	}
+
+	public static final class NameAcceptingGetterHandleBuilder<T> extends BuilderAcceptingName<T, GetterHandleBuilder<T>> {
+		private NameAcceptingGetterHandleBuilder(Class<T> refc) {
+			super(GetterHandleBuilder::new, refc);
+		}
+
+		@Override
+		public GetterHandleBuilder<T> name(String name, String... others) {
+			return super.name(name, others);
+		}
+	}
+
+	public static final class GetterHandleBuilder<T> extends HandleBuilder<T> {
+		private GetterHandleBuilder(Class<T> refc, ObjectArrayList<String> names) {
+			super(refc, names);
+		}
+
+		public <R> MethodHandle type(Class<R> type) {
+			return find(this.refc, this.names, MethodType.methodType(type, this.refc));
+		}
+
+		private static MethodHandle find(Class<?> refc, ObjectArrayList<String> names, MethodType type) {
+			for (ObjectListIterator<String> it = names.iterator(); ; ) {
+				String name = it.next();
+				// TODO: verbose exception message
+				try {
+					Field f = refc.getDeclaredField(name);
+					f.setAccessible(true);
+					if (f.getType() != type.returnType()) {
+						throw new NoSuchFieldException();
+					}
+					return LOOKUP.unreflectGetter(f);
+				} catch (NoSuchFieldException | IllegalAccessException e) {
+					if (!it.hasNext()) {
+						throw new ReflectionHelper.UnableToFindFieldException(names.elements(), e);
 					}
 				}
 			}
