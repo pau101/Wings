@@ -1,13 +1,13 @@
 package com.pau101.wings.server.capability;
 
-import java.util.function.Consumer;
-
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.common.util.INBTSerializable;
+
+import java.util.function.Consumer;
 
 public interface Flight extends INBTSerializable<NBTTagCompound> {
 	default void setIsFlying(boolean isFlying) {
@@ -41,6 +41,8 @@ public interface Flight extends INBTSerializable<NBTTagCompound> {
 	void onWornUpdate(EntityPlayer player);
 
 	void onUpdate(EntityPlayer player);
+
+	void onUpdateEyeHeight(float height, float delta, FloatConsumer heightOut);
 
 	void clone(Flight other, PlayerSet players);
 
@@ -118,5 +120,10 @@ public interface Flight extends INBTSerializable<NBTTagCompound> {
 				}
 			};
 		}
+	}
+
+	@FunctionalInterface
+	interface FloatConsumer {
+		void accept(float value);
 	}
 }

@@ -1,7 +1,6 @@
 package com.pau101.wings.server.asm;
 
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.fml.common.eventhandler.Event;
 
 public final class GetCameraEyeHeightEvent extends Event {
@@ -36,19 +35,5 @@ public final class GetCameraEyeHeightEvent extends Event {
 		GetCameraEyeHeightEvent ev = new GetCameraEyeHeightEvent(entity, delta);
 		ev.setValue(entity.getEyeHeight());
 		return ev;
-	}
-
-	public static float getGroundEyeHeight(EntityPlayer player) {
-		if (player.isPlayerSleeping()) {
-			return 0.2F;
-		}
-		if (player.isSneaking() || player.height == 1.65F) {
-			return player.eyeHeight - 0.08F;
-		}
-		return player.eyeHeight;
-	}
-
-	public static float getFlightEyeHeight(EntityPlayer player) {
-		return 0.4F;
 	}
 }

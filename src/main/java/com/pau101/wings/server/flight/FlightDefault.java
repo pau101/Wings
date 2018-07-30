@@ -55,6 +55,8 @@ public final class FlightDefault implements Flight {
 
 	private Animator animator = Animator.ABSENT;
 
+	private float lastEyeHeight = Float.NaN;
+
 	@Override
 	public void setIsFlying(boolean isFlying, PlayerSet players) {
 		if (this.isFlying != isFlying) {
@@ -178,6 +180,17 @@ public final class FlightDefault implements Flight {
 			if (getTimeFlying() > INITIAL_TIME_FLYING) {
 				setTimeFlying(getTimeFlying() - 1);
 			}
+		}
+	}
+
+	@Override
+	public void onUpdateEyeHeight(float value, float delta, FloatConsumer valueOut) {
+		float amt;
+		if (Float.isFinite(lastEyeHeight) && (amt = getFlyingAmount(delta)) != 0 && amt != 1) {
+			float t = Mth.easeOutCirc(Mth.easeInOut(amt));
+			valueOut.accept(lastEyeHeight + (value - lastEyeHeight) * (isFlying() ? t : 1.0F - t));
+		} else {
+			lastEyeHeight = value;
 		}
 	}
 

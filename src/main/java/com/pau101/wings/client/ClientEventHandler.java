@@ -89,14 +89,8 @@ public final class ClientEventHandler {
 	public static void onGetCameraEyeHeight(GetCameraEyeHeightEvent event) {
 		Entity entity = event.getEntity();
 		if (entity instanceof EntityPlayer) {
-			EntityPlayer player = (EntityPlayer) entity;
-			Flight flight = FlightCapability.get(player);
-			float amt = flight.getFlyingAmount(event.getDelta());
-			if (amt != 0 && amt != 1) {
-				float a = GetCameraEyeHeightEvent.getGroundEyeHeight(player);
-				float b = GetCameraEyeHeightEvent.getFlightEyeHeight(player);
-				event.setValue(a + (b - a) * Mth.easeOutCirc(Mth.easeInOut(amt)));
-			}
+			Flight flight = FlightCapability.get((EntityPlayer) entity);
+			flight.onUpdateEyeHeight(event.getValue(), event.getDelta(), event::setValue);
 		}
 	}
 
