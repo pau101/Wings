@@ -56,7 +56,11 @@ public final class FlightDefault implements Flight {
 
 	private Animator animator = Animator.ABSENT;
 
-	private float lastEyeHeight = Float.NaN;
+	private float fromEyeHeight = Float.NaN;
+
+	private boolean isEyeHeightUpwards;
+
+	private float prevEyeHeight = Float.NaN;
 
 	@Override
 	public void setIsFlying(boolean isFlying, PlayerSet players) {
@@ -193,11 +197,24 @@ public final class FlightDefault implements Flight {
 	@Override
 	public void onUpdateEyeHeight(float value, float delta, FloatConsumer valueOut) {
 		float amt;
-		if (Float.isFinite(lastEyeHeight) && (amt = getFlyingAmount(delta)) != 0.0F && amt != 1.0F) {
-			float t = Mth.easeOutCirc(Mth.easeInOut(amt));
-			valueOut.accept(lastEyeHeight + (value - lastEyeHeight) * (isFlying() ? t : 1.0F - t));
+		if ((amt = getFlyingAmount(delta)) != 0.0F && amt != 1.0F) {
+			boolean hasFrom = true, isUpwards = isFlying();
+			if (Float.isNaN(fromEyeHeight) || isEyeHeightUpwards != isUpwards) {
+				fromEyeHeight = prevEyeHeight;
+				isEyeHeightUpwards = isUpwards;
+				hasFrom = !Float.isNaN(fromEyeHeight);
+			}
+			if (hasFrom) {
+				float t = Mth.easeOutCirc(Mth.easeInOut(amt));
+				float newValue = fromEyeHeight + (value - fromEyeHeight) * (isUpwards ? t : 1.0F - t);
+				valueOut.accept(newValue);
+				prevEyeHeight = newValue;
+			} else {
+				prevEyeHeight = value;
+			}
 		} else {
-			lastEyeHeight = value;
+			fromEyeHeight = Float.NaN;
+			prevEyeHeight = value;
 		}
 	}
 
