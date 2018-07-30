@@ -1,10 +1,5 @@
 package com.pau101.wings.util;
 
-import java.util.Random;
-import java.util.function.Predicate;
-import java.util.function.Supplier;
-import java.util.function.UnaryOperator;
-
 import net.minecraft.block.BlockStone;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
@@ -12,6 +7,11 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import net.minecraft.world.gen.feature.WorldGenerator;
+
+import java.util.Random;
+import java.util.function.Predicate;
+import java.util.function.Supplier;
+import java.util.function.UnaryOperator;
 
 public final class VeinGenerator extends WorldGenerator {
 	private final UnaryOperator<IBlockState> block;

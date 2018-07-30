@@ -1,8 +1,5 @@
 package com.pau101.wings.server.block;
 
-import java.util.Random;
-import java.util.function.Supplier;
-
 import com.pau101.wings.util.HarvestClass;
 import com.pau101.wings.util.HarvestLevel;
 import com.pau101.wings.util.Util;
@@ -14,6 +11,9 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+
+import java.util.Random;
+import java.util.function.Supplier;
 
 public final class BlockWingsOre extends Block {
 	private final Supplier<Item> drop;

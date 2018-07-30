@@ -8,6 +8,7 @@ import net.minecraft.item.ItemMap;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.eventhandler.Event;
+
 import java.lang.invoke.MethodHandle;
 
 public final class WingsHooksClient {

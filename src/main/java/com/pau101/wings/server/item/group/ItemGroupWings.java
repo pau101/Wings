@@ -1,8 +1,8 @@
 package com.pau101.wings.server.item.group;
 
 import com.pau101.wings.WingsMod;
-import com.pau101.wings.server.item.WingsItems;
 import com.pau101.wings.server.item.StandardWing;
+import com.pau101.wings.server.item.WingsItems;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.ItemStack;
 

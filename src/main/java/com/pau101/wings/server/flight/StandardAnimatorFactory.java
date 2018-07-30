@@ -1,10 +1,10 @@
 package com.pau101.wings.server.flight;
 
-import java.util.function.Predicate;
-import java.util.function.Supplier;
-
 import com.pau101.wings.server.flight.animator.AnimatorAvian;
 import com.pau101.wings.server.flight.animator.AnimatorInsectoid;
+
+import java.util.function.Predicate;
+import java.util.function.Supplier;
 
 public enum StandardAnimatorFactory implements AnimatorFactory {
 	AVIAN(AnimatorAvian.class, AnimatorAvian::new),

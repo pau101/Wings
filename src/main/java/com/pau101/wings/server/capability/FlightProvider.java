@@ -1,10 +1,10 @@
 package com.pau101.wings.server.capability;
 
-import javax.annotation.Nullable;
-
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
+
+import javax.annotation.Nullable;
 
 final class FlightProvider implements ICapabilityProvider  {
 	private final Flight flight;

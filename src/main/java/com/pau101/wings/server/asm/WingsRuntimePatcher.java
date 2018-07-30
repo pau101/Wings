@@ -16,6 +16,7 @@ import net.minecraft.network.NetHandlerPlayServer;
 import net.minecraft.network.play.client.CPacketPlayer;
 import net.minecraft.util.EnumHand;
 import net.minecraftforge.client.ForgeHooksClient;
+
 import java.util.function.Predicate;
 
 public final class WingsRuntimePatcher extends RuntimePatcher {

@@ -1,11 +1,11 @@
 package com.pau101.wings.server.asm.plugin;
 
-import java.util.Map;
-import javax.annotation.Nullable;
-
 import com.pau101.wings.WingsMod;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.relauncher.IFMLLoadingPlugin;
+
+import javax.annotation.Nullable;
+import java.util.Map;
 
 @IFMLLoadingPlugin.Name(WingsMod.ID)
 @IFMLLoadingPlugin.MCVersion(MinecraftForge.MC_VERSION)

@@ -16,6 +16,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
+
 import java.util.List;
 
 public final class FlightDefault implements Flight {
@@ -37,7 +38,7 @@ public final class FlightDefault implements Flight {
 
 	private static final float FALL_REDUCTION = 0.9F;
 
-	private static final float PITCH_OFFSET = 30;
+	private static final float PITCH_OFFSET = 30.0F;
 
 	private static final int CHECK_FLIGHT_ABILITY_RATE = 640;
 
@@ -192,7 +193,7 @@ public final class FlightDefault implements Flight {
 	@Override
 	public void onUpdateEyeHeight(float value, float delta, FloatConsumer valueOut) {
 		float amt;
-		if (Float.isFinite(lastEyeHeight) && (amt = getFlyingAmount(delta)) != 0 && amt != 1) {
+		if (Float.isFinite(lastEyeHeight) && (amt = getFlyingAmount(delta)) != 0.0F && amt != 1.0F) {
 			float t = Mth.easeOutCirc(Mth.easeInOut(amt));
 			valueOut.accept(lastEyeHeight + (value - lastEyeHeight) * (isFlying() ? t : 1.0F - t));
 		} else {
