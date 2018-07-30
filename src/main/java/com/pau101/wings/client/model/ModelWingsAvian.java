@@ -81,8 +81,14 @@ public final class ModelWingsAvian extends ModelWings {
 		coracoidRight.addChild(feathersCoracoidRight);
 		bonesLeft = ImmutableList.of(coracoidLeft, humerusLeft, ulnaLeft, carpalsLeft);
 		bonesRight = ImmutableList.of(coracoidRight, humerusRight, ulnaRight, carpalsRight);
-		feathersLeft = ImmutableList.of(feathersCoracoidLeft, feathersTertiaryLeft, feathersSecondaryLeft, feathersPrimaryLeft);
-		feathersRight = ImmutableList.of(feathersCoracoidRight, feathersTertiaryRight, feathersSecondaryRight, feathersPrimaryRight);
+		feathersLeft = ImmutableList.of(
+			feathersCoracoidLeft, feathersTertiaryLeft,
+			feathersSecondaryLeft, feathersPrimaryLeft
+		);
+		feathersRight = ImmutableList.of(
+			feathersCoracoidRight, feathersTertiaryRight,
+			feathersSecondaryRight, feathersPrimaryRight
+		);
 	}
 
 	@Override
@@ -101,7 +107,12 @@ public final class ModelWingsAvian extends ModelWings {
 		coracoidRight.render(0.0625F);
 	}
 
-	private static void add3DTexture(ModelRenderer model, int u, int v, float offX, float offY, float offZ, int width, int height) {
+	private static void add3DTexture(
+		ModelRenderer model,
+		int u, int v,
+		float offX, float offY, float offZ,
+		int width, int height
+	) {
 		model.cubeList.add(Model3DTexture.create(model, offX, offY, offZ, width, height, u, v));
 	}
 }

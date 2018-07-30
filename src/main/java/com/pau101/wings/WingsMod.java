@@ -30,7 +30,10 @@ public final class WingsMod {
 		private static final WingsMod INSTANCE = new WingsMod();
 	}
 
-	@SidedProxy(clientSide = "com.pau101.wings.client.ClientProxy", serverSide = "com.pau101.wings.server.ServerProxy")
+	@SidedProxy(
+		clientSide = "com.pau101.wings.client.ClientProxy",
+		serverSide = "com.pau101.wings.server.ServerProxy"
+	)
 	private static Proxy proxy;
 
 	@Mod.EventHandler

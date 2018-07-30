@@ -25,24 +25,28 @@ public abstract class State {
 		this.animation = animation;
 	}
 
-	public final State update(boolean isFlying, double velocityX, double velocityY, double velocityZ, EntityPlayer player) {
+	public final State update(boolean isFlying, double velX, double velY, double velZ, EntityPlayer player) {
 		if (time++ > stateDelay) {
-			return getNext(isFlying, velocityX, velocityY, velocityZ, player);
+			return getNext(isFlying, velX, velY, velZ, player);
 		}
 		return this;
 	}
 
-	private State getNext(boolean isFlying, double velocityX, double velocityY, double velocityZ, EntityPlayer player) {
+	private State getNext(boolean isFlying, double velX, double velY, double velZ, EntityPlayer player) {
 		if (isFlying) {
-			if (velocityY < 0 && player.rotationPitch >= Mth.toDegrees((float) -Math.atan2(velocityY, MathHelper.sqrt(velocityX * velocityX + velocityZ * velocityZ)))) {
+			if (velY < 0 && player.rotationPitch >= getPitch(velX, velY, velZ)) {
 				return getGlide();
 			}
 			return getLift();
 		}
-		if (velocityY < 0) {
+		if (velY < 0) {
 			return getFalling(player);
 		}
-		return getDefault(velocityY);
+		return getDefault(velY);
+	}
+
+	private float getPitch(double velX, double velY, double velZ) {
+		return Mth.toDegrees((float) -Math.atan2(velY, MathHelper.sqrt(velX * velX + velZ * velZ)));
 	}
 
 	public final void beginAnimation(Animator animator) {

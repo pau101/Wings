@@ -39,7 +39,7 @@ public final class AnimatorInsectoid implements Animator {
 
 	@Override
 	public Vec3d getWingRotation(int index, float delta) {
-		return new Vec3d(0, Math.sin(Mth.lerp(prevFlapCycle, flapCycle, delta)) * 35 - 42, 0);
+		return new Vec3d(0.0D, Math.sin(Mth.lerp(prevFlapCycle, flapCycle, delta)) * 35.0D - 42.0D, 0.0D);
 	}
 
 	@Override

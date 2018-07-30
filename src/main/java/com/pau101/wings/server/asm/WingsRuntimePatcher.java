@@ -21,19 +21,33 @@ import java.util.function.Predicate;
 public final class WingsRuntimePatcher extends RuntimePatcher {
 	@Override
 	public void onInit() {
-		InsnPredicate.Method isElytraFlying = new MethodExt(EntityLivingBase.class, "isElytraFlying", boolean.class).on(EntityPlayer.class);
+		InsnPredicate.Method isElytraFlying = new MethodExt(
+			EntityLivingBase.class,
+			"isElytraFlying",
+			boolean.class
+		).on(EntityPlayer.class);
 		patchClass(EntityPlayer.class)
 			.patchMethod("updateSize", void.class)
 				.apply(Patch.AFTER, isElytraFlying, m -> m
 					.var(ALOAD, 0)
 					.node(SWAP)
-					.method(INVOKESTATIC, WingsHooks.class, "onFlightCheck", EntityPlayer.class, boolean.class, boolean.class)	
+					.method(
+						INVOKESTATIC,
+						WingsHooks.class, "onFlightCheck",
+						EntityPlayer.class, boolean.class,
+						boolean.class
+					)
 				).pop()
 			.patchMethod("getEyeHeight", float.class)
 				.apply(Patch.AFTER, isElytraFlying, m -> m
 					.var(ALOAD, 0)
 					.node(SWAP)
-					.method(INVOKESTATIC, WingsHooks.class, "onFlightCheck", EntityPlayer.class, boolean.class, boolean.class)
+					.method(
+						INVOKESTATIC,
+						WingsHooks.class, "onFlightCheck",
+						EntityPlayer.class, boolean.class,
+						boolean.class
+					)
 				);
 		patchClass(NetHandlerPlayServer.class)
 			.patchMethod("processPlayer", CPacketPlayer.class, void.class)
@@ -41,20 +55,35 @@ public final class WingsRuntimePatcher extends RuntimePatcher {
 					.var(ALOAD, 0)
 					.field(GETFIELD, NetHandlerPlayServer.class, "player", EntityPlayerMP.class)
 					.node(SWAP)
-					.method(INVOKESTATIC, WingsHooks.class, "onFlightCheck", EntityPlayer.class, boolean.class, boolean.class)
+					.method(
+						INVOKESTATIC,
+						WingsHooks.class, "onFlightCheck",
+						EntityPlayer.class, boolean.class,
+						boolean.class
+					)
 				);
 		patchClass(EntityRenderer.class)
 			.patchMethod("orientCamera", float.class, void.class)
 				.apply(Patch.REPLACE_NODE, new InsnPredicate.Method(Entity.class, "getEyeHeight", float.class), m -> m
 					.var(FLOAD, 1)
-					.method(INVOKESTATIC, WingsHooks.class, "onGetCameraEyeHeight", Entity.class, float.class, float.class)
+					.method(
+						INVOKESTATIC,
+						WingsHooks.class, "onGetCameraEyeHeight",
+						Entity.class, float.class,
+						float.class
+					)
 				);
 		patchClass(EntityLivingBase.class)
 			.patchMethod("updateDistance", float.class, float.class, float.class)
 				.apply(Patch.REPLACE, m -> m
 					.var(ALOAD, 0)
 					.var(FLOAD, 1)
-					.method(INVOKESTATIC, WingsHooks.class, "onUpdateBodyRotation", EntityLivingBase.class, float.class, void.class)
+					.method(
+						INVOKESTATIC,
+						WingsHooks.class, "onUpdateBodyRotation",
+						EntityLivingBase.class, float.class,
+						void.class
+					)
 					.var(BIPUSH, 0)
 					.node(I2F)
 					.node(FRETURN)
@@ -67,14 +96,25 @@ public final class WingsRuntimePatcher extends RuntimePatcher {
 					.field(GETFIELD, Entity.class, "rotationYaw", float.class)
 					.var(FLOAD, 4)
 					.node(FSUB)
-					.method(INVOKESTATIC, WingsHooks.class, "onTurn", Entity.class, float.class, void.class)
+					.method(
+						INVOKESTATIC,
+						WingsHooks.class,
+						"onTurn", Entity.class,
+						float.class,
+						void.class
+					)
 				);
 		patchClass(ItemRenderer.class)
 			.patchMethod("renderItemInFirstPerson", AbstractClientPlayer.class, float.class, float.class, EnumHand.class, float.class, ItemStack.class, float.class, void.class)
 				.apply(Patch.AFTER, renderFirstPersonHandTarget(), m -> m
 					.var(ALOAD, 0)
 					.field(GETFIELD, ItemRenderer.class, "itemStackMainHand", ItemStack.class)
-					.method(INVOKESTATIC, WingsHooksClient.class, "onCheckRenderEmptyHand", boolean.class, ItemStack.class, boolean.class)
+					.method(
+						INVOKESTATIC,
+						WingsHooksClient.class,"onCheckRenderEmptyHand",
+						boolean.class, ItemStack.class,
+						boolean.class
+					)
 				);
 		patchClass(ForgeHooksClient.class)
 			.patchMethod("shouldCauseReequipAnimation", ItemStack.class, ItemStack.class, int.class, boolean.class)
@@ -82,7 +122,12 @@ public final class WingsRuntimePatcher extends RuntimePatcher {
 					.var(ALOAD, 0)
 					.var(ALOAD, 1)
 					.var(ILOAD, 2)
-					.method(INVOKESTATIC, WingsHooksClient.class, "onCheckDoReequipAnimation", ItemStack.class, ItemStack.class, int.class, boolean.class)
+					.method(
+						INVOKESTATIC,
+						WingsHooksClient.class,"onCheckDoReequipAnimation",
+						ItemStack.class, ItemStack.class, int.class,
+						boolean.class
+					)
 					.node(IRETURN)
 				);
 	}

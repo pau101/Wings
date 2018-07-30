@@ -42,7 +42,8 @@ public final class WingsHooksClient {
 		if (fromEmpty || toEmpty) {
 			return fromEmpty != toEmpty;
 		}
-		return from.getItem().shouldCauseReequipAnimation(from, to, !isOffhand && selectedItemSlot != (selectedItemSlot = slot));
+		boolean hasSlotChange = !isOffhand && selectedItemSlot != (selectedItemSlot = slot);
+		return from.getItem().shouldCauseReequipAnimation(from, to, hasSlotChange);
 	}
 
 	private static boolean isMap(ItemStack stack) {

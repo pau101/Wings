@@ -1,11 +1,7 @@
 package com.pau101.wings.server.capability;
 
-import java.util.function.BiConsumer;
-import java.util.function.Predicate;
-
 import com.pau101.wings.WingsMod;
 import com.pau101.wings.server.flight.FlightDefault;
-import com.pau101.wings.util.Util;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -23,6 +19,9 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerChangedDimensionEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerRespawnEvent;
+
+import java.util.function.BiConsumer;
+import java.util.function.Predicate;
 
 @Mod.EventBusSubscriber(modid = WingsMod.ID)
 public final class FlightCapability {
@@ -48,13 +47,19 @@ public final class FlightCapability {
 		ifPlayer(entity, e -> true, action);
 	}
 
-	public static void ifPlayer(Entity entity, Predicate<Entity> condition, BiConsumer<EntityPlayer, Flight> action) {
-		Util.ifPlayer(entity, condition, player -> action.accept(player, get(player)));
+	public static void ifPlayer(Entity entity, Predicate<EntityPlayer> condition, BiConsumer<EntityPlayer, Flight> action) {
+		EntityPlayer player;
+		if (entity instanceof EntityPlayer && condition.test(player = (EntityPlayer) entity)) {
+			action.accept(player, get(player));
+		}
 	}
 
 	@SubscribeEvent
 	public static void onAttachCapabilities(AttachCapabilitiesEvent<Entity> event) {
-		Util.ifPlayer(event.getObject(), player -> event.addCapability(FLIGHT_ID, new FlightProvider(WingsMod.instance().newFlight(player))));
+		Entity entity = event.getObject();
+		if (entity instanceof EntityPlayer) {
+			event.addCapability(FLIGHT_ID, new FlightProvider(WingsMod.instance().newFlight((EntityPlayer) entity)));
+		}
 	}
 
 	@SubscribeEvent

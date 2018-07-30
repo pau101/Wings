@@ -4,7 +4,6 @@ import com.pau101.wings.server.capability.Flight;
 import com.pau101.wings.util.Mth;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelRenderer;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.Vec3d;
@@ -16,12 +15,6 @@ public abstract class ModelWings extends ModelBase {
 	};
 
 	public abstract void render(ItemStack stack, EntityPlayer player, Flight flight, float delta);
-
-	@Deprecated
-	@Override
-	public final void render(Entity entity, float limbSwing, float limbSwingAmount, float age, float yaw, float pitch, float scale) {
-		throw new UnsupportedOperationException();
-	}
 
 	protected static void setAngles(ModelRenderer model, float x, float y, float z) {
 		model.rotateAngleX = Mth.toRadians(x);

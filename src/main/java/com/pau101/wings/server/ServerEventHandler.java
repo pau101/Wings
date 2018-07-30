@@ -12,6 +12,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
+import net.minecraft.stats.StatBase;
 import net.minecraft.stats.StatList;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumHand;
@@ -35,12 +36,22 @@ public final class ServerEventHandler {
 		EnumHand hand = event.getHand();
 		ItemStack stack = player.getHeldItem(hand);
 		if (event.getTarget() instanceof EntityBat && stack.getItem() == Items.GLASS_BOTTLE) {
-			player.world.playSound(player, player.posX, player.posY, player.posZ, SoundEvents.ITEM_BOTTLE_FILL, SoundCategory.NEUTRAL, 1.0F, 1.0F);
+			player.world.playSound(
+				player,
+				player.posX, player.posY, player.posZ,
+				SoundEvents.ITEM_BOTTLE_FILL,
+				SoundCategory.NEUTRAL,
+				1.0F,
+				1.0F
+			);
 			ItemStack destroyed = stack.copy();
 			if (!player.capabilities.isCreativeMode) {
 				stack.shrink(1);
 			}
-			player.addStat(StatList.getObjectUseStats(Items.GLASS_BOTTLE));
+			StatBase useStat = StatList.getObjectUseStats(Items.GLASS_BOTTLE);
+			if (useStat != null) {
+				player.addStat(useStat);
+			}
 			ItemStack batBlood = new ItemStack(WingsItems.BAT_BLOOD);
 			if (stack.isEmpty()) {
 				ForgeEventFactory.onPlayerDestroyItem(player, destroyed, hand);

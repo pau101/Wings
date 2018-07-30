@@ -135,16 +135,22 @@ public final class FlightDefault implements Flight {
 		if (player.isServerWorld()) {
 			if (isFlying()) {
 				float speed = (float) MathHelper.clampedLerp(MIN_SPEED, MAX_SPEED, player.moveForward);
-				float elevationBoost = Mth.transform(Math.abs(player.rotationPitch), 45, 90, 1, 0);
-				float pc = -MathHelper.cos(-Mth.toRadians(player.rotationPitch - PITCH_OFFSET * elevationBoost));
-				float ps = MathHelper.sin(-Mth.toRadians(player.rotationPitch - PITCH_OFFSET * elevationBoost));
-				float yc = MathHelper.cos(-Mth.toRadians(player.rotationYaw) - Mth.PI);
-				float ys = MathHelper.sin(-Mth.toRadians(player.rotationYaw) - Mth.PI);
-				player.motionX += ys * pc * speed;
-				player.motionY += ps * speed + Y_BOOST * (player.rotationPitch > 0 ? elevationBoost : 1);
-				player.motionZ += yc * pc * speed;
+				float elevationBoost = Mth.transform(
+					Math.abs(player.rotationPitch),
+					45.0F, 90.0F,
+					1.0F, 0.0F
+				);
+				float pitch = -Mth.toRadians(player.rotationPitch - PITCH_OFFSET * elevationBoost);
+				float yaw = -Mth.toRadians(player.rotationYaw) - Mth.PI;
+				float vxz = -MathHelper.cos(pitch);
+				float vy = MathHelper.sin(pitch);
+				float vz = MathHelper.cos(yaw);
+				float vx = MathHelper.sin(yaw);
+				player.motionX += vx * vxz * speed;
+				player.motionY += vy * speed + Y_BOOST * (player.rotationPitch > 0.0F ? elevationBoost : 1.0D);
+				player.motionZ += vz * vxz * speed;
 			}
-			if (player.motionY < 0) {
+			if (player.motionY < 0.0D) {
 				player.motionY *= FALL_REDUCTION;
 			}
 			player.fallDistance = 0.0F;

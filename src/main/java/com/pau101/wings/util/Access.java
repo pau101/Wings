@@ -16,20 +16,20 @@ public final class Access {
 
 	private static final MethodHandles.Lookup LOOKUP = MethodHandles.lookup();
 
-	public static <T> NameAcceptingVirtualHandleBuilder<T> virtual(Class<T> refc) {
-		return new NameAcceptingVirtualHandleBuilder<>(refc);
+	public static <T> NamingVirtualHandleBuilder<T> virtual(Class<T> refc) {
+		return new NamingVirtualHandleBuilder<>(refc);
 	}
 
-	public static <T> NameAcceptingGetterHandleBuilder<T> getter(Class<T> refc) {
-		return new NameAcceptingGetterHandleBuilder<>(refc);
+	public static <T> NamingGetterHandleBuilder<T> getter(Class<T> refc) {
+		return new NamingGetterHandleBuilder<>(refc);
 	}
 
-	private static abstract class BuilderAcceptingName<T, F> {
+	private static abstract class NamingBuilder<T, F> {
 		private final BiFunction<Class<T>, ObjectArrayList<String>, F> factory;
 
 		private final Class<T> refc;
 
-		private BuilderAcceptingName(BiFunction<Class<T>, ObjectArrayList<String>, F> factory, Class<T> refc) {
+		private NamingBuilder(BiFunction<Class<T>, ObjectArrayList<String>, F> factory, Class<T> refc) {
 			this.factory = factory;
 			this.refc = refc;
 		}
@@ -53,8 +53,8 @@ public final class Access {
 		}
 	}
 
-	public static final class NameAcceptingVirtualHandleBuilder<T> extends BuilderAcceptingName<T, VirtualHandleBuilder<T>> {
-		private NameAcceptingVirtualHandleBuilder(Class<T> refc) {
+	public static final class NamingVirtualHandleBuilder<T> extends NamingBuilder<T, VirtualHandleBuilder<T>> {
+		private NamingVirtualHandleBuilder(Class<T> refc) {
 			super(VirtualHandleBuilder::new, refc);
 		}
 
@@ -114,8 +114,8 @@ public final class Access {
 		}
 	}
 
-	public static final class NameAcceptingGetterHandleBuilder<T> extends BuilderAcceptingName<T, GetterHandleBuilder<T>> {
-		private NameAcceptingGetterHandleBuilder(Class<T> refc) {
+	public static final class NamingGetterHandleBuilder<T> extends NamingBuilder<T, GetterHandleBuilder<T>> {
+		private NamingGetterHandleBuilder(Class<T> refc) {
 			super(GetterHandleBuilder::new, refc);
 		}
 

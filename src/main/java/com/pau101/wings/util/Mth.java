@@ -7,11 +7,11 @@ public final class Mth {
 
 	public static final float PI = (float) Math.PI;
 
-	public static final float TAU = (float) (2 * Math.PI);
+	public static final float TAU = (float) (2.0D * Math.PI);
 
-	private static final float DEG_TO_RAD = (float) (Math.PI / 180);
+	private static final float DEG_TO_RAD = (float) (Math.PI / 180.0D);
 
-	private static final float RAD_TO_DEG = (float) (180 / Math.PI);
+	private static final float RAD_TO_DEG = (float) (180.0D / Math.PI);
 
 	public static float toRadians(float degrees) {
 		return degrees * DEG_TO_RAD;
@@ -22,23 +22,23 @@ public final class Mth {
 	}
 
 	public static float lerp(float a, float b, float t) {
-		return t <= 0 ? a : t >= 1 ? b : a + (b - a) * t;
+		return t <= 0.0F ? a : t >= 1.0F ? b : a + (b - a) * t;
 	}
 
 	public static float lerpDegrees(float a, float b, float t) {
-		return a + t * getDifference(a, b, 360);
+		return a + t * getDifference(a, b, 360.0F);
 	}
 
 	public static double lerpDegrees(double a, double b, double t) {
-		return a + t * getDifference(a, b, 360);
+		return a + t * getDifference(a, b, 360.0D);
 	}
 
 	private static float getDifference(float a, float b, float rot) {
-		return mod(b - a + rot / 2, rot) - rot / 2;
+		return mod(b - a + rot / 2.0F, rot) - rot / 2.0F;
 	}
 
 	private static double getDifference(double a, double b, double rot) {
-		return mod(b - a + rot / 2, rot) - rot / 2;
+		return mod(b - a + rot / 2.0D, rot) - rot / 2.0D;
 	}
 
 	public static int mod(int a, int b) {
@@ -54,11 +54,11 @@ public final class Mth {
 	}
 
 	public static float easeInOut(float t) {
-		return -(MathHelper.cos(PI * t) - 1) / 2;
+		return -(MathHelper.cos(PI * t) - 1.0F) / 2.0F;
 	}
 
 	public static float easeOutCirc(float t) {
-		return MathHelper.sqrt(1 - (t - 1) * (t - 1));
+		return MathHelper.sqrt(1.0F - (t - 1.0F) * (t - 1.0F));
 	}
 
 	public static float transform(float x, float domainMin, float domainMax, float rangeMin, float rangeMax) {

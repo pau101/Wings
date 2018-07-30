@@ -1,7 +1,5 @@
 package com.pau101.wings.server.world;
 
-import java.util.Random;
-
 import com.pau101.wings.WingsMod;
 import com.pau101.wings.server.block.WingsBlocks;
 import com.pau101.wings.util.VeinGenerator;
@@ -13,13 +11,21 @@ import net.minecraftforge.event.terraingen.DecorateBiomeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
+import java.util.Random;
+
 @Mod.EventBusSubscriber(modid = WingsMod.ID)
 public final class GenerationHandler {
 	private GenerationHandler() {}
 
-	private static final VeinGenerator FAIRY_DUST_ORE_GENERATOR = new VeinGenerator(WingsBlocks.FAIRY_DUST_ORE::getDefaultState, 9);
+	private static final VeinGenerator FAIRY_DUST_ORE_GENERATOR = new VeinGenerator(
+		WingsBlocks.FAIRY_DUST_ORE::getDefaultState,
+		9
+	);
 
-	private static final VeinGenerator AMETHYST_ORE_GENERATOR = new VeinGenerator(WingsBlocks.AMETHYST_ORE::getDefaultState, 8);
+	private static final VeinGenerator AMETHYST_ORE_GENERATOR = new VeinGenerator(
+		WingsBlocks.AMETHYST_ORE::getDefaultState,
+		8
+	);
 
 	@SubscribeEvent
 	public static void onDecorateBiome(DecorateBiomeEvent.Pre event) {
@@ -30,7 +36,14 @@ public final class GenerationHandler {
 		generate(world, rng, chunkPos, 1, AMETHYST_ORE_GENERATOR, 0, 16);
 	}
 
-	private static void generate(World world, Random rng, ChunkPos chunkPos, int blockCount, WorldGenerator generator, int minHeight, int maxHeight) {
+	private static void generate(
+		World world,
+		Random rng,
+		ChunkPos chunkPos,
+		int blockCount,
+		WorldGenerator generator,
+		int minHeight, int maxHeight
+	) {
 		for (int n = blockCount; n --> 0; ) {
 			BlockPos pos = chunkPos.getBlock(
 				rng.nextInt(16) + 8,

@@ -16,7 +16,7 @@ public final class StateIdle extends State {
 
 	@Override
 	protected State getFalling(EntityPlayer player) {
-		BlockPos below = new BlockPos(player.posX, player.posY - 0.25, player.posZ);
+		BlockPos below = new BlockPos(player.posX, player.posY - 0.25D, player.posZ);
 		if (player.world.isAirBlock(below) && player.world.isAirBlock(below.down())) {
 			return super.getFalling(player);
 		}

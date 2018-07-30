@@ -35,7 +35,10 @@ public final class MethodExt extends InsnPredicate.Method {
 	public boolean test(AbstractInsnNode node) {
 		if (node instanceof MethodInsnNode) {
 			MethodInsnNode mNode = (MethodInsnNode) node;
-			return this.opcodePredicate.test(mNode.getOpcode()) && this.owner.equals(mNode.owner) && this.desc.equals(mNode.desc) && this.name.equals(mNode.name);
+			return this.opcodePredicate.test(mNode.getOpcode()) &&
+				this.owner.equals(mNode.owner) &&
+				this.desc.equals(mNode.desc) &&
+				this.name.equals(mNode.name);
 		} else {
 			return false;
 		}

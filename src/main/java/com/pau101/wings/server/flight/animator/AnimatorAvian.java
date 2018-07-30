@@ -88,14 +88,14 @@ public final class AnimatorAvian implements Animator {
 
 	private final class RestPosition implements Movement {
 		private final WingPose wing = WingPose.builder()
-			.with(0, 0, -23.5F, -16)
-			.with(1, 0, 13, 29)
-			.with(2, 0, 12, -28)
-			.with(3, 0, 4, 18.3F)
+			.with(0, 0.0D, -23.5D, -16.0D)
+			.with(1, 0.0D, 13.0D, 29.0D)
+			.with(2, 0.0D, 12.0D, -28.0D)
+			.with(3, 0.0D, 4.0D, 18.3D)
 			.build();
 
 		private final WingPose feather = WingPose.builder()
-			.with(0, 0, 0, 23.48F)
+			.with(0, 0.0D, 0.0D, 23.48D)
 			.build();
 
 		@Override
@@ -110,12 +110,12 @@ public final class AnimatorAvian implements Animator {
 
 		@Override
 		public float update(double dx, double dy, double dz) {
-			return 0;
+			return 0.0F;
 		}
 	}
 
 	private float getWeight(int index) {
-		return Math.min(Math.abs(index - 1), 2) / 2F;
+		return Math.min(Math.abs(index - 1), 2) / 2.0F;
 	}
 
 	private final class FallMovement implements Movement {
@@ -124,9 +124,10 @@ public final class AnimatorAvian implements Animator {
 			float pos = getWeight(index + 1);
 			float time = getFlapTime(delta);
 			float cycle = time - pos * 1.2F;
-			double x = (Math.sin(cycle + Mth.PI / 2) - 1) / 2 * 20 + (1 - pos) * 50;
-			double y = (Math.sin(cycle) * 20 + (1 - pos) * 14) * (1 - pos * (Math.min(Math.sin(cycle + Mth.PI), 0) / 2 + 1) * Math.sin(time));
-			return restPosition.getWingRotation(index, delta).add(x, y, 4);
+			double x = (Math.sin(cycle + Mth.PI / 2.0D) - 1.0D) / 2.0D * 20.0D + (1.0D - pos) * 50.0D;
+			double y = (Math.sin(cycle) * 20.0D + (1.0D - pos) * 14.0D) *
+				(1.0D - pos * (Math.min(Math.sin(cycle + Mth.PI), 0.0D) / 2.0D + 1.0D) * Math.sin(time));
+			return restPosition.getWingRotation(index, delta).add(x, y, 4.0D);
 		}
 
 		@Override
@@ -149,14 +150,14 @@ public final class AnimatorAvian implements Animator {
 		public Vec3d getWingRotation(int index, float delta) {
 			float pos = getWeight(index);
 			float time = getFlapTime(delta);
-			double y = (Math.sin(time) * 5 - 14) * pos;
-			return restPosition.getWingRotation(index, delta).add(0, y, 0);
+			double y = (Math.sin(time) * 5.0D - 14.0D) * pos;
+			return restPosition.getWingRotation(index, delta).add(0.0D, y, 0.0D);
 		}
 
 		@Override
 		public Vec3d getFeatherRotation(int index, float delta) {
-			double x = noise.getValue((time + delta) * 0.17F, index * 0.13F) * 1.25F;
-			return restPosition.getFeatherRotation(index, delta).add(x, 0, 0);
+			double x = noise.getValue((time + delta) * 0.17D, index * 0.13D) * 1.25D;
+			return restPosition.getFeatherRotation(index, delta).add(x, 0.0D, 0.0D);
 		}
 
 		@Override
@@ -168,31 +169,31 @@ public final class AnimatorAvian implements Animator {
 
 	private final class IdleMovement implements Movement {
 		private final WingPose wing = WingPose.builder()
-			.with(0, 40, -60, -50)
-			.with(1, 72, 10, 100)
-			.with(2, 0, -10, -120)
-			.with(3, 10, 0, 100)
+			.with(0, 40.0D, -60.0D, -50.0D)
+			.with(1, 72.0D, 10.0D, 100.0D)
+			.with(2, 0.0D, -10.0D, -120.0D)
+			.with(3, 10.0D, 0.0D, 100.0D)
 			.build();
 
 		private final WingPose feather = WingPose.builder()
-			.with(0, 10, 20, 23.48F)
-			.with(1, 0, 20, -70)
-			.with(2, 0, 10, 40)
-			.with(3, -20, 0, 20)
+			.with(0, 10.0D, 20.0D, 23.48D)
+			.with(1, 0.0D, 20.0D, -70.0D)
+			.with(2, 0.0D, 10.0D, 40.0D)
+			.with(3, -20.0D, 0.0D, 20.0D)
 			.build();
 
 		@Override
 		public Vec3d getWingRotation(int index, float delta) {
 			float pos = getWeight(index);
 			float time = getFlapTime(delta);
-			return wing.get(index).add(0, Math.sin(time) * 3 * pos, 0);
+			return wing.get(index).add(0.0D, Math.sin(time) * 3.0D * pos, 0.0D);
 		}
 
 		@Override
 		public Vec3d getFeatherRotation(int index, float delta) {
 			float pos = getWeight(index);
 			float time = getFlapTime(delta);
-			return feather.get(index).add(0, -Math.sin(time) * 5 * pos, 0);
+			return feather.get(index).add(0, -Math.sin(time) * 5.0D * pos, 0.0D);
 		}
 
 		@Override
@@ -209,11 +210,12 @@ public final class AnimatorAvian implements Animator {
 		@Override
 		public Vec3d getWingRotation(int index, float delta) {
 			float pos = getWeight(index);
-			float time = getFlapTime(delta);//5.5F
+			float time = getFlapTime(delta);
 			float cycle = time - pos * 1.2F;
-			double x = (Math.sin(cycle + Mth.PI / 2) - 1) / 2 * 16 + 8;
-			double y = (Math.sin(cycle) * 26 + 12) * (1 - pos * (Math.min(Math.sin(cycle + Mth.PI), 0) / 2 + 1) * Math.sin(time));
-			return restPosition.getWingRotation(index, delta).add(x, y, 0);
+			double x = (Math.sin(cycle + Mth.PI / 2.0D) - 1.0D) / 2.0D * 16.0D + 8.0D;
+			double y = (Math.sin(cycle) * 26.0D + 12.0D) *
+				(1.0D - pos * (Math.min(Math.sin(cycle + Mth.PI), 0.0D) / 2.0D + 1.0D) * Math.sin(time));
+			return restPosition.getWingRotation(index, delta).add(x, y, 0.0D);
 		}
 
 		@Override

@@ -76,7 +76,11 @@ public final class ClientEventHandler {
 			float delta = event.getPartialTicks();
 			float amt = FlightCapability.get(player).getFlyingAmount(delta);
 			if (amt > 0) {
-				float roll = Mth.lerpDegrees(player.prevRenderYawOffset - player.prevRotationYaw, player.renderYawOffset - player.rotationYaw, delta);
+				float roll = Mth.lerpDegrees(
+					player.prevRenderYawOffset - player.prevRotationYaw,
+					player.renderYawOffset - player.rotationYaw,
+					delta
+				);
 				float pitch = -Mth.lerpDegrees(player.prevRotationPitch, player.rotationPitch, delta) - 90;
 				GlStateManager.rotate(Mth.lerpDegrees(0, roll, amt), 0, 0, 1);
 				GlStateManager.rotate(Mth.lerpDegrees(0, pitch, amt), 1, 0, 0);
@@ -102,7 +106,11 @@ public final class ClientEventHandler {
 			float delta = (float) event.getRenderPartialTicks();
 			float amt = FlightCapability.get(player).getFlyingAmount(delta);
 			if (amt > 0) {
-				float roll = Mth.lerpDegrees(player.prevRenderYawOffset - player.prevRotationYaw, player.renderYawOffset - player.rotationYaw, delta);
+				float roll = Mth.lerpDegrees(
+					player.prevRenderYawOffset - player.prevRotationYaw,
+					player.renderYawOffset - player.rotationYaw,
+					delta
+				);
 				event.setRoll(Mth.lerpDegrees(0, -roll * 0.25F, amt));
 			}
 		}
@@ -116,7 +124,9 @@ public final class ClientEventHandler {
 	}
 
 	private static KeyBinding newKeyBinding(String name, KeyConflictContext keyContext, int keyCode) {
-		KeyBinding kb = new KeyBinding("key." + WingsMod.ID + "." + name, keyContext, keyCode, "key.categories." + WingsMod.ID);
+		String desc = "key." + WingsMod.ID + "." + name;
+		String category = "key.categories." + WingsMod.ID;
+		KeyBinding kb = new KeyBinding(desc, keyContext, keyCode, category);
 		ClientRegistry.registerKeyBinding(kb);
 		return kb;
 	}

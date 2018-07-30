@@ -1,7 +1,5 @@
 package com.pau101.wings.server.item;
 
-import java.util.stream.Stream;
-
 import com.pau101.wings.WingsMod;
 import com.pau101.wings.server.flight.Animator;
 import com.pau101.wings.server.flight.AnimatorFactory;
@@ -10,6 +8,9 @@ import com.pau101.wings.util.Mth;
 import com.pau101.wings.util.Util;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
+
+import java.util.stream.Stream;
+
 import static com.pau101.wings.server.flight.StandardAnimatorFactory.AVIAN;
 import static com.pau101.wings.server.flight.StandardAnimatorFactory.INSECTOID;
 
@@ -39,7 +40,12 @@ public enum StandardWing implements WingType {
 	private final ResourceLocation texture;
 
 	StandardWing(AnimatorFactory animatorFactory, String name) {
-		this(animatorFactory, name, String.format(TRANSLATION_KEY_FORMAT, Util.underScoreToCamel(name)), new ResourceLocation(WingsMod.ID, String.format(TEXTURE_FORMAT, name)));
+		this(
+			animatorFactory,
+			name,
+			String.format(TRANSLATION_KEY_FORMAT, Util.underScoreToCamel(name)),
+			new ResourceLocation(WingsMod.ID, String.format(TEXTURE_FORMAT, name))
+		);
 	}
 
 	StandardWing(AnimatorFactory animatorFactory, String name, String translationKey, ResourceLocation texture) {

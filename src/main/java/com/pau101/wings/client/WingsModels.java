@@ -22,7 +22,9 @@ public final class WingsModels {
 
 	@SubscribeEvent
 	public static void register(ModelRegistryEvent event) {
-		StandardWing.stream().forEach(t -> registerItemState(WingsItems.WINGS, t.getMeta(), "type=" + t.getName()));
+		StandardWing.stream().forEach(t ->
+			registerItemState(WingsItems.WINGS, t.getMeta(), "type=" + t.getName())
+		);
 		register(WingsBlocks.FAIRY_DUST_ORE);
 		register(WingsBlocks.AMETHYST_ORE);
 		register(WingsItems.FAIRY_DUST);

@@ -7,17 +7,17 @@ package com.pau101.wings.util;
  * https://github.com/gre/bezier-easing/blob/18f06f5d058184690f5975a243e5bcfcba2e89c4/src/index.js
  */
 public final class CubicBezier {
-	private static final float NEWTON_ITERATIONS = 4;
+	private static final float NEWTON_ITERATIONS = 4.0F;
 
 	private static final float NEWTON_MIN_SLOPE = 1e-3F;
 
 	private static final float SUBDIVISION_PRECISION = 1e-7F;
 
-	private static final float SUBDIVISION_MAX_ITERATIONS = 10;
+	private static final float SUBDIVISION_MAX_ITERATIONS = 10.0F;
 
 	private static final int SPLINE_TABLE_SIZE = 11;
 
-	private static final float SAMPLE_STEP_SIZE = 1 / (SPLINE_TABLE_SIZE - 1F);
+	private static final float SAMPLE_STEP_SIZE = 1.0F / (SPLINE_TABLE_SIZE - 1.0F);
 
 	private final float x1, y1, x2, y2;
 
@@ -51,11 +51,15 @@ public final class CubicBezier {
 	private float getTForX(float x) {
 		float intervalStart = 0;
 		int currentSample = 1;
-		for (int lastSample = SPLINE_TABLE_SIZE - 1; currentSample != lastSample && sampleValues[currentSample] <= x; currentSample++) {
+		for (int lastSample = SPLINE_TABLE_SIZE - 1;
+			 currentSample != lastSample && sampleValues[currentSample] <= x;
+			 currentSample++
+		) {
 			intervalStart += SAMPLE_STEP_SIZE;
 		}
 		currentSample--;
-		float dist = (x - sampleValues[currentSample]) / (sampleValues[currentSample + 1] - sampleValues[currentSample]);
+		float slope = (sampleValues[currentSample + 1] - sampleValues[currentSample]);
+		float dist = (x - sampleValues[currentSample]) / slope;
 		float guessForT = intervalStart + dist * SAMPLE_STEP_SIZE;
 		float initialSlope = getSlope(guessForT, x1, x2);
 		if (initialSlope >= NEWTON_MIN_SLOPE) {

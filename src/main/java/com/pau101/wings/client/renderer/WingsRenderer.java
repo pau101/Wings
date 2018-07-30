@@ -38,7 +38,8 @@ public final class WingsRenderer {
 			GlStateManager.pushMatrix();
 			float swing = player.getSwingProgress(delta);
 			if (swing > 0.0F) {
-				GlStateManager.rotate(Mth.toDegrees(MathHelper.sin(MathHelper.sqrt(swing) * Mth.TAU) * 0.2F), 0.0F, 1.0F, 0.0F);
+				float theta = Mth.toDegrees(MathHelper.sin(MathHelper.sqrt(swing) * Mth.TAU) * 0.2F);
+				GlStateManager.rotate(theta, 0.0F, 1.0F, 0.0F);
 			}
 			IRenderBauble.Helper.rotateIfSneaking(player);
 			models.getOrDefault(type, ModelWings.NONE).render(stack, player, FlightCapability.get(player), delta);

@@ -58,7 +58,10 @@ public final class ItemWings extends Item implements IBauble, IRenderBauble {
 	@Override
 	public String getItemStackDisplayName(ItemStack stack) {
 		//noinspection deprecation
-		return I18n.translateToLocalFormatted(super.getItemStackDisplayName(stack), I18n.translateToLocal(StandardWing.fromMeta(stack).getTranslationKey()));
+		return I18n.translateToLocalFormatted(
+			super.getItemStackDisplayName(stack),
+			I18n.translateToLocal(StandardWing.fromMeta(stack).getTranslationKey())
+		);
 	}
 
 	@Override
