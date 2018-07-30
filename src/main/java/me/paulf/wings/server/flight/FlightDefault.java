@@ -9,7 +9,9 @@ import me.paulf.wings.server.flight.state.StateIdle;
 import me.paulf.wings.server.item.StandardWing;
 import me.paulf.wings.server.item.WingsItems;
 import me.paulf.wings.util.CubicBezier;
+import me.paulf.wings.util.FloatConsumer;
 import me.paulf.wings.util.Mth;
+import me.paulf.wings.util.SmoothingFunction;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -56,11 +58,7 @@ public final class FlightDefault implements Flight {
 
 	private Animator animator = Animator.ABSENT;
 
-	private float fromEyeHeight = Float.NaN;
-
-	private boolean isEyeHeightUpwards;
-
-	private float prevEyeHeight = Float.NaN;
+	private final SmoothingFunction eyeHeightFunc = SmoothingFunction.create(t -> Mth.easeOutCirc(Mth.easeInOut(t)));
 
 	@Override
 	public void setIsFlying(boolean isFlying, PlayerSet players) {
@@ -196,26 +194,7 @@ public final class FlightDefault implements Flight {
 
 	@Override
 	public void onUpdateEyeHeight(float value, float delta, FloatConsumer valueOut) {
-		float amt;
-		if ((amt = getFlyingAmount(delta)) != 0.0F && amt != 1.0F) {
-			boolean hasFrom = true, isUpwards = isFlying();
-			if (Float.isNaN(fromEyeHeight) || isEyeHeightUpwards != isUpwards) {
-				fromEyeHeight = prevEyeHeight;
-				isEyeHeightUpwards = isUpwards;
-				hasFrom = !Float.isNaN(fromEyeHeight);
-			}
-			if (hasFrom) {
-				float t = Mth.easeOutCirc(Mth.easeInOut(amt));
-				float newValue = fromEyeHeight + (value - fromEyeHeight) * (isUpwards ? t : 1.0F - t);
-				valueOut.accept(newValue);
-				prevEyeHeight = newValue;
-			} else {
-				prevEyeHeight = value;
-			}
-		} else {
-			fromEyeHeight = Float.NaN;
-			prevEyeHeight = value;
-		}
+		eyeHeightFunc.accept(getFlyingAmount(delta), SmoothingFunction.Sign.valueOf(isFlying()), value, valueOut);
 	}
 
 	@Override
