@@ -135,7 +135,8 @@ public final class WingsRuntimePatcher extends RuntimePatcher {
 
 	private static Predicate<MethodPatcher.PredicateData> renderFirstPersonHandTarget() {
 		InsnPredicate iload8 = new InsnPredicate.Var().var(8).opcode(ILOAD); 
-		MethodExt isInvisible = new MethodExt(AbstractClientPlayer.class, "isInvisible", boolean.class);
+		MethodExt isInvisible = new MethodExt(Entity.class, "isInvisible", boolean.class)
+			.on(AbstractClientPlayer.class);
 		return iload8.and(data -> data.node.getNext() != null &&
 			data.node.getNext().getNext() != null &&
 			isInvisible.test(data.node.getNext().getNext().getNext())

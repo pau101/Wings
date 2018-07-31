@@ -44,7 +44,7 @@ public final class MethodExt extends InsnPredicate.Method {
 		}
 	}
 
-	public Method on(Object target) {
+	public MethodExt on(Object target) {
 		return new MethodExt(MappingHandler.INSTANCE.getClassMapping(target), desc, name);
 	}
 }

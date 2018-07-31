@@ -55,7 +55,7 @@ public final class WingsHooksClient {
 		private GetItemStackMainHand() {}
 
 		private static final MethodHandle MH = Access.getter(ItemRenderer.class)
-			.name("field_184831_bT ", "itemStackMainHand")
+			.name("field_187467_d", "itemStackMainHand")
 			.type(ItemStack.class);
 
 		private static ItemStack invoke(ItemRenderer instance) {
