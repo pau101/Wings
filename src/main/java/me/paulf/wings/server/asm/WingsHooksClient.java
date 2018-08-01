@@ -22,8 +22,8 @@ public final class WingsHooksClient {
 
 	public static boolean onCheckDoReequipAnimation(ItemStack from, ItemStack to, int slot) {
 		boolean fromEmpty = from.isEmpty(), toEmpty = to.isEmpty();
-		boolean isOffhand = slot == -1;
-		if (toEmpty && isOffhand) {
+		boolean isOffHand = slot == -1;
+		if (toEmpty && isOffHand) {
 			Minecraft mc = Minecraft.getMinecraft();
 			EntityPlayerSP player = mc.player;
 			if (player == null) {
@@ -31,7 +31,10 @@ public final class WingsHooksClient {
 			}
 			boolean fromMap = isMap(GetItemStackMainHand.invoke(mc.getItemRenderer()));
 			boolean toMap = isMap(player.getHeldItemMainhand());
-			if (toMap != fromMap) {
+			if (toMap && fromMap) {
+				return false;
+			}
+			if (toMap || fromMap) {
 				return true;
 			}
 			if (fromEmpty) {
@@ -43,7 +46,7 @@ public final class WingsHooksClient {
 		if (fromEmpty || toEmpty) {
 			return fromEmpty != toEmpty;
 		}
-		boolean hasSlotChange = !isOffhand && selectedItemSlot != (selectedItemSlot = slot);
+		boolean hasSlotChange = !isOffHand && selectedItemSlot != (selectedItemSlot = slot);
 		return from.getItem().shouldCauseReequipAnimation(from, to, hasSlotChange);
 	}
 
