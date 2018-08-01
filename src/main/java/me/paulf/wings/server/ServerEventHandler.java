@@ -6,7 +6,6 @@ import me.paulf.wings.server.asm.PlayerFlightCheckEvent;
 import me.paulf.wings.server.capability.Flight;
 import me.paulf.wings.server.capability.FlightCapability;
 import me.paulf.wings.server.item.WingsItems;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.passive.EntityBat;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
@@ -97,10 +96,11 @@ public final class ServerEventHandler {
 
 	@SubscribeEvent
 	public static void onGetLivingHeadLimit(GetLivingHeadLimitEvent event) {
-		EntityLivingBase living = event.getEntityLiving();
-		if (living instanceof EntityPlayer && FlightCapability.get((EntityPlayer) living).isFlying()) {
-			event.setHardLimit(50.0F);
-			event.disableSoftLimit();
-		}
+		FlightCapability.ifPlayer(event.getEntityLiving(), (player, flight) -> {
+			if (flight.isFlying()) {
+				event.setHardLimit(50.0F);
+				event.disableSoftLimit();
+			}
+		});
 	}
 }

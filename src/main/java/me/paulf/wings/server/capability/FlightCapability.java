@@ -84,10 +84,9 @@ public final class FlightCapability {
 
 	@SubscribeEvent
 	public static void onPlayerStartTracking(PlayerEvent.StartTracking event) {
-		Entity target = event.getTarget();
-		if (target instanceof EntityPlayerMP) {
-			get((EntityPlayerMP) target).sync(Flight.PlayerSet.ofPlayer((EntityPlayerMP) event.getEntityPlayer()));
-		}
+		ifPlayer(event.getTarget(), (player, flight) ->
+			flight.sync(Flight.PlayerSet.ofPlayer((EntityPlayerMP) event.getEntityPlayer()))
+		);
 	}
 
 	private static final class FlightStorage implements Capability.IStorage<Flight> {

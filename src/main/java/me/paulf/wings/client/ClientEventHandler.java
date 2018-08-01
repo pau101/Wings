@@ -14,8 +14,6 @@ import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.model.ModelPlayer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.settings.KeyBinding;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.client.event.EntityViewRenderEvent;
 import net.minecraftforge.client.settings.KeyConflictContext;
@@ -70,11 +68,9 @@ public final class ClientEventHandler {
 
 	@SubscribeEvent
 	public static void onApplyRenderRotations(ApplyRenderRotationsEvent.Post event) {
-		EntityLivingBase entity = event.getEntity();
-		if (entity instanceof EntityPlayer) {
-			EntityPlayer player = (EntityPlayer) entity;
+		FlightCapability.ifPlayer(event.getEntity(), (player, flight) -> {
 			float delta = event.getPartialTicks();
-			float amt = FlightCapability.get(player).getFlyingAmount(delta);
+			float amt = flight.getFlyingAmount(delta);
 			if (amt > 0.0F) {
 				float roll = Mth.lerpDegrees(
 					player.prevRenderYawOffset - player.prevRotationYaw,
@@ -86,25 +82,21 @@ public final class ClientEventHandler {
 				GlStateManager.rotate(Mth.lerpDegrees(0.0F, pitch, amt), 1.0F, 0.0F, 0.0F);
 				GlStateManager.translate(0.0F, -1.2F * Mth.easeInOut(amt), 0.0F);
 			}
-		}
+		});
 	}
 
 	@SubscribeEvent
 	public static void onGetCameraEyeHeight(GetCameraEyeHeightEvent event) {
-		Entity entity = event.getEntity();
-		if (entity instanceof EntityPlayer) {
-			Flight flight = FlightCapability.get((EntityPlayer) entity);
-			flight.onUpdateEyeHeight(event.getValue(), event.getDelta(), event::setValue);
-		}
+		FlightCapability.ifPlayer(event.getEntity(), (player, flight) ->
+			flight.onUpdateEyeHeight(event.getValue(), event.getDelta(), event::setValue)
+		);
 	}
 
 	@SubscribeEvent
 	public static void onCameraSetup(EntityViewRenderEvent.CameraSetup event) {
-		Entity entity = event.getEntity();
-		if (entity instanceof EntityPlayer) {
-			EntityPlayer player = (EntityPlayer) entity;
+		FlightCapability.ifPlayer(event.getEntity(), (player, flight) -> {
 			float delta = (float) event.getRenderPartialTicks();
-			float amt = FlightCapability.get(player).getFlyingAmount(delta);
+			float amt = flight.getFlyingAmount(delta);
 			if (amt > 0.0F) {
 				float roll = Mth.lerpDegrees(
 					player.prevRenderYawOffset - player.prevRotationYaw,
@@ -113,7 +105,7 @@ public final class ClientEventHandler {
 				);
 				event.setRoll(Mth.lerpDegrees(0.0F, -roll * 0.25F, amt));
 			}
-		}
+		});
 	}
 
 	@SubscribeEvent
