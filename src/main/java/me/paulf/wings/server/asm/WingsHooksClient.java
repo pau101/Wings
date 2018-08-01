@@ -31,11 +31,8 @@ public final class WingsHooksClient {
 			}
 			boolean fromMap = isMap(GetItemStackMainHand.invoke(mc.getItemRenderer()));
 			boolean toMap = isMap(player.getHeldItemMainhand());
-			if (toMap && fromMap) {
-				return false;
-			}
-			if (toMap || fromMap) {
-				return true;
+			if (fromMap || toMap) {
+				return fromMap != toMap;
 			}
 			if (fromEmpty) {
 				EmptyOffHandPresentEvent ev = new EmptyOffHandPresentEvent(player);
