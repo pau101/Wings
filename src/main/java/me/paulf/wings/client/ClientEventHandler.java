@@ -49,14 +49,14 @@ public final class ClientEventHandler {
 		EntityPlayer player = event.getEntityPlayer();
 		float delta = event.getRotation() - player.ticksExisted;
 		float amt = FlightCapability.get(player).getFlyingAmount(delta);
-		if (amt > 0) {
+		if (amt > 0.0F) {
 			ModelBiped model = event.getModel();
 			float pitch = event.getRotationPitch();
-			model.bipedHead.rotateAngleX = Mth.toRadians(Mth.lerp(pitch, pitch / 4 - 90, amt));
+			model.bipedHead.rotateAngleX = Mth.toRadians(Mth.lerp(pitch, pitch / 4.0F - 90.0F, amt));
 			model.bipedLeftArm.rotateAngleX = Mth.lerp(model.bipedLeftArm.rotateAngleX, -3.2F, amt);
 			model.bipedRightArm.rotateAngleX = Mth.lerp(model.bipedRightArm.rotateAngleX, -3.2F, amt);
-			model.bipedLeftLeg.rotateAngleX = Mth.lerp(model.bipedLeftLeg.rotateAngleX, 0, amt);
-			model.bipedRightLeg.rotateAngleX = Mth.lerp(model.bipedRightLeg.rotateAngleX, 0, amt);
+			model.bipedLeftLeg.rotateAngleX = Mth.lerp(model.bipedLeftLeg.rotateAngleX, 0.0F, amt);
+			model.bipedRightLeg.rotateAngleX = Mth.lerp(model.bipedRightLeg.rotateAngleX, 0.0F, amt);
 			ModelBase.copyModelAngles(model.bipedHead, model.bipedHeadwear);
 			if (model instanceof ModelPlayer) {
 				ModelPlayer playerModel = (ModelPlayer) model;
@@ -75,16 +75,16 @@ public final class ClientEventHandler {
 			EntityPlayer player = (EntityPlayer) entity;
 			float delta = event.getPartialTicks();
 			float amt = FlightCapability.get(player).getFlyingAmount(delta);
-			if (amt > 0) {
+			if (amt > 0.0F) {
 				float roll = Mth.lerpDegrees(
 					player.prevRenderYawOffset - player.prevRotationYaw,
 					player.renderYawOffset - player.rotationYaw,
 					delta
 				);
 				float pitch = -Mth.lerpDegrees(player.prevRotationPitch, player.rotationPitch, delta) - 90;
-				GlStateManager.rotate(Mth.lerpDegrees(0, roll, amt), 0, 0, 1);
-				GlStateManager.rotate(Mth.lerpDegrees(0, pitch, amt), 1, 0, 0);
-				GlStateManager.translate(0, -1.2F * Mth.easeInOut(amt), 0);
+				GlStateManager.rotate(Mth.lerpDegrees(0.0F, roll, amt), 0.0F, 0.0F, 1.0F);
+				GlStateManager.rotate(Mth.lerpDegrees(0.0F, pitch, amt), 1.0F, 0.0F, 0.0F);
+				GlStateManager.translate(0.0F, -1.2F * Mth.easeInOut(amt), 0.0F);
 			}
 		}
 	}
@@ -105,13 +105,13 @@ public final class ClientEventHandler {
 			EntityPlayer player = (EntityPlayer) entity;
 			float delta = (float) event.getRenderPartialTicks();
 			float amt = FlightCapability.get(player).getFlyingAmount(delta);
-			if (amt > 0) {
+			if (amt > 0.0F) {
 				float roll = Mth.lerpDegrees(
 					player.prevRenderYawOffset - player.prevRotationYaw,
 					player.renderYawOffset - player.rotationYaw,
 					delta
 				);
-				event.setRoll(Mth.lerpDegrees(0, -roll * 0.25F, amt));
+				event.setRoll(Mth.lerpDegrees(0.0F, -roll * 0.25F, amt));
 			}
 		}
 	}
