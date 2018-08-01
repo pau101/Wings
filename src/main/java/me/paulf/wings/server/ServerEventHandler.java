@@ -65,8 +65,8 @@ public final class ServerEventHandler {
 	@SubscribeEvent
 	public static void onMount(EntityMountEvent event) {
 		if (event.isMounting()) {
-			FlightCapability.ifPlayer(event.getEntityMounting(), (p, f) -> {
-				if (f.isFlying()) {
+			FlightCapability.ifPlayer(event.getEntityMounting(), (player, flight) -> {
+				if (flight.isFlying()) {
 					event.setCanceled(true);
 				}
 			});
@@ -82,8 +82,8 @@ public final class ServerEventHandler {
 
 	@SubscribeEvent
 	public static void onPlayerDeath(LivingDeathEvent event) {
-		FlightCapability.ifPlayer(event.getEntityLiving(), (p, f) ->
-			f.setIsFlying(false, Flight.PlayerSet.ofAll())
+		FlightCapability.ifPlayer(event.getEntityLiving(), (player, flight) ->
+			flight.setIsFlying(false, Flight.PlayerSet.ofAll())
 		);
 	}
 
