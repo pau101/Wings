@@ -1,6 +1,7 @@
 package me.paulf.wings.client;
 
 import me.paulf.wings.WingsMod;
+import me.paulf.wings.client.audio.FlightSound;
 import me.paulf.wings.server.asm.EmptyOffHandPresentEvent;
 import me.paulf.wings.server.asm.GetCameraEyeHeightEvent;
 import me.paulf.wings.server.capability.Flight;
@@ -17,6 +18,7 @@ import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.client.event.EntityViewRenderEvent;
 import net.minecraftforge.client.settings.KeyConflictContext;
+import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.Event;
@@ -113,6 +115,13 @@ public final class ClientEventHandler {
 		if (FlightCapability.get(event.getPlayer()).getFlyingAmount(1.0F) > 0.0F) {
 			event.setResult(Event.Result.ALLOW);
 		}
+	}
+
+	@SubscribeEvent
+	public static void onEntityJoinWorld(EntityJoinWorldEvent event) {
+		FlightCapability.ifPlayer(event.getEntity(), EntityPlayer::isUser, (player, flight) ->
+			Minecraft.getMinecraft().getSoundHandler().playSound(new FlightSound(player, flight))
+		);
 	}
 
 	private static KeyBinding newKeyBinding(String name, KeyConflictContext keyContext, int keyCode) {
