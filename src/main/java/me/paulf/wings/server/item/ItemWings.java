@@ -8,10 +8,10 @@ import baubles.api.render.IRenderBauble;
 import me.paulf.wings.WingsMod;
 import me.paulf.wings.server.capability.Flight;
 import me.paulf.wings.server.capability.FlightCapability;
+import me.paulf.wings.server.sound.WingsSounds;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.SoundEvents;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ActionResult;
@@ -40,7 +40,7 @@ public final class ItemWings extends Item implements IBauble, IRenderBauble {
 
 	@Override
 	public void onEquipped(ItemStack itemstack, EntityLivingBase player) {
-		player.playSound(SoundEvents.ITEM_ARMOR_EQIIP_ELYTRA, 1.0F, 1.0F); // TODO: equip sound event
+		player.playSound(WingsSounds.ITEM_ARMOR_EQIIP_WINGS, 1.0F, 1.0F);
 	}
 
 	@Override

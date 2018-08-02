@@ -1,7 +1,7 @@
 package me.paulf.wings.client;
 
 import me.paulf.wings.WingsMod;
-import me.paulf.wings.client.audio.FlightSound;
+import me.paulf.wings.client.audio.WingsSound;
 import me.paulf.wings.server.asm.EmptyOffHandPresentEvent;
 import me.paulf.wings.server.asm.GetCameraEyeHeightEvent;
 import me.paulf.wings.server.capability.Flight;
@@ -120,7 +120,7 @@ public final class ClientEventHandler {
 	@SubscribeEvent
 	public static void onEntityJoinWorld(EntityJoinWorldEvent event) {
 		FlightCapability.ifPlayer(event.getEntity(), EntityPlayer::isUser, (player, flight) ->
-			Minecraft.getMinecraft().getSoundHandler().playSound(new FlightSound(player, flight))
+			Minecraft.getMinecraft().getSoundHandler().playSound(new WingsSound(player, flight))
 		);
 	}
 

@@ -1,24 +1,23 @@
 package me.paulf.wings.client.audio;
 
 import me.paulf.wings.server.capability.Flight;
+import me.paulf.wings.server.sound.WingsSounds;
 import net.minecraft.client.audio.MovingSound;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.SoundEvents;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.MathHelper;
 
-public final class FlightSound extends MovingSound {
+public final class WingsSound extends MovingSound {
 	private final EntityPlayer player;
 
 	private final Flight flight;
 
-	public FlightSound(EntityPlayer player, Flight flight) {
+	public WingsSound(EntityPlayer player, Flight flight) {
 		this(player, flight, true, 0, Math.nextAfter(0.0F, 1.0D));
 	}
 
-	private FlightSound(EntityPlayer player, Flight flight, boolean repeat, int repeatDelay, float volume) {
-		// TODO: custom flight sound event
-		super(SoundEvents.ITEM_ELYTRA_FLYING, SoundCategory.PLAYERS);
+	private WingsSound(EntityPlayer player, Flight flight, boolean repeat, int repeatDelay, float volume) {
+		super(WingsSounds.ITEM_WINGS_FLYING, SoundCategory.PLAYERS);
 		this.player = player;
 		this.flight = flight;
 		this.repeat = repeat;
@@ -30,7 +29,7 @@ public final class FlightSound extends MovingSound {
 	public void update() {
 		if (player.isDead) {
 			donePlaying = true;
-		} else {
+		} else if (flight.getFlyingAmount(1.0F) > 0.0F) {
 			xPosF = (float) player.posX;
 			yPosF = (float) player.posY;
 			zPosF = (float) player.posZ;

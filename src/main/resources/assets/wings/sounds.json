@@ -1,0 +1,16 @@
+{
+	"item.wings.flying": {
+		"sounds": [ { "name": "minecraft:minecraft:item/elytra/elytra_loop", "volume": 0.6 } ]
+	},
+	"item.armor.equip_wings": {
+		"sounds": [
+			"minecraft:item/armor/equip_leather1",
+			"minecraft:item/armor/equip_leather2",
+			"minecraft:item/armor/equip_leather3",
+			"minecraft:item/armor/equip_leather4",
+			"minecraft:item/armor/equip_leather5",
+			"minecraft:item/armor/equip_leather6"
+		],
+		"subtitle": "subtitles.item.armor.equip_wings"
+	}
+}
