@@ -16,7 +16,7 @@ public final class WingsSounds {
 	private static final SoundEvent NIL = SoundEvents.ENTITY_PIG_AMBIENT;
 
 	@GameRegistry.ObjectHolder(WingsMod.ID + ":item.armor.equip_wings")
-	public static final SoundEvent ITEM_ARMOR_EQIIP_WINGS = NIL;
+	public static final SoundEvent ITEM_ARMOR_EQUIP_WINGS = NIL;
 
 	@GameRegistry.ObjectHolder(WingsMod.ID + ":item.wings.flying")
 	public static final SoundEvent ITEM_WINGS_FLYING = NIL;

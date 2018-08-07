@@ -41,7 +41,7 @@ public final class ItemWings extends Item implements IBauble, IRenderBauble {
 
 	@Override
 	public void onEquipped(ItemStack itemstack, EntityLivingBase player) {
-		player.playSound(WingsSounds.ITEM_ARMOR_EQIIP_WINGS, 1.0F, 1.0F);
+		player.playSound(WingsSounds.ITEM_ARMOR_EQUIP_WINGS, 1.0F, 1.0F);
 	}
 
 	@Override
