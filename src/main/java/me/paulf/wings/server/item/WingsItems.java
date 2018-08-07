@@ -16,13 +16,11 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 public final class WingsItems {
 	private WingsItems() {}
 
-	private static final Item NIL = Items.AIR;
+	public static final Item FAIRY_DUST = Items.AIR;
 
-	public static final Item FAIRY_DUST = NIL;
+	public static final Item AMETHYST = Items.AIR;
 
-	public static final Item AMETHYST = NIL;
-
-	public static final Item BAT_BLOOD = NIL;
+	public static final Item BAT_BLOOD = Items.AIR;
 
 	@SubscribeEvent
 	public static void register(RegistryEvent.Register<Item> event) {

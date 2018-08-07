@@ -17,11 +17,9 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 public final class WingsBlocks {
 	private WingsBlocks() {}
 
-	private static final Block NIL = Blocks.AIR;
+	public static final Block FAIRY_DUST_ORE = Blocks.AIR;
 
-	public static final Block FAIRY_DUST_ORE = NIL;
-
-	public static final Block AMETHYST_ORE = NIL;
+	public static final Block AMETHYST_ORE = Blocks.AIR;
 
 	@SubscribeEvent
 	public static void register(RegistryEvent.Register<Block> event) {
