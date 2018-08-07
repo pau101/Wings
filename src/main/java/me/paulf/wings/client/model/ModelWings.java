@@ -5,16 +5,15 @@ import me.paulf.wings.util.Mth;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.Vec3d;
 
 public abstract class ModelWings extends ModelBase {
 	public static final ModelWings NONE = new ModelWings() {
 		@Override
-		public void render(ItemStack stack, EntityPlayer player, Flight flight, float delta) {}
+		public void render(EntityPlayer player, Flight flight, float delta) {}
 	};
 
-	public abstract void render(ItemStack stack, EntityPlayer player, Flight flight, float delta);
+	public abstract void render(EntityPlayer player, Flight flight, float delta);
 
 	protected static void setAngles(ModelRenderer model, float x, float y, float z) {
 		model.rotateAngleX = Mth.toRadians(x);

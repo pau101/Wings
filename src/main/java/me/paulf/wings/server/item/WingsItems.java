@@ -18,8 +18,6 @@ public final class WingsItems {
 
 	private static final Item NIL = Items.AIR;
 
-	public static final ItemWings WINGS = ItemWings.nil();
-
 	public static final Item FAIRY_DUST = NIL;
 
 	public static final Item AMETHYST = NIL;
@@ -31,9 +29,6 @@ public final class WingsItems {
 		event.getRegistry().registerAll(
 			Reg.asItem(WingsBlocks.FAIRY_DUST_ORE),
 			Reg.asItem(WingsBlocks.AMETHYST_ORE),
-			Reg.withName(ItemWings.create()
-				.setCreativeTab(ItemGroupWings.instance()), "wings"
-			),
 			Reg.withName(new Item()
 				.setCreativeTab(ItemGroupWings.instance()), "fairy_dust"
 			),
@@ -45,5 +40,10 @@ public final class WingsItems {
 				.setContainerItem(Items.GLASS_BOTTLE),"bat_blood"
 			)
 		);
+		StandardWing.stream()
+			.map(type -> Reg.withName(ItemWings.create(type)
+				.setCreativeTab(ItemGroupWings.instance()), type.getId().getPath()
+			))
+			.forEach(event.getRegistry()::register);
 	}
 }

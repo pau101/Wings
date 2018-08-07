@@ -2,9 +2,9 @@ package me.paulf.wings;
 
 import baubles.api.render.IRenderBauble;
 import me.paulf.wings.server.capability.Flight;
+import me.paulf.wings.server.item.StandardWing;
 import me.paulf.wings.server.net.Network;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
@@ -46,8 +46,8 @@ public final class WingsMod {
 		proxy.init();
 	}
 
-	public void renderWings(ItemStack stack, EntityPlayer player, IRenderBauble.RenderType type, float delta) {
-		proxy.renderWings(stack, player, type, delta);
+	public void renderWings(StandardWing type, EntityPlayer player, IRenderBauble.RenderType renderType, float delta) {
+		proxy.renderWings(type, player, renderType, delta);
 	}
 
 	public Flight newFlight(EntityPlayer player) {

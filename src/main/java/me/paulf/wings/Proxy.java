@@ -3,23 +3,25 @@ package me.paulf.wings;
 import baubles.api.render.IRenderBauble;
 import me.paulf.wings.server.capability.Flight;
 import me.paulf.wings.server.capability.FlightCapability;
+import me.paulf.wings.server.fix.WingsFixes;
 import me.paulf.wings.server.flight.FlightDefault;
+import me.paulf.wings.server.item.StandardWing;
 import me.paulf.wings.server.net.Network;
 import me.paulf.wings.server.net.clientbound.MessageSyncFlight;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.item.ItemStack;
 
 public abstract class Proxy {
 	protected final Network network = new Network();
 
 	public void preInit() {
 		FlightCapability.register();
+		WingsFixes.register();
 	}
 
 	public void init() {}
 
-	public void renderWings(ItemStack stack, EntityPlayer player, IRenderBauble.RenderType type, float delta) {}
+	public void renderWings(StandardWing type, EntityPlayer player, IRenderBauble.RenderType renderType, float delta) {}
 
 	public final Flight newFlight(EntityPlayer player) {
 		Flight flight = new FlightDefault();

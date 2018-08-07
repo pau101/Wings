@@ -4,7 +4,6 @@ import com.google.common.collect.ImmutableList;
 import me.paulf.wings.server.capability.Flight;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
 
 public final class ModelWingsAvian extends ModelWings {
 	private final ModelRenderer coracoidLeft;
@@ -92,7 +91,7 @@ public final class ModelWingsAvian extends ModelWings {
 	}
 
 	@Override
-	public void render(ItemStack stack, EntityPlayer player, Flight flight, float delta) {
+	public void render(EntityPlayer player, Flight flight, float delta) {
 		for (int i = 0; i < bonesLeft.size(); i++) {
 			ModelRenderer left = bonesLeft.get(i);
 			ModelRenderer right = bonesRight.get(i);

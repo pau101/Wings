@@ -12,7 +12,6 @@
 		"D": { "type": "forge:ore_dict", "ore": "gemDiamond" }
 	},
 	"result": {
-		"item": "wings",
-		"data": 0
+		"item": "angel_wings"
 	}
 }

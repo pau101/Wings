@@ -9,7 +9,6 @@ import me.paulf.wings.WingsMod;
 import me.paulf.wings.server.capability.Flight;
 import me.paulf.wings.server.capability.FlightCapability;
 import me.paulf.wings.server.sound.WingsSounds;
-import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -17,15 +16,17 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumHand;
-import net.minecraft.util.NonNullList;
-import net.minecraft.util.text.translation.I18n;
 import net.minecraft.world.World;
 
 public final class ItemWings extends Item implements IBauble, IRenderBauble {
-	private ItemWings() {}
+	private final StandardWing type;
 
-	public ItemStack createStack(StandardWing type) {
-		return new ItemStack(this, 1, type.getMeta());
+	private ItemWings(StandardWing type) {
+		this.type = type;
+	}
+
+	public StandardWing getType() {
+		return type;
 	}
 
 	@Override
@@ -52,23 +53,7 @@ public final class ItemWings extends Item implements IBauble, IRenderBauble {
 
 	@Override
 	public void onPlayerBaubleRender(ItemStack stack, EntityPlayer player, RenderType type, float delta) {
-		WingsMod.instance().renderWings(stack, player, type, delta);
-	}
-
-	@Override
-	public String getItemStackDisplayName(ItemStack stack) {
-		//noinspection deprecation
-		return I18n.translateToLocalFormatted(
-			super.getItemStackDisplayName(stack),
-			I18n.translateToLocal(StandardWing.fromMeta(stack).getTranslationKey())
-		);
-	}
-
-	@Override
-	public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> items) {
-		if (isInCreativeTab(tab)) {
-			StandardWing.stream().forEach(t -> items.add(createStack(t)));
-		}
+		WingsMod.instance().renderWings(getType(), player, type, delta);
 	}
 
 	@Override
@@ -87,14 +72,10 @@ public final class ItemWings extends Item implements IBauble, IRenderBauble {
 		return new ActionResult<>(EnumActionResult.FAIL, stack);
 	}
 
-	public static ItemWings create() {
-		ItemWings item = new ItemWings();
+	public static ItemWings create(StandardWing type) {
+		ItemWings item = new ItemWings(type);
 		item.setMaxStackSize(1);
-		item.setHasSubtypes(true);
+		item.setMaxDamage(250);
 		return item;
-	}
-
-	static ItemWings nil() {
-		return new ItemWings();
 	}
 }

@@ -1,6 +1,6 @@
 {
 	"item.wings.flying": {
-		"sounds": [ { "name": "minecraft:minecraft:item/elytra/elytra_loop", "volume": 0.6 } ]
+		"sounds": [ { "name": "minecraft:item/elytra/elytra_loop", "volume": 0.6 } ]
 	},
 	"item.armor.equip_wings": {
 		"sounds": [

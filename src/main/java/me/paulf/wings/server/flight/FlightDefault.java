@@ -7,13 +7,11 @@ import me.paulf.wings.server.capability.Flight;
 import me.paulf.wings.server.flight.state.State;
 import me.paulf.wings.server.flight.state.StateIdle;
 import me.paulf.wings.server.item.StandardWing;
-import me.paulf.wings.server.item.WingsItems;
 import me.paulf.wings.util.CubicBezier;
 import me.paulf.wings.util.FloatConsumer;
 import me.paulf.wings.util.Mth;
 import me.paulf.wings.util.SmoothingFunction;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.math.MathHelper;
@@ -125,9 +123,9 @@ public final class FlightDefault implements Flight {
 	private WingType getWingType(EntityPlayer player) {
 		IBaublesItemHandler inv = BaublesApi.getBaublesHandler(player);
 		for (int i = 0; i < inv.getSlots(); i++) {
-			ItemStack stack = inv.getStackInSlot(i);
-			if (stack.getItem() == WingsItems.WINGS) {
-				return StandardWing.fromMeta(stack);
+			WingType type = StandardWing.fromStack(inv.getStackInSlot(i));
+			if (type != WingType.ABSENT) {
+				return type;
 			}
 		}
 		return WingType.ABSENT;

@@ -11,7 +11,6 @@ import me.paulf.wings.util.Mth;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.MathHelper;
 
 public final class WingsRenderer {
@@ -31,9 +30,8 @@ public final class WingsRenderer {
 		.put(StandardWing.DRAGON, AVIAN)
 		.build();
 
-	public void render(ItemStack stack, EntityPlayer player, IRenderBauble.RenderType renderType, float delta) {
+	public void render(StandardWing type, EntityPlayer player, IRenderBauble.RenderType renderType, float delta) {
 		if (renderType == IRenderBauble.RenderType.BODY) {
-			StandardWing type = StandardWing.fromMeta(stack);
 			Minecraft.getMinecraft().getTextureManager().bindTexture(type.getTexture());
 			GlStateManager.pushMatrix();
 			float swing = player.getSwingProgress(delta);
@@ -42,7 +40,7 @@ public final class WingsRenderer {
 				GlStateManager.rotate(theta, 0.0F, 1.0F, 0.0F);
 			}
 			IRenderBauble.Helper.rotateIfSneaking(player);
-			models.getOrDefault(type, ModelWings.NONE).render(stack, player, FlightCapability.get(player), delta);
+			models.getOrDefault(type, ModelWings.NONE).render(player, FlightCapability.get(player), delta);
 			GlStateManager.popMatrix();
 		}
 	}

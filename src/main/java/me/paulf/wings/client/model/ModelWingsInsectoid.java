@@ -4,7 +4,6 @@ import me.paulf.wings.server.capability.Flight;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
 
 public final class ModelWingsInsectoid extends ModelWings {
 	private final ModelRenderer wingLeft;
@@ -22,7 +21,7 @@ public final class ModelWingsInsectoid extends ModelWings {
 	}
 
 	@Override
-	public void render(ItemStack stack, EntityPlayer player, Flight flight, float delta) {
+	public void render(EntityPlayer player, Flight flight, float delta) {
 		setAngles(wingLeft, wingRight, flight.getWingRotation(0, delta));
 		GlStateManager.enableCull();
 		wingLeft.render(0.0625F);

@@ -1,12 +1,13 @@
 package me.paulf.wings.client.debug;
 
+import baubles.api.BaubleType;
 import baubles.api.BaublesApi;
 import baubles.api.cap.IBaublesItemHandler;
 import com.mojang.authlib.GameProfile;
 import me.paulf.wings.WingsMod;
 import me.paulf.wings.server.capability.FlightCapability;
 import me.paulf.wings.server.item.StandardWing;
-import me.paulf.wings.server.item.WingsItems;
+import me.paulf.wings.util.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityOtherPlayerMP;
 import net.minecraft.client.renderer.GlStateManager;
@@ -63,8 +64,9 @@ public final class DebugFlightAnimation {
 					player.prevPosZ = -1.0D;
 					player.prevPosY = 63.0D;
 					IBaublesItemHandler baubles = BaublesApi.getBaublesHandler(player);
-					ItemStack stack = new ItemStack(WingsItems.WINGS, 1, StandardWing.EVIL.getMeta());
-					int slot = IntStream.of(WingsItems.WINGS.getBaubleType(stack).getValidSlots()).findFirst()
+
+					ItemStack stack = new ItemStack(Util.requireItem(StandardWing.EVIL.getId()));
+					int slot = IntStream.of(BaubleType.BODY.getValidSlots()).findFirst()
 						.orElseThrow(AssertionError::new);
 					baubles.setStackInSlot(slot, stack);
 					FlightCapability.get(player).setIsFlying(true);

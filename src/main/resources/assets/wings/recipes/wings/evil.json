@@ -13,7 +13,6 @@
 		"D": { "type": "forge:ore_dict", "ore": "gemDiamond" }
 	},
 	"result": {
-		"item": "wings",
-		"data": 7
+		"item": "evil_wings"
 	}
 }

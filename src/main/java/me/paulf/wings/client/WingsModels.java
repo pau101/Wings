@@ -8,7 +8,6 @@ import me.paulf.wings.util.Util;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.item.Item;
-import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.common.Mod;
@@ -22,9 +21,10 @@ public final class WingsModels {
 
 	@SubscribeEvent
 	public static void register(ModelRegistryEvent event) {
-		StandardWing.stream().forEach(t ->
-			registerItemState(WingsItems.WINGS, t.getMeta(), "type=" + t.getName())
-		);
+		StandardWing.stream()
+			.map(StandardWing::getId)
+			.map(Util::requireItem)
+			.forEach(WingsModels::register);
 		register(WingsBlocks.FAIRY_DUST_ORE);
 		register(WingsBlocks.AMETHYST_ORE);
 		register(WingsItems.FAIRY_DUST);
@@ -42,11 +42,6 @@ public final class WingsModels {
 
 	private static void register(Item item, int meta, String variant) {
 		register(item, meta, Util.getName(item).toString(), variant);
-	}
-
-	private static void registerItemState(Item item, int meta, String variant) {
-		ResourceLocation name = Util.getName(item);
-		register(item, meta, name.getNamespace() + ":item/" + name.getPath(), variant);
 	}
 
 	private static void register(Item item, int meta, String location, String variant) {

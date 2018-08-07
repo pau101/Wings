@@ -3,10 +3,9 @@ package me.paulf.wings.server.item;
 import me.paulf.wings.WingsMod;
 import me.paulf.wings.server.flight.Animator;
 import me.paulf.wings.server.flight.AnimatorFactory;
-import me.paulf.wings.server.flight.WingType;
-import me.paulf.wings.util.Mth;
-import me.paulf.wings.util.Util;
 import me.paulf.wings.server.flight.StandardAnimatorFactory;
+import me.paulf.wings.server.flight.WingType;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 
@@ -23,7 +22,7 @@ public enum StandardWing implements WingType {
 	EVIL(StandardAnimatorFactory.AVIAN, "evil"),
 	DRAGON(StandardAnimatorFactory.AVIAN, "dragon");
 
-	private static final String TRANSLATION_KEY_FORMAT = "wing.%s.name";
+	private static final String ID_FORMAT = "%s_wings";
 
 	private static final String TEXTURE_FORMAT = "textures/entity/wings/%s.png";
 
@@ -31,38 +30,26 @@ public enum StandardWing implements WingType {
 
 	private final AnimatorFactory animatorFactory;
 
-	private final String name;
-
-	private final String translationKey;
+	private final ResourceLocation id;
 
 	private final ResourceLocation texture;
 
 	StandardWing(AnimatorFactory animatorFactory, String name) {
 		this(
 			animatorFactory,
-			name,
-			String.format(TRANSLATION_KEY_FORMAT, Util.underScoreToCamel(name)),
+			new ResourceLocation(WingsMod.ID, String.format(ID_FORMAT, name)),
 			new ResourceLocation(WingsMod.ID, String.format(TEXTURE_FORMAT, name))
 		);
 	}
 
-	StandardWing(AnimatorFactory animatorFactory, String name, String translationKey, ResourceLocation texture) {
+	StandardWing(AnimatorFactory animatorFactory, ResourceLocation id, ResourceLocation texture) {
 		this.animatorFactory = animatorFactory;
-		this.name = name;
-		this.translationKey = translationKey;
+		this.id = id;
 		this.texture = texture;
 	}
 
-	public String getName() {
-		return name;
-	}
-
-	public String getTranslationKey() {
-		return translationKey;
-	}
-
-	public int getMeta() {
-		return ordinal();
+	public ResourceLocation getId() {
+		return id;
 	}
 
 	public ResourceLocation getTexture() {
@@ -83,7 +70,11 @@ public enum StandardWing implements WingType {
 		return Stream.of(TYPES);
 	}
 
-	public static StandardWing fromMeta(ItemStack stack) {
-		return TYPES[Mth.mod(stack.getMetadata(), TYPES.length)];
+	public static WingType fromStack(ItemStack stack) {
+		Item item = stack.getItem();
+		if (item instanceof ItemWings) {
+			return ((ItemWings) item).getType();
+		}
+		return WingType.ABSENT;
 	}
 }

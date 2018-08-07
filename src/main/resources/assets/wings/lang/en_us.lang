@@ -6,20 +6,18 @@ key.wings.fly=Fly
 tile.fairyDustOre.name=Fairy Dust Ore
 tile.amethystOre.name=Amethyst Ore
 
-item.wings.name=%s Wings
+item.angelWings.name=Angel Wings
+item.slimeWings.name=Slime Wings
+item.blueButterflyWings.name=Blue Butterfly Wings
+item.monarchButterflyWings.name=Monarch Butterfly Wings
+item.fireWings.name=Fire Wings
+item.batWings.name=Bat Wings
+item.fairyWings.name=Fairy Wings
+item.evilWings.name=Evil Wings
+item.dragonWings.name=Dragon Wings
 item.fairyDust.name=Fairy Dust
 item.amethyst.name=Amethyst
 item.batBlood.name=Bat Blood
-
-wing.angel.name=Angel
-wing.slime.name=Slime
-wing.blueButterfly.name=Blue Butterfly
-wing.monarchButterfly.name=Monarch Butterfly
-wing.fire.name=Fire
-wing.bat.name=Bat
-wing.fairy.name=Fairy
-wing.evil.name=Evil
-wing.dragon.name=Dragon
 
 subtitles.item.armor.equip_wings=Wings rustle
 

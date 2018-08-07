@@ -4,12 +4,12 @@ import baubles.api.render.IRenderBauble;
 import me.paulf.wings.Proxy;
 import me.paulf.wings.client.renderer.WingsRenderer;
 import me.paulf.wings.server.capability.Flight;
+import me.paulf.wings.server.item.StandardWing;
 import me.paulf.wings.server.item.WingsItems;
 import me.paulf.wings.server.net.serverbound.MessageControlFlying;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.color.ItemColors;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
 
 public final class ClientProxy extends Proxy {
 	private final WingsRenderer wingsRenderer = new WingsRenderer();
@@ -22,8 +22,8 @@ public final class ClientProxy extends Proxy {
 	}
 
 	@Override
-	public void renderWings(ItemStack stack, EntityPlayer player, IRenderBauble.RenderType type, float delta) {
-		wingsRenderer.render(stack, player, type, delta);
+	public void renderWings(StandardWing type, EntityPlayer player, IRenderBauble.RenderType renderType, float delta) {
+		wingsRenderer.render(type, player, renderType, delta);
 	}
 
 	@Override
