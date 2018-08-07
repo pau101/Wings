@@ -1,4 +1,4 @@
-package me.paulf.wings.util;
+package me.paulf.wings.server.world.feature;
 
 import net.minecraft.block.BlockStone;
 import net.minecraft.block.state.IBlockState;
@@ -13,22 +13,22 @@ import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.function.UnaryOperator;
 
-public final class VeinGenerator extends WorldGenerator {
+public final class FeatureVein extends WorldGenerator {
 	private final UnaryOperator<IBlockState> block;
 
 	private final int blockCount;
 
 	private final Predicate<IBlockState> canReplace;
 
-	public VeinGenerator(Supplier<IBlockState> block, int count) {
-		this(b -> block.get(), count);
+	public FeatureVein(Supplier<IBlockState> block, int blockCount) {
+		this(b -> block.get(), blockCount);
 	}
 
-	public VeinGenerator(UnaryOperator<IBlockState> block, int count) {
-		this(block, count, StonePredicate.create());
+	public FeatureVein(UnaryOperator<IBlockState> block, int blockCount) {
+		this(block, blockCount, StonePredicate.create());
 	}
 
-	public VeinGenerator(UnaryOperator<IBlockState> block, int blockCount, Predicate<IBlockState> canReplace) {
+	public FeatureVein(UnaryOperator<IBlockState> block, int blockCount, Predicate<IBlockState> canReplace) {
 		this.block = block;
 		this.blockCount = blockCount;
 		this.canReplace = canReplace;

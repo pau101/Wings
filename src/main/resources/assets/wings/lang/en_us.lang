@@ -22,3 +22,17 @@ wing.evil.name=Evil
 wing.dragon.name=Dragon
 
 subtitles.item.armor.equip_wings=Wings rustle
+
+config.wings.ores.entry.fairy_dust=Fairy Dust Ore Generation
+config.wings.ores.entry.amethyst=Amethyst Ore Generation
+config.wings.ores.entry.fairy_dust.tooltip=Customize vein distribution and shape
+config.wings.ores.entry.amethyst.tooltip=Customize vein distribution and shape
+
+config.wings.ores.settings.size=Size
+config.wings.ores.settings.count=Count
+config.wings.ores.settings.minHeight=Minimum Height
+config.wings.ores.settings.maxHeight=Maximum Height
+config.wings.ores.settings.size.tooltip=Vein size in blocks scaled by 8
+config.wings.ores.settings.count.tooltip=Vein generation attempt count
+config.wings.ores.settings.minHeight.tooltip=Vein placement from lowest Y level
+config.wings.ores.settings.maxHeight.tooltip=Vein placement to highest Y level

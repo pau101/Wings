@@ -2,9 +2,12 @@ package me.paulf.wings.server.world;
 
 import me.paulf.wings.WingsMod;
 import me.paulf.wings.server.block.WingsBlocks;
-import me.paulf.wings.util.VeinGenerator;
+import me.paulf.wings.server.config.VeinSettings;
+import me.paulf.wings.server.config.WingsOreConfig;
+import me.paulf.wings.server.world.feature.FeatureRange;
+import me.paulf.wings.server.world.feature.FeatureVein;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.World;
 import net.minecraft.world.gen.feature.WorldGenerator;
 import net.minecraftforge.event.terraingen.DecorateBiomeEvent;
@@ -12,45 +15,37 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import java.util.Random;
+import java.util.function.Supplier;
 
 @Mod.EventBusSubscriber(modid = WingsMod.ID)
 public final class GenerationHandler {
 	private GenerationHandler() {}
 
-	private static final VeinGenerator FAIRY_DUST_ORE_GENERATOR = new VeinGenerator(
-		WingsBlocks.FAIRY_DUST_ORE::getDefaultState,
-		9
+	private static final WorldGenerator FAIRY_DUST_ORE_GENERATOR = newVeinFeature(
+		WingsOreConfig.FAIRY_DUST,
+		WingsBlocks.FAIRY_DUST_ORE::getDefaultState
 	);
 
-	private static final VeinGenerator AMETHYST_ORE_GENERATOR = new VeinGenerator(
-		WingsBlocks.AMETHYST_ORE::getDefaultState,
-		8
+	private static final WorldGenerator AMETHYST_ORE_GENERATOR = newVeinFeature(
+		WingsOreConfig.AMETHYST,
+		WingsBlocks.AMETHYST_ORE::getDefaultState
 	);
 
 	@SubscribeEvent
 	public static void onDecorateBiome(DecorateBiomeEvent.Pre event) {
 		World world = event.getWorld();
 		Random rng = event.getRand();
-		ChunkPos chunkPos = event.getChunkPos();
-		generate(world, rng, chunkPos, 10, FAIRY_DUST_ORE_GENERATOR, 0, 64);
-		generate(world, rng, chunkPos, 1, AMETHYST_ORE_GENERATOR, 0, 16);
+		BlockPos pos = event.getChunkPos().getBlock(8, 0, 8);
+		FAIRY_DUST_ORE_GENERATOR.generate(world, rng, pos);
+		AMETHYST_ORE_GENERATOR.generate(world, rng, pos);
 	}
 
-	private static void generate(
-		World world,
-		Random rng,
-		ChunkPos chunkPos,
-		int blockCount,
-		WorldGenerator generator,
-		int minHeight, int maxHeight
-	) {
-		for (int n = blockCount; n --> 0; ) {
-			BlockPos pos = chunkPos.getBlock(
-				rng.nextInt(16) + 8,
-				rng.nextInt(maxHeight - minHeight) + minHeight,
-				rng.nextInt(16) + 8
-			);
-			generator.generate(world, rng, pos);
-		}
+	private static WorldGenerator newVeinFeature(VeinSettings settings, Supplier<IBlockState> block) {
+		return new FeatureRange(
+			new FeatureVein(block, settings.getCount()),
+			settings.getSize(),
+			settings.getMinHeight(),
+			settings.getMaxHeight()
+		);
 	}
 }
