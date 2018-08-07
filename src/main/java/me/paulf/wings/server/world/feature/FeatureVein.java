@@ -16,41 +16,41 @@ import java.util.function.UnaryOperator;
 public final class FeatureVein extends WorldGenerator {
 	private final UnaryOperator<IBlockState> block;
 
-	private final int blockCount;
+	private final int size;
 
 	private final Predicate<IBlockState> canReplace;
 
-	public FeatureVein(Supplier<IBlockState> block, int blockCount) {
-		this(b -> block.get(), blockCount);
+	public FeatureVein(Supplier<IBlockState> block, int size) {
+		this(b -> block.get(), size);
 	}
 
-	public FeatureVein(UnaryOperator<IBlockState> block, int blockCount) {
-		this(block, blockCount, StonePredicate.create());
+	public FeatureVein(UnaryOperator<IBlockState> block, int size) {
+		this(block, size, StonePredicate.create());
 	}
 
-	public FeatureVein(UnaryOperator<IBlockState> block, int blockCount, Predicate<IBlockState> canReplace) {
+	public FeatureVein(UnaryOperator<IBlockState> block, int size, Predicate<IBlockState> canReplace) {
 		this.block = block;
-		this.blockCount = blockCount;
+		this.size = size;
 		this.canReplace = canReplace;
 	}
 
 	@Override
 	public boolean generate(World world, Random rng, BlockPos pos) {
 		float yaw = rng.nextFloat() * (float) Math.PI;
-		double xExtent = MathHelper.sin(yaw) * blockCount / 8.0F;
-		double zExtent = MathHelper.cos(yaw) * blockCount / 8.0F;
+		double xExtent = MathHelper.sin(yaw) * size / 8.0F;
+		double zExtent = MathHelper.cos(yaw) * size / 8.0F;
 		double startX = pos.getX() + xExtent;
 		double endX = pos.getX() - xExtent;
 		double startZ = pos.getZ() + zExtent;
 		double endZ = pos.getZ() - zExtent;
 		double startY = pos.getY() + rng.nextInt(3) - 2;
 		double endY = pos.getY() + rng.nextInt(3) - 2;
-		for (int n = 0; n < blockCount; n++) {
-			float delta = (float) n / blockCount;
+		for (int n = 0; n < size; n++) {
+			float delta = (float) n / size;
 			double x = startX + (endX - startX) * delta;
 			double y = startY + (endY - startY) * delta;
 			double z = startZ + (endZ - startZ) * delta;
-			double girth = rng.nextDouble() * blockCount / 16.0D;
+			double girth = rng.nextDouble() * size / 16.0D;
 			double xzRadius = ((MathHelper.sin((float) Math.PI * delta) + 1.0F) * girth + 1.0D) / 2.0D;
 			double yRadius = ((MathHelper.sin((float) Math.PI * delta) + 1.0F) * girth + 1.0D) / 2.0D;
 			int minX = MathHelper.floor(x - xzRadius);
