@@ -1,17 +1,16 @@
 package me.paulf.wings.server.flight;
 
-import baubles.api.BaublesApi;
-import baubles.api.cap.IBaublesItemHandler;
 import com.google.common.collect.Lists;
 import me.paulf.wings.server.capability.Flight;
 import me.paulf.wings.server.flight.state.State;
 import me.paulf.wings.server.flight.state.StateIdle;
-import me.paulf.wings.server.item.StandardWing;
+import me.paulf.wings.server.item.ItemWings;
 import me.paulf.wings.util.CubicBezier;
 import me.paulf.wings.util.FloatConsumer;
 import me.paulf.wings.util.Mth;
 import me.paulf.wings.util.SmoothingFunction;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.math.MathHelper;
@@ -40,7 +39,7 @@ public final class FlightDefault implements Flight {
 
 	private static final float PITCH_OFFSET = 30.0F;
 
-	private static final int CHECK_FLIGHT_ABILITY_RATE = 640;
+	private static final int DAMAGE_RATE = 60;
 
 	private final List<FlyingListener> flyingListeners = Lists.newArrayList();
 
@@ -49,6 +48,8 @@ public final class FlightDefault implements Flight {
 	private int prevTimeFlying = INITIAL_TIME_FLYING;
 
 	private int timeFlying = INITIAL_TIME_FLYING;
+
+	private int flightTime;
 
 	private boolean isFlying;
 
@@ -62,6 +63,7 @@ public final class FlightDefault implements Flight {
 	public void setIsFlying(boolean isFlying, PlayerSet players) {
 		if (this.isFlying != isFlying) {
 			this.isFlying = isFlying;
+			flightTime = 0;
 			flyingListeners.forEach(FlyingListener.onChangeUsing(isFlying));
 			sync(players);
 		}
@@ -117,18 +119,7 @@ public final class FlightDefault implements Flight {
 
 	@Override
 	public boolean canFly(EntityPlayer player) {
-		return getWingType(player).canFly();
-	}
-
-	private WingType getWingType(EntityPlayer player) {
-		IBaublesItemHandler inv = BaublesApi.getBaublesHandler(player);
-		for (int i = 0; i < inv.getSlots(); i++) {
-			WingType type = StandardWing.fromStack(inv.getStackInSlot(i));
-			if (type != WingType.ABSENT) {
-				return type;
-			}
-		}
-		return WingType.ABSENT;
+		return !ItemWings.get(player).isEmpty();
 	}
 
 	@Override
@@ -160,28 +151,33 @@ public final class FlightDefault implements Flight {
 			double dx = player.posX - player.prevPosX;
 			double dy = player.posY - player.prevPosY;
 			double dz = player.posZ - player.prevPosZ;
-			animator = getWingType(player).getAnimator(animator);
+			animator = ItemWings.getType(ItemWings.get(player)).getAnimator(animator);
 			animator.update(dx, dy, dz);
 			State state = this.state.update(isFlying(), dx, dy, dz, player);
 			if (!this.state.equals(state)) {
 				state.beginAnimation(animator);
 			}
 			this.state = state;
+		} else if (isFlying()) {
+			if (flightTime % DAMAGE_RATE == (DAMAGE_RATE - 1)) {
+				ItemStack stack = ItemWings.get(player);
+				stack.damageItem(1, player);
+				if (!ItemWings.isUsable(stack)) {
+					setIsFlying(false, PlayerSet.ofAll());
+				}
+			}
 		}
+		flightTime++;
 	}
 
 	@Override
 	public void onUpdate(EntityPlayer player) {
-		boolean isClient = player.world.isRemote, isUser = player.isUser();
 		setPrevTimeFlying(getTimeFlying());
 		if (isFlying()) {
 			if (getTimeFlying() < MAX_TIME_FLYING) {
 				setTimeFlying(getTimeFlying() + 1);
-			} else if (isUser && player.onGround) {
+			} else if (player.isUser() && player.onGround) {
 				setIsFlying(false, PlayerSet.ofOthers());
-			}
-			if (!isClient && player.ticksExisted % CHECK_FLIGHT_ABILITY_RATE == 0 && !canFly(player)) {
-				setIsFlying(false, PlayerSet.ofAll());
 			}
 		} else {
 			if (getTimeFlying() > INITIAL_TIME_FLYING) {

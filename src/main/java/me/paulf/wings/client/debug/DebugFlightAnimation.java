@@ -1,8 +1,5 @@
 package me.paulf.wings.client.debug;
 
-import baubles.api.BaubleType;
-import baubles.api.BaublesApi;
-import baubles.api.cap.IBaublesItemHandler;
 import com.mojang.authlib.GameProfile;
 import me.paulf.wings.WingsMod;
 import me.paulf.wings.server.capability.FlightCapability;
@@ -15,7 +12,9 @@ import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumHand;
 import net.minecraft.world.World;
 import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
@@ -26,7 +25,6 @@ import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.relauncher.Side;
 
 import java.util.UUID;
-import java.util.stream.IntStream;
 
 @Mod.EventBusSubscriber(value = Side.CLIENT, modid = WingsMod.ID)
 public final class DebugFlightAnimation {
@@ -63,12 +61,9 @@ public final class DebugFlightAnimation {
 					player.setPosition(0.0D, 62.0D, 0.0D);
 					player.prevPosZ = -1.0D;
 					player.prevPosY = 63.0D;
-					IBaublesItemHandler baubles = BaublesApi.getBaublesHandler(player);
-
-					ItemStack stack = new ItemStack(Util.requireItem(StandardWing.EVIL.getId()));
-					int slot = IntStream.of(BaubleType.BODY.getValidSlots()).findFirst()
-						.orElseThrow(AssertionError::new);
-					baubles.setStackInSlot(slot, stack);
+					Item item = Util.requireItem(StandardWing.EVIL.getId());
+					player.setHeldItem(EnumHand.MAIN_HAND, new ItemStack(item));
+					item.onItemRightClick(world, player, EnumHand.MAIN_HAND);
 					FlightCapability.get(player).setIsFlying(true);
 				}
 				if (player != null && mc.getConnection() != null) {

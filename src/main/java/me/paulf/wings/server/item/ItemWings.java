@@ -8,6 +8,7 @@ import baubles.api.render.IRenderBauble;
 import me.paulf.wings.WingsMod;
 import me.paulf.wings.server.capability.Flight;
 import me.paulf.wings.server.capability.FlightCapability;
+import me.paulf.wings.server.flight.WingType;
 import me.paulf.wings.server.sound.WingsSounds;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -19,6 +20,8 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.world.World;
 
 public final class ItemWings extends Item implements IBauble, IRenderBauble {
+	private static final BaubleType BAUBLE_TYPE = BaubleType.BODY;
+
 	private final StandardWing type;
 
 	private ItemWings(StandardWing type) {
@@ -31,7 +34,7 @@ public final class ItemWings extends Item implements IBauble, IRenderBauble {
 
 	@Override
 	public BaubleType getBaubleType(ItemStack stack) {
-		return BaubleType.BODY;
+		return BAUBLE_TYPE;
 	}
 
 	@Override
@@ -72,10 +75,33 @@ public final class ItemWings extends Item implements IBauble, IRenderBauble {
 		return new ActionResult<>(EnumActionResult.FAIL, stack);
 	}
 
+	public static boolean isUsable(ItemStack stack) {
+		return !stack.isEmpty() && stack.getItemDamage() < stack.getMaxDamage() - 1;
+	}
+
+	public static ItemStack get(EntityPlayer player) {
+		IBaublesItemHandler inv = BaublesApi.getBaublesHandler(player);
+		for (int slot : BAUBLE_TYPE.getValidSlots()) {
+			ItemStack stack = inv.getStackInSlot(slot);
+			if (stack.getItem() instanceof ItemWings && isUsable(stack)) {
+				return stack;
+			}
+		}
+		return ItemStack.EMPTY;
+	}
+
+	public static WingType getType(ItemStack stack) {
+		Item item = stack.getItem();
+		if (item instanceof ItemWings) {
+			return ((ItemWings) item).getType();
+		}
+		return WingType.ABSENT;
+	}
+
 	public static ItemWings create(StandardWing type) {
 		ItemWings item = new ItemWings(type);
 		item.setMaxStackSize(1);
-		item.setMaxDamage(250);
+		item.setMaxDamage(540);
 		return item;
 	}
 }

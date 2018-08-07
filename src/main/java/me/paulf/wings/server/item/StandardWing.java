@@ -5,8 +5,6 @@ import me.paulf.wings.server.flight.Animator;
 import me.paulf.wings.server.flight.AnimatorFactory;
 import me.paulf.wings.server.flight.StandardAnimatorFactory;
 import me.paulf.wings.server.flight.WingType;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 
 import java.util.stream.Stream;
@@ -70,11 +68,4 @@ public enum StandardWing implements WingType {
 		return Stream.of(TYPES);
 	}
 
-	public static WingType fromStack(ItemStack stack) {
-		Item item = stack.getItem();
-		if (item instanceof ItemWings) {
-			return ((ItemWings) item).getType();
-		}
-		return WingType.ABSENT;
-	}
 }
