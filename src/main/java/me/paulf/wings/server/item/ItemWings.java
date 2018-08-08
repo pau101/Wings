@@ -33,6 +33,11 @@ public final class ItemWings extends Item implements IBauble, IRenderBauble {
 	}
 
 	@Override
+	public boolean getIsRepairable(ItemStack stack, ItemStack ingredient) {
+		return ingredient.getItem() == WingsItems.FAIRY_DUST;
+	}
+
+	@Override
 	public BaubleType getBaubleType(ItemStack stack) {
 		return BAUBLE_TYPE;
 	}
