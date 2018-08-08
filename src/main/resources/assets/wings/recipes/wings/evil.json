@@ -9,7 +9,7 @@
 		"E": { "item": "minecraft:emerald" },
 		"M": { "item": "wings:amethyst" },
 		"G": { "type": "forge:ore_dict", "ore": "ingotGold" },
-		"A": { "item": "wings:fairy_dust" },
+		"A": { "type": "forge:ore_dict", "ore": "dustFairy" },
 		"D": { "type": "forge:ore_dict", "ore": "gemDiamond" }
 	},
 	"result": {

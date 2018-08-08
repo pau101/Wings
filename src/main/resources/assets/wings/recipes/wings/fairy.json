@@ -9,7 +9,7 @@
 		"P": { "item": "minecraft:red_flower", "data": 7 },
 		"O": { "item": "minecraft:red_flower", "data": 8 },
 		"G": { "type": "forge:ore_dict", "ore": "ingotGold" },
-		"A": { "item": "wings:fairy_dust" },
+		"A": { "type": "forge:ore_dict", "ore": "dustFairy" },
 		"D": { "type": "forge:ore_dict", "ore": "gemDiamond" }
 	},
 	"result": {

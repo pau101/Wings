@@ -8,7 +8,7 @@
 	"key": {
 		"B": { "item": "minecraft:blaze_powder" },
 		"G": { "type": "forge:ore_dict", "ore": "ingotGold" },
-		"A": { "item": "wings:fairy_dust" },
+		"A": { "type": "forge:ore_dict", "ore": "dustFairy" },
 		"D": { "type": "forge:ore_dict", "ore": "gemDiamond" }
 	},
 	"result": {

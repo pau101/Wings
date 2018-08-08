@@ -9,7 +9,7 @@
 		"I": { "type": "forge:ore_dict", "ore": "dyeBlack" },
 		"B": { "type": "forge:ore_dict", "ore": "dyeBlue" },
 		"G": { "type": "forge:ore_dict", "ore": "ingotGold" },
-		"A": { "item": "wings:fairy_dust" },
+		"A": { "type": "forge:ore_dict", "ore": "dustFairy" },
 		"D": { "type": "forge:ore_dict", "ore": "gemDiamond" }
 	},
 	"result": {
