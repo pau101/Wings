@@ -25,8 +25,8 @@ public final class WingsItems {
 	@SubscribeEvent
 	public static void register(RegistryEvent.Register<Item> event) {
 		event.getRegistry().registerAll(
-			Reg.asItem(WingsBlocks.FAIRY_DUST_ORE),
-			Reg.asItem(WingsBlocks.AMETHYST_ORE),
+			Reg.createItem(WingsBlocks.FAIRY_DUST_ORE),
+			Reg.createItem(WingsBlocks.AMETHYST_ORE),
 			Reg.withName(new Item()
 				.setCreativeTab(ItemGroupWings.instance()), "fairy_dust"
 			),

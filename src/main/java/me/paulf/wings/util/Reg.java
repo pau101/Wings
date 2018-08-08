@@ -26,7 +26,7 @@ public final class Reg {
 		return withName(block, registryName, block::setTranslationKey);
 	}
 
-	public static Item asItem(Block block) {
+	public static Item createItem(Block block) {
 		return new ItemBlock(block).setRegistryName(Util.getName(block));
 	}
 }
