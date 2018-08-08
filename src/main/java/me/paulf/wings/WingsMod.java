@@ -3,7 +3,6 @@ package me.paulf.wings;
 import baubles.api.render.IRenderBauble;
 import me.paulf.wings.server.capability.Flight;
 import me.paulf.wings.server.item.StandardWing;
-import me.paulf.wings.server.net.Network;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
@@ -52,10 +51,6 @@ public final class WingsMod {
 
 	public Flight newFlight(EntityPlayer player) {
 		return proxy.newFlight(player);
-	}
-
-	public Network getNetwork() {
-		return proxy.getNetwork();
 	}
 
 	@Mod.InstanceFactory

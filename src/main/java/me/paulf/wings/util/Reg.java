@@ -10,9 +10,7 @@ import java.util.function.Consumer;
 public final class Reg {
 	private Reg() {}
 
-	static <T extends IForgeRegistryEntry.Impl<? super T>> T withName(
-		T entry, String registryName, Consumer<String> translationKeySetter
-	) {
+	private static <T extends IForgeRegistryEntry.Impl<? super T>> T withName(T entry, String registryName, Consumer<String> translationKeySetter) {
 		entry.setRegistryName(registryName);
 		translationKeySetter.accept(Util.getName(entry).getNamespace() + "." + Util.underScoreToCamel(registryName));
 		return entry;

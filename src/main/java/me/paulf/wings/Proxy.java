@@ -14,12 +14,12 @@ import net.minecraft.entity.player.EntityPlayerMP;
 public abstract class Proxy {
 	protected final Network network = new Network();
 
-	public void preInit() {
+	protected void preInit() {
 		FlightCapability.register();
 		WingsFixes.register();
 	}
 
-	public void init() {}
+	protected void init() {}
 
 	public void renderWings(StandardWing type, EntityPlayer player, IRenderBauble.RenderType renderType, float delta) {}
 
@@ -44,8 +44,4 @@ public abstract class Proxy {
 	}
 
 	protected abstract void addFlightListeners(EntityPlayer player, Flight flight);
-
-	public final Network getNetwork() {
-		return network;
-	}
 }

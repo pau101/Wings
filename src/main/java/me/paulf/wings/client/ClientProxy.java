@@ -15,7 +15,7 @@ public final class ClientProxy extends Proxy {
 	private final WingsRenderer wingsRenderer = new WingsRenderer();
 
 	@Override
-	public void init() {
+	protected void init() {
 		super.init();
 		ItemColors colors = Minecraft.getMinecraft().getItemColors();
 		colors.registerItemColorHandler((stack, pass) -> pass == 0 ? 0x9B172D : 0xFFFFFF, WingsItems.BAT_BLOOD);
