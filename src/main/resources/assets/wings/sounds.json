@@ -11,6 +11,6 @@
 			"minecraft:item/armor/equip_leather5",
 			"minecraft:item/armor/equip_leather6"
 		],
-		"subtitle": "subtitles.item.armor.equip_wings"
+		"subtitle": "subtitles.wings.item.armor.equip_wings"
 	}
 }

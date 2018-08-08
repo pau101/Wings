@@ -14,7 +14,7 @@ public final class Reg {
 		T entry, String registryName, Consumer<String> translationKeySetter
 	) {
 		entry.setRegistryName(registryName);
-		translationKeySetter.accept(Util.underScoreToCamel(registryName));
+		translationKeySetter.accept(Util.getName(entry).getNamespace() + "." + Util.underScoreToCamel(registryName));
 		return entry;
 	}
 

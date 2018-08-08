@@ -3,23 +3,23 @@ itemGroup.wings=Wings
 key.categories.wings=Wings
 key.wings.fly=Fly
 
-tile.fairyDustOre.name=Fairy Dust Ore
-tile.amethystOre.name=Amethyst Ore
+tile.wings.fairyDustOre.name=Fairy Dust Ore
+tile.wings.amethystOre.name=Amethyst Ore
 
-item.angelWings.name=Angel Wings
-item.slimeWings.name=Slime Wings
-item.blueButterflyWings.name=Blue Butterfly Wings
-item.monarchButterflyWings.name=Monarch Butterfly Wings
-item.fireWings.name=Fire Wings
-item.batWings.name=Bat Wings
-item.fairyWings.name=Fairy Wings
-item.evilWings.name=Evil Wings
-item.dragonWings.name=Dragon Wings
-item.fairyDust.name=Fairy Dust
-item.amethyst.name=Amethyst
-item.batBlood.name=Bat Blood
+item.wings.angelWings.name=Angel Wings
+item.wings.slimeWings.name=Slime Wings
+item.wings.blueButterflyWings.name=Blue Butterfly Wings
+item.wings.monarchButterflyWings.name=Monarch Butterfly Wings
+item.wings.fireWings.name=Fire Wings
+item.wings.batWings.name=Bat Wings
+item.wings.fairyWings.name=Fairy Wings
+item.wings.evilWings.name=Evil Wings
+item.wings.dragonWings.name=Dragon Wings
+item.wings.fairyDust.name=Fairy Dust
+item.wings.amethyst.name=Amethyst
+item.wings.batBlood.name=Bat Blood
 
-subtitles.item.armor.equip_wings=Wings rustle
+subtitles.wings.item.armor.equip_wings=Wings rustle
 
 config.wings.ores.entry.fairy_dust=Fairy Dust Ore Generation
 config.wings.ores.entry.amethyst=Amethyst Ore Generation
