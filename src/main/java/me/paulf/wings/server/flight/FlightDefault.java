@@ -119,11 +119,10 @@ public final class FlightDefault implements Flight {
 
 	@Override
 	public boolean canFly(EntityPlayer player) {
-		return !ItemWings.get(player).isEmpty();
+		return ItemWings.isUsable(ItemWings.get(player));
 	}
 
-	@Override
-	public void onWornUpdate(EntityPlayer player) {
+	private void onWornUpdate(EntityPlayer player, ItemStack wings) {
 		if (player.isServerWorld()) {
 			if (isFlying()) {
 				float speed = (float) MathHelper.clampedLerp(MIN_SPEED, MAX_SPEED, player.moveForward);
@@ -151,7 +150,7 @@ public final class FlightDefault implements Flight {
 			double dx = player.posX - player.prevPosX;
 			double dy = player.posY - player.prevPosY;
 			double dz = player.posZ - player.prevPosZ;
-			animator = ItemWings.getType(ItemWings.get(player)).getAnimator(animator);
+			animator = ItemWings.getType(wings).getAnimator(animator);
 			animator.update(dx, dy, dz);
 			State state = this.state.update(isFlying(), dx, dy, dz, player);
 			if (!this.state.equals(state)) {
@@ -160,9 +159,8 @@ public final class FlightDefault implements Flight {
 			this.state = state;
 		} else if (isFlying()) {
 			if (flightTime % DAMAGE_RATE == (DAMAGE_RATE - 1)) {
-				ItemStack stack = ItemWings.get(player);
-				stack.damageItem(1, player);
-				if (!ItemWings.isUsable(stack)) {
+				wings.damageItem(1, player);
+				if (!ItemWings.isUsable(wings)) {
 					setIsFlying(false, PlayerSet.ofAll());
 				}
 			}
@@ -172,6 +170,12 @@ public final class FlightDefault implements Flight {
 
 	@Override
 	public void onUpdate(EntityPlayer player) {
+		ItemStack wings = ItemWings.get(player);
+		if (!wings.isEmpty()) {
+			onWornUpdate(player, wings);
+		} else if (!player.world.isRemote && isFlying()) {
+			setIsFlying(false, Flight.PlayerSet.ofAll());
+		}
 		setPrevTimeFlying(getTimeFlying());
 		if (isFlying()) {
 			if (getTimeFlying() < MAX_TIME_FLYING) {

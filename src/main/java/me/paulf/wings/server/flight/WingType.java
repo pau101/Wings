@@ -1,10 +1,12 @@
 package me.paulf.wings.server.flight;
 
+import net.minecraft.util.ResourceLocation;
+
 public interface WingType {
 	WingType ABSENT = new WingType() {
 		@Override
-		public boolean canFly() {
-			return false;
+		public ResourceLocation getTexture() {
+			return new ResourceLocation("missingno");
 		}
 
 		@Override
@@ -13,7 +15,7 @@ public interface WingType {
 		}
 	};
 
-	boolean canFly();
+	ResourceLocation getTexture();
 
 	Animator getAnimator(Animator animator);
 }

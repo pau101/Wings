@@ -1,8 +1,7 @@
 package me.paulf.wings;
 
-import baubles.api.render.IRenderBauble;
 import me.paulf.wings.server.capability.Flight;
-import me.paulf.wings.server.item.StandardWing;
+import me.paulf.wings.util.ItemAccessor;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
@@ -14,7 +13,7 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 	name = WingsMod.NAME,
 	version = WingsMod.VERSION,
 	dependencies =
-		"required-after:baubles;" +
+		"after:baubles;" +
 		"required-after:llibrary@[1.7,1.8)",
 	acceptedMinecraftVersions = "[1.12]"
 )
@@ -45,12 +44,12 @@ public final class WingsMod {
 		proxy.init();
 	}
 
-	public void renderWings(StandardWing type, EntityPlayer player, IRenderBauble.RenderType renderType, float delta) {
-		proxy.renderWings(type, player, renderType, delta);
-	}
-
 	public Flight newFlight(EntityPlayer player) {
 		return proxy.newFlight(player);
+	}
+
+	public ItemAccessor<EntityPlayer> getWingsAccessor() {
+		return proxy.getWingsAccessor();
 	}
 
 	@Mod.InstanceFactory

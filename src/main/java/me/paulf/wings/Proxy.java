@@ -1,27 +1,30 @@
 package me.paulf.wings;
 
-import baubles.api.render.IRenderBauble;
 import me.paulf.wings.server.capability.Flight;
 import me.paulf.wings.server.capability.FlightCapability;
 import me.paulf.wings.server.fix.WingsFixes;
 import me.paulf.wings.server.flight.FlightDefault;
-import me.paulf.wings.server.item.StandardWing;
 import me.paulf.wings.server.net.Network;
 import me.paulf.wings.server.net.clientbound.MessageSyncFlight;
+import me.paulf.wings.util.ItemAccessor;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraftforge.common.MinecraftForge;
 
 public abstract class Proxy {
 	protected final Network network = new Network();
 
+	private final WingsProvider wingsProvider = new WingsProvider();
+
+	private final ItemAccessor<EntityPlayer> wingsAccessor = createWingsAccessor(wingsProvider);
+
 	protected void preInit() {
 		FlightCapability.register();
 		WingsFixes.register();
+		wingsProvider.addEventListeners(MinecraftForge.EVENT_BUS::register);
 	}
 
 	protected void init() {}
-
-	public void renderWings(StandardWing type, EntityPlayer player, IRenderBauble.RenderType renderType, float delta) {}
 
 	public final Flight newFlight(EntityPlayer player) {
 		Flight flight = new FlightDefault();
@@ -44,4 +47,14 @@ public abstract class Proxy {
 	}
 
 	protected abstract void addFlightListeners(EntityPlayer player, Flight flight);
+
+	public final ItemAccessor<EntityPlayer> getWingsAccessor() {
+		return wingsAccessor;
+	}
+
+	private static ItemAccessor<EntityPlayer> createWingsAccessor(WingsProvider provider) {
+		ItemAccessor.Builder<EntityPlayer> bob = ItemAccessor.builder();
+		provider.addEquipmentPlacings(bob::withPlacing);
+		return bob.build();
+	}
 }

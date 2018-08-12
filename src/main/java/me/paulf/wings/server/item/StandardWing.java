@@ -50,13 +50,9 @@ public enum StandardWing implements WingType {
 		return id;
 	}
 
+	@Override
 	public ResourceLocation getTexture() {
 		return texture;
-	}
-
-	@Override
-	public boolean canFly() {
-		return true;
 	}
 
 	@Override

@@ -39,8 +39,6 @@ public interface Flight extends INBTSerializable<NBTTagCompound> {
 
 	boolean canFly(EntityPlayer player);
 
-	void onWornUpdate(EntityPlayer player);
-
 	void onUpdate(EntityPlayer player);
 
 	void onUpdateEyeHeight(float height, float delta, FloatConsumer heightOut);
@@ -122,5 +120,4 @@ public interface Flight extends INBTSerializable<NBTTagCompound> {
 			};
 		}
 	}
-
 }

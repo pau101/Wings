@@ -2,6 +2,7 @@ package me.paulf.wings.server.capability;
 
 import me.paulf.wings.WingsMod;
 import me.paulf.wings.server.flight.FlightDefault;
+import me.paulf.wings.util.SimpleCapabilityProvider;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -30,7 +31,7 @@ public final class FlightCapability {
 	private static final ResourceLocation FLIGHT_ID = new ResourceLocation(WingsMod.ID, "flight");
 
 	@CapabilityInject(Flight.class)
-	static final Capability<Flight> CAPABILITY = null;
+	private static final Capability<Flight> CAPABILITY = null;
 
 	public static void register() {
 		CapabilityManager.INSTANCE.register(Flight.class, new FlightStorage(), FlightDefault::new);
@@ -58,7 +59,7 @@ public final class FlightCapability {
 	public static void onAttachCapabilities(AttachCapabilitiesEvent<Entity> event) {
 		Entity entity = event.getObject();
 		if (entity instanceof EntityPlayer) {
-			event.addCapability(FLIGHT_ID, new FlightProvider(WingsMod.instance().newFlight((EntityPlayer) entity)));
+			event.addCapability(FLIGHT_ID, SimpleCapabilityProvider.create(CAPABILITY, WingsMod.instance().newFlight((EntityPlayer) entity)));
 		}
 	}
 
