@@ -1,5 +1,8 @@
 package me.paulf.wings.util;
 
+import me.paulf.wings.util.function.FloatConsumer;
+import me.paulf.wings.util.function.FloatUnaryOperator;
+
 public final class SmoothingFunction {
 	private final FloatUnaryOperator easing;
 

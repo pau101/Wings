@@ -1,4 +1,4 @@
-package me.paulf.wings.util;
+package me.paulf.wings.util.function;
 
 @FunctionalInterface
 public interface FloatUnaryOperator {

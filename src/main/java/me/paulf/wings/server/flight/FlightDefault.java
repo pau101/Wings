@@ -6,7 +6,7 @@ import me.paulf.wings.server.flight.state.State;
 import me.paulf.wings.server.flight.state.StateIdle;
 import me.paulf.wings.server.item.ItemWings;
 import me.paulf.wings.util.CubicBezier;
-import me.paulf.wings.util.FloatConsumer;
+import me.paulf.wings.util.function.FloatConsumer;
 import me.paulf.wings.util.Mth;
 import me.paulf.wings.util.SmoothingFunction;
 import net.minecraft.entity.player.EntityPlayer;

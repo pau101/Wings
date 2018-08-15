@@ -7,7 +7,7 @@ import me.paulf.wings.client.model.ModelWingsInsectoid;
 import me.paulf.wings.server.flight.WingType;
 import me.paulf.wings.server.item.ItemWings;
 import me.paulf.wings.server.item.StandardWing;
-import me.paulf.wings.util.FloatConsumer;
+import me.paulf.wings.util.function.FloatConsumer;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.entity.RenderPlayer;

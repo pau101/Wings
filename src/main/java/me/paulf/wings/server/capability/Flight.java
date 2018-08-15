@@ -1,6 +1,6 @@
 package me.paulf.wings.server.capability;
 
-import me.paulf.wings.util.FloatConsumer;
+import me.paulf.wings.util.function.FloatConsumer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
