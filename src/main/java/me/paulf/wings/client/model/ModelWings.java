@@ -12,15 +12,15 @@ import net.minecraft.util.math.Vec3d;
 public abstract class ModelWings extends ModelBase {
 	public static final ModelWings NONE = new ModelWings() {
 		@Override
-		public void render(EntityPlayer player, Flight flight, float delta) {}
+		public void render(EntityPlayer player, Flight flight, float delta, float scale) {}
 	};
 
 	@Override
 	public final void render(Entity entity, float limbSwing, float limbSwingAmount, float delta, float yawHead, float pitch, float scale) {
-		FlightCapability.ifPlayer(entity, (player, flight) -> render(player, flight, delta));
+		FlightCapability.ifPlayer(entity, (player, flight) -> render(player, flight, delta, scale));
 	}
 
-	public abstract void render(EntityPlayer player, Flight flight, float delta);
+	public abstract void render(EntityPlayer player, Flight flight, float delta, float scale);
 
 	static void setAngles(ModelRenderer left, ModelRenderer right, Vec3d angles) {
 		right.rotateAngleX = (left.rotateAngleX = Mth.toRadians((float) angles.x));

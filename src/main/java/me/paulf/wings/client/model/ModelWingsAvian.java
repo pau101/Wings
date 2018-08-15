@@ -6,9 +6,7 @@ import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.entity.player.EntityPlayer;
 
 public final class ModelWingsAvian extends ModelWings {
-	private final ModelRenderer coracoidLeft;
-
-	private final ModelRenderer coracoidRight;
+	private final ModelRenderer root;
 
 	private final ImmutableList<ModelRenderer> bonesLeft, bonesRight;
 
@@ -16,10 +14,11 @@ public final class ModelWingsAvian extends ModelWings {
 
 	public ModelWingsAvian() {
 		textureWidth = textureHeight = 64;
-		coracoidLeft = new ModelRenderer(this, 0, 28);
+		root = new ModelRenderer(this, 0, 0);
+		ModelRenderer coracoidLeft = new ModelRenderer(this, 0, 28);
 		coracoidLeft.setRotationPoint(1.5F, 5.5F, 2.5F);
 		coracoidLeft.addBox(0, -1.5F, -1.5F, 5, 3, 3, 0);
-		coracoidRight = new ModelRenderer(this, 0, 34);
+		ModelRenderer coracoidRight = new ModelRenderer(this, 0, 34);
 		coracoidRight.setRotationPoint(-1.5F, 5.5F, 2.5F);
 		coracoidRight.addBox(-5, -1.5F, -1.5F, 5, 3, 3, 0);
 		ModelRenderer humerusLeft = new ModelRenderer(this, 0, 0);
@@ -78,6 +77,8 @@ public final class ModelWingsAvian extends ModelWings {
 		coracoidLeft.addChild(feathersCoracoidLeft);
 		coracoidRight.addChild(humerusRight);
 		coracoidRight.addChild(feathersCoracoidRight);
+		root.addChild(coracoidLeft);
+		root.addChild(coracoidRight);
 		bonesLeft = ImmutableList.of(coracoidLeft, humerusLeft, ulnaLeft, carpalsLeft);
 		bonesRight = ImmutableList.of(coracoidRight, humerusRight, ulnaRight, carpalsRight);
 		feathersLeft = ImmutableList.of(
@@ -91,7 +92,7 @@ public final class ModelWingsAvian extends ModelWings {
 	}
 
 	@Override
-	public void render(EntityPlayer player, Flight flight, float delta) {
+	public void render(EntityPlayer player, Flight flight, float delta, float scale) {
 		for (int i = 0; i < bonesLeft.size(); i++) {
 			ModelRenderer left = bonesLeft.get(i);
 			ModelRenderer right = bonesRight.get(i);
@@ -102,8 +103,7 @@ public final class ModelWingsAvian extends ModelWings {
 			ModelRenderer right = feathersRight.get(i);
 			setAngles(left, right, flight.getFeatherRotation(i, delta));
 		}
-		coracoidLeft.render(0.0625F);
-		coracoidRight.render(0.0625F);
+		root.render(scale);
 	}
 
 	private static void add3DTexture(

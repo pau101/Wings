@@ -35,7 +35,7 @@ public final class WingsItems {
 			),
 			Reg.withName(new Item()
 				.setCreativeTab(ItemGroupWings.instance())
-				.setContainerItem(Items.GLASS_BOTTLE),"bat_blood"
+				.setContainerItem(Items.GLASS_BOTTLE), "bat_blood"
 			)
 		);
 		StandardWing.stream()

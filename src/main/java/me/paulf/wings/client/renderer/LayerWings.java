@@ -7,17 +7,16 @@ import me.paulf.wings.client.model.ModelWingsInsectoid;
 import me.paulf.wings.server.flight.WingType;
 import me.paulf.wings.server.item.ItemWings;
 import me.paulf.wings.server.item.StandardWing;
-import me.paulf.wings.util.Mth;
+import me.paulf.wings.util.FloatConsumer;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.entity.RenderLivingBase;
+import net.minecraft.client.renderer.entity.RenderPlayer;
 import net.minecraft.client.renderer.entity.layers.LayerArmorBase;
 import net.minecraft.client.renderer.entity.layers.LayerRenderer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.math.MathHelper;
 
 public final class LayerWings implements LayerRenderer<AbstractClientPlayer> {
-	private final RenderLivingBase<?> renderer;
+	private final RenderPlayer renderer;
 
 	private final ModelWings avian = new ModelWingsAvian();
 
@@ -35,8 +34,11 @@ public final class LayerWings implements LayerRenderer<AbstractClientPlayer> {
 		.put(StandardWing.DRAGON, avian)
 		.build();
 
-	public LayerWings(RenderLivingBase<?> renderer) {
+	private final TransformFunction transform;
+
+	public LayerWings(RenderPlayer renderer, TransformFunction transform) {
 		this.renderer = renderer;
+		this.transform = transform;
 	}
 
 	@Override
@@ -44,18 +46,10 @@ public final class LayerWings implements LayerRenderer<AbstractClientPlayer> {
 		ItemStack stack;
 		if (!player.isInvisible() && !(stack = ItemWings.get(player)).isEmpty()) {
 			WingType type = ItemWings.getType(stack);
+			ModelWings model = models.getOrDefault(type, ModelWings.NONE);
 			renderer.bindTexture(type.getTexture());
 			GlStateManager.pushMatrix();
-			float swing = player.getSwingProgress(delta);
-			if (swing > 0.0F) {
-				float theta = Mth.toDegrees(MathHelper.sin(MathHelper.sqrt(swing) * Mth.TAU) * 0.2F);
-				GlStateManager.rotate(theta, 0.0F, 1.0F, 0.0F);
-			}
-			if (player.isSneaking()) {
-				GlStateManager.translate(0F, 0.2F, 0F);
-				GlStateManager.rotate(Mth.toDegrees(0.5F), 1.0F, 0.0F, 0.0F);
-			}
-			ModelWings model = models.getOrDefault(type, ModelWings.NONE);
+			transform.apply(player, scale, renderer.getMainModel().bipedBody::postRender);
 			GlStateManager.enableCull();
 			model.render(player, limbSwing, limbSwingAmount, delta, yawHead, headPitch, scale);
 			if (stack.hasEffect()) {
@@ -70,5 +64,9 @@ public final class LayerWings implements LayerRenderer<AbstractClientPlayer> {
 	@Override
 	public boolean shouldCombineTextures() {
 		return false;
+	}
+
+	public interface TransformFunction {
+		void apply(AbstractClientPlayer player, float scale, FloatConsumer bodyTransform);
 	}
 }

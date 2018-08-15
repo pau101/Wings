@@ -11,10 +11,12 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.IntHashMap;
 import net.minecraft.world.World;
 import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
@@ -22,6 +24,7 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
+import net.minecraftforge.fml.relauncher.ReflectionHelper;
 import net.minecraftforge.fml.relauncher.Side;
 
 import java.util.UUID;
@@ -58,6 +61,7 @@ public final class DebugFlightAnimation {
 					player = new EntityOtherPlayerMP(world, PROFILE) {{
 						getDataManager().set(PLAYER_MODEL_FLAG, (byte) 0xFF);
 					}};
+					player.setEntityId(-player.getEntityId());
 					player.setPosition(0.0D, 62.0D, 0.0D);
 					player.prevPosZ = -1.0D;
 					player.prevPosY = 63.0D;
@@ -65,8 +69,11 @@ public final class DebugFlightAnimation {
 					player.setHeldItem(EnumHand.MAIN_HAND, new ItemStack(item));
 					item.onItemRightClick(world, player, EnumHand.MAIN_HAND);
 					FlightCapability.get(player).setIsFlying(true);
+					IntHashMap<Entity> entities = ReflectionHelper.getPrivateValue(World.class, world, "entitiesById");
+					entities.addKey(player.getEntityId(), player);
 				}
 				if (player != null && mc.getConnection() != null) {
+					player.ticksExisted++;
 					player.onUpdate();
 				}
 			}

@@ -1,6 +1,8 @@
 package me.paulf.wings;
 
 import me.paulf.wings.server.capability.Flight;
+import me.paulf.wings.server.capability.FlightCapability;
+import me.paulf.wings.server.fix.WingsFixes;
 import me.paulf.wings.util.ItemAccessor;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.fml.common.Mod;
@@ -12,9 +14,7 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 	modid = WingsMod.ID,
 	name = WingsMod.NAME,
 	version = WingsMod.VERSION,
-	dependencies =
-		"after:baubles;" +
-		"required-after:llibrary@[1.7,1.8)",
+	dependencies = "required-after:llibrary@[1.7,1.8)",
 	acceptedMinecraftVersions = "[1.12]"
 )
 public final class WingsMod {
@@ -22,7 +22,7 @@ public final class WingsMod {
 
 	public static final String NAME = "Wings";
 
-	public static final String VERSION = "1.0.0";
+	public static final String VERSION = "1.0.1";
 
 	private static final class Holder {
 		private static final WingsMod INSTANCE = new WingsMod();
@@ -36,7 +36,8 @@ public final class WingsMod {
 
 	@Mod.EventHandler
 	public void init(FMLPreInitializationEvent event) {
-		proxy.preInit();
+		FlightCapability.register();
+		WingsFixes.register();
 	}
 
 	@Mod.EventHandler

@@ -2,6 +2,7 @@ package me.paulf.wings.util;
 
 import it.unimi.dsi.fastutil.ints.IntList;
 import it.unimi.dsi.fastutil.ints.IntLists;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
@@ -13,7 +14,7 @@ public interface ItemPlacing<T extends ICapabilityProvider> {
 
 	IntList getSlots();
 
-	static <T extends ICapabilityProvider> ItemPlacing<T> forArmor(EntityEquipmentSlot slot) {
+	static <T extends EntityLivingBase> ItemPlacing<T> forArmor(EntityEquipmentSlot slot) {
 		return new ItemPlacing<T>() {
 			@Override
 			public IItemHandler getStorage(T provider) {
@@ -24,7 +25,6 @@ public interface ItemPlacing<T extends ICapabilityProvider> {
 			public IntList getSlots() {
 				return IntLists.singleton(slot.getIndex());
 			}
-
 		};
 	}
 }

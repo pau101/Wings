@@ -23,6 +23,10 @@ public final class ItemAccessor<T extends ICapabilityProvider> {
 		return slots.build();
 	}
 
+	public static <T extends ICapabilityProvider> ItemAccessor<T> none() {
+		return new ItemAccessor<>(ImmutableList.of());
+	}
+
 	public static <T extends ICapabilityProvider> Builder<T> builder() {
 		return new Builder<>();
 	}
@@ -38,7 +42,7 @@ public final class ItemAccessor<T extends ICapabilityProvider> {
 			this.placings = placings;
 		}
 
-		public Builder withPlacing(ItemPlacing<T> placing) {
+		public Builder addPlacing(ItemPlacing<T> placing) {
 			placings.add(placing);
 			return this;
 		}

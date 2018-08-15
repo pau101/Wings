@@ -1,4 +1,4 @@
-package me.paulf.wings.server.integration.baubles;
+package me.paulf.wings.server.integration;
 
 import baubles.api.BaubleType;
 import baubles.api.BaublesApi;
@@ -8,35 +8,45 @@ import it.unimi.dsi.fastutil.ints.IntArrayList;
 import it.unimi.dsi.fastutil.ints.IntList;
 import it.unimi.dsi.fastutil.ints.IntLists;
 import me.paulf.wings.WingsMod;
+import me.paulf.wings.server.asm.plugin.Integration;
+import me.paulf.wings.server.flight.ConstructWingsAccessorEvent;
 import me.paulf.wings.server.item.ItemWings;
 import me.paulf.wings.util.ItemPlacing;
 import me.paulf.wings.util.SimpleCapabilityProvider;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.items.IItemHandler;
 
-public final class WingsBaubleHandler {
-	private WingsBaubleHandler() {}
+@Integration(
+	id = "bauble_wings",
+	name = "Bauble Wings",
+	condition = "required-after:wings;after:baubles@[1.5,1.6)"
+)
+public final class WingsBaublesIntegration {
+	@Mod.EventHandler
+	public void init(FMLPreInitializationEvent event) {
+		MinecraftForge.EVENT_BUS.register(new Object() {
+			@SubscribeEvent
+			public void onConstructWingsAccessor(ConstructWingsAccessorEvent event) {
+				event.addPlacing(new ItemPlacing<EntityPlayer>() {
+					@Override
+					public IItemHandler getStorage(EntityPlayer player) {
+						return BaublesApi.getBaublesHandler(player);
+					}
 
-	public static ItemPlacing<EntityPlayer> createBodyPlacing() {
-		return new ItemPlacing<EntityPlayer>() {
-			@Override
-			public IItemHandler getStorage(EntityPlayer player) {
-				return BaublesApi.getBaublesHandler(player);
+					@Override
+					public IntList getSlots() {
+						return IntLists.unmodifiable(IntArrayList.wrap(BaubleType.BODY.getValidSlots()));
+					}
+				});
 			}
 
-			@Override
-			public IntList getSlots() {
-				return IntLists.unmodifiable(IntArrayList.wrap(BaubleType.BODY.getValidSlots()));
-			}
-		};
-	}
-
-	public static Object createEventListener() {
-		return new Object() {
 			@SubscribeEvent
 			public void onAttachCapabilities(AttachCapabilitiesEvent<ItemStack> event) {
 				if (ItemWings.test(event.getObject())) {
@@ -46,7 +56,7 @@ public final class WingsBaubleHandler {
 					);
 				}
 			}
-		};
+		});
 	}
 
 	private static final String TIFFANY =

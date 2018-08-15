@@ -1,6 +1,8 @@
 package me.paulf.wings.server;
 
 import me.paulf.wings.WingsMod;
+import me.paulf.wings.server.flight.ConstructWingsAccessorEvent;
+import me.paulf.wings.util.ItemPlacing;
 import me.paulf.wings.server.asm.GetLivingHeadLimitEvent;
 import me.paulf.wings.server.asm.PlayerFlightCheckEvent;
 import me.paulf.wings.server.capability.Flight;
@@ -10,6 +12,7 @@ import net.minecraft.entity.passive.EntityBat;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.init.SoundEvents;
+import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.stats.StatBase;
 import net.minecraft.stats.StatList;
@@ -102,5 +105,10 @@ public final class ServerEventHandler {
 				event.disableSoftLimit();
 			}
 		});
+	}
+
+	@SubscribeEvent
+	public static void onConstructWingsAccessor(ConstructWingsAccessorEvent event) {
+		event.addPlacing(ItemPlacing.forArmor(EntityEquipmentSlot.CHEST));
 	}
 }
