@@ -1,9 +1,9 @@
 {
 	"type": "forge:ore_shaped",
 	"pattern": [
-		"SGS",
+		"SDS",
 		"GAG",
-		"D D"
+		"G G"
 	],
 	"key": {
 		"S": { "type": "forge:ore_dict", "ore": "slimeball" },

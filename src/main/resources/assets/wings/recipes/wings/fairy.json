@@ -1,9 +1,9 @@
 {
 	"type": "forge:ore_shaped",
 	"pattern": [
-		"PGO",
+		"PDO",
 		"GAG",
-		"D D"
+		"G G"
 	],
 	"key": {
 		"P": { "item": "minecraft:red_flower", "data": 7 },

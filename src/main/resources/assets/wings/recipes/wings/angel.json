@@ -1,9 +1,9 @@
 {
 	"type": "forge:ore_shaped",
 	"pattern": [
-		"FGF",
+		"FDF",
 		"GAG",
-		"D D"
+		"G G"
 	],
 	"key": {
 		"F": { "type": "forge:ore_dict", "ore": "feather" },

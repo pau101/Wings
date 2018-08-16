@@ -1,9 +1,9 @@
 {
 	"type": "forge:ore_shaped",
 	"pattern": [
-		"BGB",
+		"BDB",
 		"GAG",
-		"D D"
+		"G G"
 	],
 	"key": {
 		"B": { "item": "minecraft:blaze_powder" },

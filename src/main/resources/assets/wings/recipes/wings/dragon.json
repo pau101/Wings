@@ -1,9 +1,9 @@
 {
 	"type": "forge:ore_shaped",
 	"pattern": [
-		"EGE",
+		"EDE",
 		"GAG",
-		"D D"
+		"G G"
 	],
 	"key": {
 		"E": { "item": "minecraft:dragon_breath" },

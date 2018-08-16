@@ -1,9 +1,9 @@
 {
 	"type": "forge:ore_shaped",
 	"pattern": [
-		"EGM",
+		"EDM",
 		"GAG",
-		"D D"
+		"G G"
 	],
 	"key": {
 		"E": { "item": "minecraft:emerald" },

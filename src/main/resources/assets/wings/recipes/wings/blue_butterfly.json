@@ -1,9 +1,9 @@
 {
 	"type": "forge:ore_shaped",
 	"pattern": [
-		"IGB",
+		"IDB",
 		"GAG",
-		"D D"
+		"G G"
 	],
 	"key": {
 		"I": { "type": "forge:ore_dict", "ore": "dyeBlack" },
