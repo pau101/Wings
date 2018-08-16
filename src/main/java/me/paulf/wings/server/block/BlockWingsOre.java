@@ -31,10 +31,7 @@ public final class BlockWingsOre extends Block {
 
 	@Override
 	public int quantityDroppedWithBonus(int fortune, Random rng) {
-		if (fortune > 0) {
-			return quantityDropped(rng) * Math.max(rng.nextInt(fortune + 2), 1);
-		}
-		return quantityDropped(rng);
+		return fortune > 0 ? quantityDropped(rng) * Math.max(rng.nextInt(fortune + 2), 1) : quantityDropped(rng);
 	}
 
 	@Override
