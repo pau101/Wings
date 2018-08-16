@@ -2,7 +2,7 @@ package me.paulf.wings.client;
 
 import me.paulf.wings.Proxy;
 import me.paulf.wings.client.renderer.LayerWings;
-import me.paulf.wings.server.capability.Flight;
+import me.paulf.wings.server.flight.Flight;
 import me.paulf.wings.server.item.WingsItems;
 import me.paulf.wings.server.net.serverbound.MessageControlFlying;
 import net.minecraft.client.Minecraft;

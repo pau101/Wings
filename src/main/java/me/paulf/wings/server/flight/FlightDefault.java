@@ -1,7 +1,6 @@
 package me.paulf.wings.server.flight;
 
 import com.google.common.collect.Lists;
-import me.paulf.wings.server.capability.Flight;
 import me.paulf.wings.server.flight.state.State;
 import me.paulf.wings.server.flight.state.StateIdle;
 import me.paulf.wings.server.item.ItemWings;

@@ -1,6 +1,6 @@
 package me.paulf.wings.client.model;
 
-import me.paulf.wings.server.capability.Flight;
+import me.paulf.wings.server.flight.Flight;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.entity.player.EntityPlayer;
 

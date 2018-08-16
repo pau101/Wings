@@ -2,7 +2,7 @@ package me.paulf.wings.client.debug;
 
 import com.mojang.authlib.GameProfile;
 import me.paulf.wings.WingsMod;
-import me.paulf.wings.server.capability.FlightCapability;
+import me.paulf.wings.server.flight.FlightCapability;
 import me.paulf.wings.server.item.StandardWing;
 import me.paulf.wings.util.Util;
 import net.minecraft.client.Minecraft;

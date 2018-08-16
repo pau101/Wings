@@ -1,6 +1,6 @@
 package me.paulf.wings.client.audio;
 
-import me.paulf.wings.server.capability.Flight;
+import me.paulf.wings.server.flight.Flight;
 import me.paulf.wings.server.sound.WingsSounds;
 import net.minecraft.client.audio.MovingSound;
 import net.minecraft.entity.player.EntityPlayer;

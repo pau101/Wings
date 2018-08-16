@@ -1,4 +1,4 @@
-package me.paulf.wings.server.capability;
+package me.paulf.wings.server.flight;
 
 import me.paulf.wings.util.function.FloatConsumer;
 import net.minecraft.entity.player.EntityPlayer;

@@ -1,7 +1,6 @@
-package me.paulf.wings.server.capability;
+package me.paulf.wings.server.flight;
 
 import me.paulf.wings.WingsMod;
-import me.paulf.wings.server.flight.FlightDefault;
 import me.paulf.wings.util.SimpleCapabilityProvider;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;

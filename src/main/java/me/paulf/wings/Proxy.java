@@ -1,6 +1,6 @@
 package me.paulf.wings;
 
-import me.paulf.wings.server.capability.Flight;
+import me.paulf.wings.server.flight.Flight;
 import me.paulf.wings.server.flight.ConstructWingsAccessorEvent;
 import me.paulf.wings.server.flight.FlightDefault;
 import me.paulf.wings.server.net.Network;
