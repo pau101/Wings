@@ -102,7 +102,7 @@ public final class ItemWings extends Item {
 			EnumEnchantmentType.WEARABLE
 		));
 		wings.setMaxStackSize(1);
-		wings.setMaxDamage(540);
+		wings.setMaxDamage(480);
 		return wings;
 	}
 }
