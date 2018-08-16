@@ -22,6 +22,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -33,30 +34,53 @@ import org.lwjgl.util.vector.Vector3f;
 	condition = "required-after:wings;after:mobends@[0.24,0.25)"
 )
 public final class WingsMoBendsIntegration {
+	@SidedProxy
+	private static Proxy proxy = new Proxy();
+
 	@Mod.EventHandler
 	public void init(FMLPreInitializationEvent event) {
-		MinecraftForge.EVENT_BUS.register(new Object() {
-			@SubscribeEvent
-			public void onGetMoBendsPlayerAnimation(GetMoBendsPlayerAnimationEvent event) {
-				EntityPlayer player = event.getPlayer();
-				if (FlightCapability.get(player).getFlyingAmount(1.0F) > 0.0F) {
-					event.set("wings");
-				}
-			}
-		});
+		proxy.preinit();
 	}
 
 	@Mod.EventHandler
 	public void init(FMLInitializationEvent event) {
-		for (Object obj : AnimatedEntity.skinMap.values()) {
-			RenderBendsPlayer renderer = (RenderBendsPlayer) obj;
-			renderer.addLayer(new LayerWings(renderer, (player, scale, bodyTransform) -> {
-				bodyTransform.accept(scale);
-				GlStateManager.translate(0.0F, -12.0F * scale, 0.0F);
-			}));
+		proxy.init();
+	}
+
+	private static class Proxy {
+		void preinit() {}
+
+		void init() {}
+	}
+
+	public static final class ServerProxy extends Proxy {}
+
+	public static final class ClientProxy extends Proxy {
+		@Override
+		void preinit() {
+			MinecraftForge.EVENT_BUS.register(new Object() {
+				@SubscribeEvent
+				public void onGetMoBendsPlayerAnimation(GetMoBendsPlayerAnimationEvent event) {
+					EntityPlayer player = event.getPlayer();
+					if (FlightCapability.get(player).getFlyingAmount(1.0F) > 0.0F) {
+						event.set("wings");
+					}
+				}
+			});
 		}
-		AnimatedEntity ae = AnimatedEntity.get("player");
-		ae.add(new AnimationWings());
+
+		@Override
+		void init() {
+			for (Object obj : AnimatedEntity.skinMap.values()) {
+				RenderBendsPlayer renderer = (RenderBendsPlayer) obj;
+				renderer.addLayer(new LayerWings(renderer, (player, scale, bodyTransform) -> {
+					bodyTransform.accept(scale);
+					GlStateManager.translate(0.0F, -12.0F * scale, 0.0F);
+				}));
+			}
+			AnimatedEntity ae = AnimatedEntity.get("player");
+			ae.add(new AnimationWings());
+		}
 	}
 
 	private static final class AnimationWings extends Animation {
