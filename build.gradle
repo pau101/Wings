@@ -24,9 +24,9 @@ repositories {
 
 apply plugin: "net.minecraftforge.gradle.forge"
 
-ext.corePlugin = "me.paulf.wings.server.asm.plugin.WingsLoadingPlugin"
-ext.modVersion = "1.0.1"
-ext.llibraryVersion = "1.7.9"
+project.ext.corePlugin = "me.paulf.wings.server.asm.plugin.WingsLoadingPlugin"
+project.ext.modVersion = "1.0.1"
+project.ext.llibraryVersion = "1.7.9"
 version = "${modVersion}-1.12"
 group = "me.paulf.wings"
 archivesBaseName = "wings"
