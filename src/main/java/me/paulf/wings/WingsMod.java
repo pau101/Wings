@@ -1,5 +1,6 @@
 package me.paulf.wings;
 
+import me.paulf.wings.server.dreamcatcher.InSomniableCapability;
 import me.paulf.wings.server.flight.Flight;
 import me.paulf.wings.server.flight.FlightCapability;
 import me.paulf.wings.server.fix.WingsFixes;
@@ -37,6 +38,7 @@ public final class WingsMod {
 	@Mod.EventHandler
 	public void init(FMLPreInitializationEvent event) {
 		FlightCapability.register();
+		InSomniableCapability.register();
 		WingsFixes.register();
 	}
 

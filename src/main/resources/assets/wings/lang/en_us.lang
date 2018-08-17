@@ -19,6 +19,14 @@ item.wings.fairyDust.name=Fairy Dust
 item.wings.amethyst.name=Amethyst
 item.wings.batBlood.name=Bat Blood
 
+wings.dreamcatcher.jiu=JiU's Wings
+wings.dreamcatcher.sua=SuA's Wings
+wings.dreamcatcher.siyeon=Siyeon's Wings
+wings.dreamcatcher.handong=Handong's Wings
+wings.dreamcatcher.yoohyeon=Yoohyeon's Wings
+wings.dreamcatcher.dami=Dami's Wings
+wings.dreamcatcher.gahyeon=Gahyeon's Wings
+
 subtitles.wings.item.armor.equip_wings=Wings rustle
 
 config.wings.ores.entry.fairy_dust=Fairy Dust Ore Generation
