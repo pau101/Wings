@@ -12,7 +12,7 @@ import me.paulf.wings.server.asm.plugin.Integration;
 import me.paulf.wings.server.flight.ConstructWingsAccessorEvent;
 import me.paulf.wings.server.item.ItemWings;
 import me.paulf.wings.util.ItemPlacing;
-import me.paulf.wings.util.SimpleCapabilityProvider;
+import me.paulf.wings.util.CapabilityProviders;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
@@ -52,7 +52,7 @@ public final class WingsBaublesIntegration {
 				if (ItemWings.test(event.getObject())) {
 					event.addCapability(
 						new ResourceLocation(WingsMod.ID, TIFFANY),
-						SimpleCapabilityProvider.create(BaublesCapabilities.CAPABILITY_ITEM_BAUBLE, new BaubleItem(BaubleType.BODY))
+						CapabilityProviders.builder(BaublesCapabilities.CAPABILITY_ITEM_BAUBLE, new BaubleItem(BaubleType.BODY)).build()
 					);
 				}
 			}

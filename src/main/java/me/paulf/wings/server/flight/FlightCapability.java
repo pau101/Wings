@@ -1,7 +1,7 @@
 package me.paulf.wings.server.flight;
 
 import me.paulf.wings.WingsMod;
-import me.paulf.wings.util.SimpleCapabilityProvider;
+import me.paulf.wings.util.CapabilityProviders;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -58,7 +58,10 @@ public final class FlightCapability {
 	public static void onAttachCapabilities(AttachCapabilitiesEvent<Entity> event) {
 		Entity entity = event.getObject();
 		if (entity instanceof EntityPlayer) {
-			event.addCapability(FLIGHT_ID, SimpleCapabilityProvider.create(CAPABILITY, WingsMod.instance().newFlight((EntityPlayer) entity)));
+			event.addCapability(
+				FLIGHT_ID,
+				CapabilityProviders.builder(CAPABILITY, WingsMod.instance().newFlight((EntityPlayer) entity)).build()
+			);
 		}
 	}
 
