@@ -4,8 +4,11 @@ import me.paulf.wings.util.Access;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.renderer.ItemRenderer;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemMap;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.eventhandler.Event;
 
@@ -15,6 +18,20 @@ public final class WingsHooksClient {
 	private WingsHooksClient() {}
 
 	private static int selectedItemSlot = 0;
+
+	public static void onTurn(Entity entity, float deltaYaw) {
+		if (entity instanceof EntityLivingBase) {
+			EntityLivingBase living = (EntityLivingBase) entity;
+			float theta = MathHelper.wrapDegrees(living.rotationYaw - living.renderYawOffset);
+			GetLivingHeadLimitEvent ev = GetLivingHeadLimitEvent.create(living);
+			MinecraftForge.EVENT_BUS.post(ev);
+			float limit = ev.getHardLimit();
+			if (theta < -limit || theta > limit) {
+				living.renderYawOffset += deltaYaw;
+				living.prevRenderYawOffset += deltaYaw;
+			}
+		}
+	}
 
 	public static boolean onCheckRenderEmptyHand(boolean isMainHand, ItemStack itemStackMainHand) {
 		return isMainHand || !isMap(itemStackMainHand);

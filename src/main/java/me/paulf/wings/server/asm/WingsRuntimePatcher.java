@@ -99,7 +99,7 @@ public final class WingsRuntimePatcher extends RuntimePatcher {
 					.node(FSUB)
 					.method(
 						INVOKESTATIC,
-						WingsHooks.class,
+						WingsHooksClient.class,
 						"onTurn", Entity.class,
 						float.class,
 						void.class

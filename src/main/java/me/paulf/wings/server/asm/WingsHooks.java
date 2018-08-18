@@ -38,18 +38,4 @@ public final class WingsHooks {
 			living.renderYawOffset += theta * 0.2F;
 		}
 	}
-
-	public static void onTurn(Entity entity, float deltaYaw) {
-		if (entity instanceof EntityLivingBase) {
-			EntityLivingBase living = (EntityLivingBase) entity;
-			float theta = MathHelper.wrapDegrees(living.rotationYaw - living.renderYawOffset);
-			GetLivingHeadLimitEvent ev = GetLivingHeadLimitEvent.create(living);
-			MinecraftForge.EVENT_BUS.post(ev);
-			float limit = ev.getHardLimit();
-			if (theta < -limit || theta > limit) {
-				living.renderYawOffset += deltaYaw;
-				living.prevRenderYawOffset += deltaYaw;
-			}
-		}
-	}
 }
