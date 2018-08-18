@@ -1,7 +1,7 @@
 package me.paulf.wings.client.model;
 
 import com.google.common.collect.ImmutableList;
-import me.paulf.wings.server.flight.Flight;
+import me.paulf.wings.client.flight.FlightView;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.entity.player.EntityPlayer;
 
@@ -92,7 +92,7 @@ public final class ModelWingsAvian extends ModelWings {
 	}
 
 	@Override
-	public void render(EntityPlayer player, Flight flight, float delta, float scale) {
+	public void render(EntityPlayer player, FlightView flight, float delta, float scale) {
 		for (int i = 0; i < bonesLeft.size(); i++) {
 			ModelRenderer left = bonesLeft.get(i);
 			ModelRenderer right = bonesRight.get(i);

@@ -9,6 +9,7 @@ import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityInject;
 import net.minecraftforge.common.capabilities.CapabilityManager;
@@ -58,10 +59,12 @@ public final class FlightCapability {
 	public static void onAttachCapabilities(AttachCapabilitiesEvent<Entity> event) {
 		Entity entity = event.getObject();
 		if (entity instanceof EntityPlayer) {
+			Flight flight = WingsMod.instance().newFlight((EntityPlayer) entity);
 			event.addCapability(
 				FLIGHT_ID,
-				CapabilityProviders.builder(CAPABILITY, WingsMod.instance().newFlight((EntityPlayer) entity)).build()
+				CapabilityProviders.builder(CAPABILITY, flight).build()
 			);
+			MinecraftForge.EVENT_BUS.post(AttachFlightCapabilityEvent.create(event, flight));
 		}
 	}
 

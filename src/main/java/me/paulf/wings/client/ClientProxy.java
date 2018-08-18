@@ -1,6 +1,7 @@
 package me.paulf.wings.client;
 
 import me.paulf.wings.Proxy;
+import me.paulf.wings.client.flight.FlightViewCapability;
 import me.paulf.wings.client.renderer.LayerWings;
 import me.paulf.wings.server.flight.Flight;
 import me.paulf.wings.server.item.WingsItems;
@@ -12,6 +13,12 @@ import net.minecraft.client.renderer.entity.RenderPlayer;
 import net.minecraft.entity.player.EntityPlayer;
 
 public final class ClientProxy extends Proxy {
+	@Override
+	public void preinit() {
+		super.preinit();
+		FlightViewCapability.register();
+	}
+
 	@Override
 	protected void init() {
 		super.init();

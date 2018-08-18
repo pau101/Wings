@@ -2,19 +2,23 @@ package me.paulf.wings.client;
 
 import me.paulf.wings.WingsMod;
 import me.paulf.wings.client.audio.WingsSound;
+import me.paulf.wings.client.flight.FlightViewCapability;
 import me.paulf.wings.server.asm.EmptyOffHandPresentEvent;
 import me.paulf.wings.server.asm.GetCameraEyeHeightEvent;
 import me.paulf.wings.server.flight.Flight;
 import me.paulf.wings.server.flight.FlightCapability;
+import me.paulf.wings.server.item.ItemWings;
 import me.paulf.wings.util.Mth;
 import net.ilexiconn.llibrary.client.event.ApplyRenderRotationsEvent;
 import net.ilexiconn.llibrary.client.event.PlayerModelEvent;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.model.ModelPlayer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.settings.KeyBinding;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.client.event.EntityViewRenderEvent;
 import net.minecraftforge.client.settings.KeyConflictContext;
@@ -24,6 +28,7 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.Event;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.InputEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import org.lwjgl.input.Keyboard;
 
@@ -89,9 +94,10 @@ public final class ClientEventHandler {
 
 	@SubscribeEvent
 	public static void onGetCameraEyeHeight(GetCameraEyeHeightEvent event) {
-		FlightCapability.ifPlayer(event.getEntity(), (player, flight) ->
-			flight.onUpdateEyeHeight(event.getValue(), event.getDelta(), event::setValue)
-		);
+		Entity entity = event.getEntity();
+		if (entity instanceof AbstractClientPlayer) {
+			FlightViewCapability.get((AbstractClientPlayer) entity).onUpdateEyeHeight(event.getValue(), event.getDelta(), event::setValue);
+		}
 	}
 
 	@SubscribeEvent
@@ -122,6 +128,15 @@ public final class ClientEventHandler {
 		FlightCapability.ifPlayer(event.getEntity(), EntityPlayer::isUser, (player, flight) ->
 			Minecraft.getMinecraft().getSoundHandler().playSound(new WingsSound(player, flight))
 		);
+	}
+
+	@SubscribeEvent
+	public static void onPlayerUpdate(TickEvent.PlayerTickEvent event) {
+		EntityPlayer entity;
+		if (event.phase == TickEvent.Phase.END && (entity = event.player) instanceof AbstractClientPlayer) {
+			AbstractClientPlayer player = (AbstractClientPlayer) entity;
+			FlightViewCapability.get(player).onUpdate(player, ItemWings.get(player));
+		}
 	}
 
 	private static KeyBinding newKeyBinding(String name, KeyConflictContext keyContext, int keyCode) {

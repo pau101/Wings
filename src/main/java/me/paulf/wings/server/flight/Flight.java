@@ -1,11 +1,10 @@
 package me.paulf.wings.server.flight;
 
-import me.paulf.wings.util.function.FloatConsumer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.common.util.INBTSerializable;
 
 import java.util.function.Consumer;
@@ -29,19 +28,13 @@ public interface Flight extends INBTSerializable<NBTTagCompound> {
 
 	float getFlyingAmount(float delta);
 
-	Vec3d getWingRotation(int index, float delta);
-
-	Vec3d getFeatherRotation(int index, float delta);
-
 	void registerFlyingListener(FlyingListener listener);
 
 	void registerSyncListener(SyncListener listener);
 
 	boolean canFly(EntityPlayer player);
 
-	void onUpdate(EntityPlayer player);
-
-	void onUpdateEyeHeight(float height, float delta, FloatConsumer heightOut);
+	void onUpdate(EntityPlayer player, ItemStack wings);
 
 	void clone(Flight other, PlayerSet players);
 

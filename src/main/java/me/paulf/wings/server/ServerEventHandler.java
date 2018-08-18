@@ -2,6 +2,7 @@ package me.paulf.wings.server;
 
 import me.paulf.wings.WingsMod;
 import me.paulf.wings.server.flight.ConstructWingsAccessorEvent;
+import me.paulf.wings.server.item.ItemWings;
 import me.paulf.wings.util.ItemPlacing;
 import me.paulf.wings.server.asm.GetLivingHeadLimitEvent;
 import me.paulf.wings.server.asm.PlayerFlightCheckEvent;
@@ -79,7 +80,7 @@ public final class ServerEventHandler {
 	@SubscribeEvent
 	public static void onPlayerUpdate(TickEvent.PlayerTickEvent event) {
 		if (event.phase == TickEvent.Phase.END) {
-			FlightCapability.get(event.player).onUpdate(event.player);
+			FlightCapability.get(event.player).onUpdate(event.player, ItemWings.get(event.player));
 		}
 	}
 

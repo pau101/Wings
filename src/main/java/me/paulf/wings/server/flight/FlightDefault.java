@@ -1,19 +1,14 @@
 package me.paulf.wings.server.flight;
 
 import com.google.common.collect.Lists;
-import me.paulf.wings.server.flight.state.State;
-import me.paulf.wings.server.flight.state.StateIdle;
 import me.paulf.wings.server.item.ItemWings;
 import me.paulf.wings.util.CubicBezier;
-import me.paulf.wings.util.function.FloatConsumer;
 import me.paulf.wings.util.Mth;
-import me.paulf.wings.util.SmoothingFunction;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec3d;
 
 import java.util.List;
 
@@ -52,12 +47,6 @@ public final class FlightDefault implements Flight {
 
 	private boolean isFlying;
 
-	private State state = new StateIdle();
-
-	private Animator animator = Animator.ABSENT;
-
-	private final SmoothingFunction eyeHeightFunc = SmoothingFunction.create(t -> Mth.easeOutCirc(Mth.easeInOut(t)));
-
 	@Override
 	public void setIsFlying(boolean isFlying, PlayerSet players) {
 		if (this.isFlying != isFlying) {
@@ -86,16 +75,6 @@ public final class FlightDefault implements Flight {
 	@Override
 	public float getFlyingAmount(float delta) {
 		return FLY_AMOUNT_CURVE.eval(Mth.lerp(getPrevTimeFlying(), getTimeFlying(), delta) / MAX_TIME_FLYING);
-	}
-
-	@Override
-	public Vec3d getWingRotation(int index, float delta) {
-		return animator.getWingRotation(index, delta);
-	}
-
-	@Override
-	public Vec3d getFeatherRotation(int index, float delta) {
-		return animator.getFeatherRotation(index, delta);
 	}
 
 	private void setPrevTimeFlying(int prevTimeFlying) {
@@ -145,18 +124,7 @@ public final class FlightDefault implements Flight {
 			}
 			player.fallDistance = 0.0F;
 		}
-		if (player.world.isRemote) {
-			double dx = player.posX - player.prevPosX;
-			double dy = player.posY - player.prevPosY;
-			double dz = player.posZ - player.prevPosZ;
-			animator = ItemWings.getType(wings).getAnimator(animator);
-			animator.update(dx, dy, dz);
-			State state = this.state.update(isFlying(), dx, dy, dz, player);
-			if (!this.state.equals(state)) {
-				state.beginAnimation(animator);
-			}
-			this.state = state;
-		} else if (isFlying()) {
+		if (!player.world.isRemote && isFlying()) {
 			if (flightTime % DAMAGE_RATE == (DAMAGE_RATE - 1)) {
 				wings.damageItem(1, player);
 				if (!ItemWings.isUsable(wings)) {
@@ -168,8 +136,7 @@ public final class FlightDefault implements Flight {
 	}
 
 	@Override
-	public void onUpdate(EntityPlayer player) {
-		ItemStack wings = ItemWings.get(player);
+	public void onUpdate(EntityPlayer player, ItemStack wings) {
 		if (!wings.isEmpty()) {
 			onWornUpdate(player, wings);
 		} else if (!player.world.isRemote && isFlying()) {
@@ -187,11 +154,6 @@ public final class FlightDefault implements Flight {
 				setTimeFlying(getTimeFlying() - 1);
 			}
 		}
-	}
-
-	@Override
-	public void onUpdateEyeHeight(float value, float delta, FloatConsumer valueOut) {
-		eyeHeightFunc.accept(getFlyingAmount(delta), SmoothingFunction.Sign.valueOf(isFlying()), value, valueOut);
 	}
 
 	@Override

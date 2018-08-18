@@ -1,9 +1,6 @@
 package me.paulf.wings;
 
-import me.paulf.wings.server.dreamcatcher.InSomniableCapability;
 import me.paulf.wings.server.flight.Flight;
-import me.paulf.wings.server.flight.FlightCapability;
-import me.paulf.wings.server.fix.WingsFixes;
 import me.paulf.wings.util.ItemAccessor;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.fml.common.Mod;
@@ -37,9 +34,7 @@ public final class WingsMod {
 
 	@Mod.EventHandler
 	public void init(FMLPreInitializationEvent event) {
-		FlightCapability.register();
-		InSomniableCapability.register();
-		WingsFixes.register();
+		proxy.preinit();
 	}
 
 	@Mod.EventHandler

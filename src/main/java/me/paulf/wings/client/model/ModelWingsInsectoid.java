@@ -1,6 +1,6 @@
 package me.paulf.wings.client.model;
 
-import me.paulf.wings.server.flight.Flight;
+import me.paulf.wings.client.flight.FlightView;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.entity.player.EntityPlayer;
 
@@ -25,7 +25,7 @@ public final class ModelWingsInsectoid extends ModelWings {
 	}
 
 	@Override
-	public void render(EntityPlayer player, Flight flight, float delta, float scale) {
+	public void render(EntityPlayer player, FlightView flight, float delta, float scale) {
 		setAngles(wingLeft, wingRight, flight.getWingRotation(0, delta));
 		root.render(scale);
 	}

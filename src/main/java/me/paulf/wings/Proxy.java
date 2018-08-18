@@ -1,7 +1,10 @@
 package me.paulf.wings;
 
+import me.paulf.wings.server.dreamcatcher.InSomniableCapability;
+import me.paulf.wings.server.fix.WingsFixes;
 import me.paulf.wings.server.flight.Flight;
 import me.paulf.wings.server.flight.ConstructWingsAccessorEvent;
+import me.paulf.wings.server.flight.FlightCapability;
 import me.paulf.wings.server.flight.FlightDefault;
 import me.paulf.wings.server.net.Network;
 import me.paulf.wings.server.net.clientbound.MessageSyncFlight;
@@ -14,6 +17,12 @@ public abstract class Proxy {
 	protected final Network network = new Network();
 
 	private ItemAccessor<EntityPlayer> wingsAccessor = ItemAccessor.none();
+
+	public void preinit() {
+		FlightCapability.register();
+		InSomniableCapability.register();
+		WingsFixes.register();
+	}
 
 	protected void init() {
 		ConstructWingsAccessorEvent event = new ConstructWingsAccessorEvent();
