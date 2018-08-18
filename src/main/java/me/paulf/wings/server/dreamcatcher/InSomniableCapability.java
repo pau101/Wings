@@ -2,12 +2,11 @@ package me.paulf.wings.server.dreamcatcher;
 
 import me.paulf.wings.WingsMod;
 import me.paulf.wings.util.CapabilityProviders;
+import me.paulf.wings.util.SimpleStorage;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.nbt.NBTBase;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityNote;
-import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityInject;
@@ -28,8 +27,8 @@ public final class InSomniableCapability {
 	private static final Capability<Playable> PLAYABLE = null;
 
 	public static void register() {
-		CapabilityManager.INSTANCE.register(InSomniable.class, new Storage<>(), InSomniable::new);
-		CapabilityManager.INSTANCE.register(Playable.class, new Storage<>(), Playable::new);
+		CapabilityManager.INSTANCE.register(InSomniable.class, SimpleStorage.ofVoid(), InSomniable::new);
+		CapabilityManager.INSTANCE.register(Playable.class, SimpleStorage.ofVoid(), Playable::new);
 	}
 
 	public static InSomniable get(EntityPlayer player) {
@@ -75,15 +74,5 @@ public final class InSomniableCapability {
 					.build()
 			);
 		}
-	}
-
-	private static final class Storage<T> implements Capability.IStorage<T> {
-		@Override
-		public NBTBase writeNBT(Capability<T> capability, T instance, EnumFacing side) {
-			return null;
-		}
-
-		@Override
-		public void readNBT(Capability<T> capability, T instance, EnumFacing side, NBTBase nbt) {}
 	}
 }

@@ -42,8 +42,8 @@ public final class WingsMod {
 		proxy.init();
 	}
 
-	public Flight newFlight(EntityPlayer player) {
-		return proxy.newFlight(player);
+	public void addFlightListeners(EntityPlayer player, Flight instance) {
+		proxy.addFlightListeners(player, instance);
 	}
 
 	public ItemAccessor<EntityPlayer> getWingsAccessor() {

@@ -36,7 +36,7 @@ public final class ClientProxy extends Proxy {
 	}
 
 	@Override
-	public void addFlightListeners(EntityPlayer player, Flight flight) {
+	public void addSpecializedFlightListeners(EntityPlayer player, Flight flight) {
 		if (player.isUser()) {
 			Flight.Notifier notifier = Flight.Notifier.of(
 				() -> {},

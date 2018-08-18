@@ -2,10 +2,9 @@ package me.paulf.wings;
 
 import me.paulf.wings.server.dreamcatcher.InSomniableCapability;
 import me.paulf.wings.server.fix.WingsFixes;
-import me.paulf.wings.server.flight.Flight;
 import me.paulf.wings.server.flight.ConstructWingsAccessorEvent;
+import me.paulf.wings.server.flight.Flight;
 import me.paulf.wings.server.flight.FlightCapability;
-import me.paulf.wings.server.flight.FlightDefault;
 import me.paulf.wings.server.net.Network;
 import me.paulf.wings.server.net.clientbound.MessageSyncFlight;
 import me.paulf.wings.util.ItemAccessor;
@@ -30,27 +29,25 @@ public abstract class Proxy {
 		wingsAccessor = event.build();
 	}
 
-	public final Flight newFlight(EntityPlayer player) {
-		Flight flight = new FlightDefault();
+	public final void addFlightListeners(EntityPlayer player, Flight instance) {
 		if (player instanceof EntityPlayerMP) {
-			flight.registerFlyingListener(isFlying -> player.capabilities.allowFlying = isFlying);
-			flight.registerFlyingListener(isFlying -> {
+			instance.registerFlyingListener(isFlying -> player.capabilities.allowFlying = isFlying);
+			instance.registerFlyingListener(isFlying -> {
 				if (isFlying) {
 					player.dismountRidingEntity();
 				}
 			});
 			Flight.Notifier notifier = Flight.Notifier.of(
-				() -> network.sendToPlayer(new MessageSyncFlight(player, flight), (EntityPlayerMP) player),
-				p -> network.sendToPlayer(new MessageSyncFlight(player, flight), p),
-				() -> network.sendToAllTracking(new MessageSyncFlight(player, flight), player)
+				() -> network.sendToPlayer(new MessageSyncFlight(player, instance), (EntityPlayerMP) player),
+				p -> network.sendToPlayer(new MessageSyncFlight(player, instance), p),
+				() -> network.sendToAllTracking(new MessageSyncFlight(player, instance), player)
 			);
-			flight.registerSyncListener(players -> players.notify(notifier));
+			instance.registerSyncListener(players -> players.notify(notifier));
 		}
-		addFlightListeners(player, flight);
-		return flight;
+		addSpecializedFlightListeners(player, instance);
 	}
 
-	protected abstract void addFlightListeners(EntityPlayer player, Flight flight);
+	protected abstract void addSpecializedFlightListeners(EntityPlayer player, Flight flight);
 
 	public final ItemAccessor<EntityPlayer> getWingsAccessor() {
 		return wingsAccessor;

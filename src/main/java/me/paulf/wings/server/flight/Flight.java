@@ -3,13 +3,11 @@ package me.paulf.wings.server.flight;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.PacketBuffer;
-import net.minecraftforge.common.util.INBTSerializable;
 
 import java.util.function.Consumer;
 
-public interface Flight extends INBTSerializable<NBTTagCompound> {
+public interface Flight {
 	default void setIsFlying(boolean isFlying) {
 		setIsFlying(isFlying, PlayerSet.empty());
 	}

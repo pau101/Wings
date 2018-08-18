@@ -13,7 +13,7 @@ import java.util.function.Consumer;
 public final class CapabilityProviders {
 	private CapabilityProviders() {}
 
-	public static <T> SimpleBuilder<T> builder(Capability<T> capability, T instance) {
+	public static <T> SimpleBuilder<T> builder(Capability<? super T> capability, T instance) {
 		return new SimpleBuilder<>(capability, instance);
 	}
 
@@ -35,11 +35,11 @@ public final class CapabilityProviders {
 	}
 
 	private static abstract class Provider<T> implements ICapabilityProvider {
-		final Capability<T> capability;
+		final Capability<? super T> capability;
 
 		T instance;
 
-		private Provider(Capability<T> capability, T instance) {
+		private Provider(Capability<? super T> capability, T instance) {
 			this.capability = capability;
 			this.instance = instance;
 		}
@@ -57,7 +57,7 @@ public final class CapabilityProviders {
 	}
 
 	private static final class SimpleProvider<T> extends Provider<T> {
-		private SimpleProvider(Capability<T> capability, T instance) {
+		private SimpleProvider(Capability<? super T> capability, T instance) {
 			super(capability, instance);
 		}
 	}
@@ -65,7 +65,7 @@ public final class CapabilityProviders {
 	private static final class SerializingProvider<T, N extends NBTBase> extends Provider<T> implements INBTSerializable<N> {
 		final NBTSerializer<T, N> serializer;
 
-		private SerializingProvider(Capability<T> capability, T instance, NBTSerializer<T, N> serializer) {
+		private SerializingProvider(Capability<? super T> capability, T instance, NBTSerializer<T, N> serializer) {
 			super(capability, instance);
 			this.serializer = serializer;
 		}
@@ -82,11 +82,11 @@ public final class CapabilityProviders {
 	}
 
 	public static abstract class Builder<T> {
-		final Capability<T> capability;
+		final Capability<? super T> capability;
 
 		final T instance;
 
-		private Builder(Capability<T> capability, T instance) {
+		private Builder(Capability<? super T> capability, T instance) {
 			this.capability = capability;
 			this.instance = instance;
 		}
@@ -98,7 +98,7 @@ public final class CapabilityProviders {
 	}
 
 	public static final class SimpleBuilder<T> extends Builder<T> {
-		private SimpleBuilder(Capability<T> capability, T instance) {
+		private SimpleBuilder(Capability<? super T> capability, T instance) {
 			super(capability, instance);
 		}
 
@@ -120,7 +120,7 @@ public final class CapabilityProviders {
 	public static final class SerializingBuilder<T, N extends NBTBase> extends Builder<T> {
 		private final NBTSerializer<T, N> serializer;
 
-		private SerializingBuilder(Capability<T> capability, T instance, NBTSerializer<T, N> serializer) {
+		private SerializingBuilder(Capability<? super T> capability, T instance, NBTSerializer<T, N> serializer) {
 			super(capability, instance);
 			this.serializer = serializer;
 		}

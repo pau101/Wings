@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 import me.paulf.wings.server.item.ItemWings;
 import me.paulf.wings.util.CubicBezier;
 import me.paulf.wings.util.Mth;
+import me.paulf.wings.util.NBTSerializer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -11,12 +12,9 @@ import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.math.MathHelper;
 
 import java.util.List;
+import java.util.function.Supplier;
 
 public final class FlightDefault implements Flight {
-	private static final String IS_FLYING  = "isFlying";
-
-	private static final String TIME_FLYING = "timeFlying";
-
 	private static final CubicBezier FLY_AMOUNT_CURVE = new CubicBezier(0.37F, 0.13F, 0.3F, 1.12F);
 
 	private static final int INITIAL_TIME_FLYING = 0;
@@ -180,17 +178,31 @@ public final class FlightDefault implements Flight {
 		setTimeFlying(buf.readVarInt());
 	}
 
-	@Override
-	public NBTTagCompound serializeNBT() {
-		NBTTagCompound compound = new NBTTagCompound();
-		compound.setBoolean(IS_FLYING, isFlying());
-		compound.setInteger(TIME_FLYING, getTimeFlying());
-		return compound;
-	}
+	public static final class Serializer implements NBTSerializer<FlightDefault, NBTTagCompound> {
+		private static final String IS_FLYING  = "isFlying";
 
-	@Override
-	public void deserializeNBT(NBTTagCompound compound) {
-		setIsFlying(compound.getBoolean(IS_FLYING));
-		setTimeFlying(compound.getInteger(TIME_FLYING));
+		private static final String TIME_FLYING = "timeFlying";
+
+		private final Supplier<FlightDefault> factory;
+
+		public Serializer(Supplier<FlightDefault> factory) {
+			this.factory = factory;
+		}
+
+		@Override
+		public NBTTagCompound serialize(FlightDefault instance) {
+			NBTTagCompound compound = new NBTTagCompound();
+			compound.setBoolean(IS_FLYING, instance.isFlying());
+			compound.setInteger(TIME_FLYING, instance.getTimeFlying());
+			return compound;
+		}
+
+		@Override
+		public FlightDefault deserialize(NBTTagCompound compound) {
+			FlightDefault f = factory.get();
+			f.setIsFlying(compound.getBoolean(IS_FLYING));
+			f.setTimeFlying(compound.getInteger(TIME_FLYING));
+			return f;
+		}
 	}
 }
