@@ -29,7 +29,7 @@ public abstract class Proxy {
 		wingsAccessor = event.build();
 	}
 
-	public final void addFlightListeners(EntityPlayer player, Flight instance) {
+	public void addFlightListeners(EntityPlayer player, Flight instance) {
 		if (player instanceof EntityPlayerMP) {
 			instance.registerFlyingListener(isFlying -> player.capabilities.allowFlying = isFlying);
 			instance.registerFlyingListener(isFlying -> {
@@ -44,10 +44,7 @@ public abstract class Proxy {
 			);
 			instance.registerSyncListener(players -> players.notify(notifier));
 		}
-		addSpecializedFlightListeners(player, instance);
 	}
-
-	protected abstract void addSpecializedFlightListeners(EntityPlayer player, Flight flight);
 
 	public final ItemAccessor<EntityPlayer> getWingsAccessor() {
 		return wingsAccessor;

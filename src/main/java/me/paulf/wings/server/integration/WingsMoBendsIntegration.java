@@ -29,8 +29,8 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import org.lwjgl.util.vector.Vector3f;
 
 @Integration(
-	id = "wings_mobends_interop",
-	name = "Mo' Bends Interoperability for Wings",
+	id = "mobends_wings",
+	name = "Mo' Bending Wings",
 	condition = "required-after:wings;after:mobends@[0.24,0.25)"
 )
 public final class WingsMoBendsIntegration {
