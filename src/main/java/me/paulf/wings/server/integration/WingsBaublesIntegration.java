@@ -11,8 +11,8 @@ import me.paulf.wings.WingsMod;
 import me.paulf.wings.server.asm.plugin.Integration;
 import me.paulf.wings.server.flight.ConstructWingsAccessorEvent;
 import me.paulf.wings.server.item.ItemWings;
-import me.paulf.wings.util.ItemPlacing;
 import me.paulf.wings.util.CapabilityProviders;
+import me.paulf.wings.util.ItemPlacing;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
@@ -49,7 +49,7 @@ public final class WingsBaublesIntegration {
 
 			@SubscribeEvent
 			public void onAttachCapabilities(AttachCapabilitiesEvent<ItemStack> event) {
-				if (ItemWings.test(event.getObject())) {
+				if (event.getObject().getItem() instanceof ItemWings) {
 					event.addCapability(
 						new ResourceLocation(WingsMod.ID, TIFFANY),
 						CapabilityProviders.builder(BaublesCapabilities.CAPABILITY_ITEM_BAUBLE, new BaubleItem(BaubleType.BODY)).build()

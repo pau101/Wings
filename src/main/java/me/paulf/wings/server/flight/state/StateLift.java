@@ -1,6 +1,6 @@
 package me.paulf.wings.server.flight.state;
 
-import me.paulf.wings.server.flight.Animator;
+import me.paulf.wings.client.flight.Animator;
 
 public final class StateLift extends State {
 	public StateLift() {

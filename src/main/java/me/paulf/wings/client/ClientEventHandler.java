@@ -7,7 +7,7 @@ import me.paulf.wings.server.asm.EmptyOffHandPresentEvent;
 import me.paulf.wings.server.asm.GetCameraEyeHeightEvent;
 import me.paulf.wings.server.flight.Flight;
 import me.paulf.wings.server.flight.FlightCapability;
-import me.paulf.wings.server.item.ItemWings;
+import me.paulf.wings.server.winged.FlightApparatuses;
 import me.paulf.wings.util.Mth;
 import net.ilexiconn.llibrary.client.event.ApplyRenderRotationsEvent;
 import net.ilexiconn.llibrary.client.event.PlayerModelEvent;
@@ -135,7 +135,7 @@ public final class ClientEventHandler {
 		EntityPlayer entity;
 		if (event.phase == TickEvent.Phase.END && (entity = event.player) instanceof AbstractClientPlayer) {
 			AbstractClientPlayer player = (AbstractClientPlayer) entity;
-			FlightViewCapability.get(player).onUpdate(player, ItemWings.get(player));
+			FlightViewCapability.get(player).onUpdate(player, FlightApparatuses.find(player));
 		}
 	}
 

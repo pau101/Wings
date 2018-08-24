@@ -7,10 +7,17 @@ import me.paulf.wings.server.flight.Flight;
 import me.paulf.wings.server.flight.FlightCapability;
 import me.paulf.wings.server.net.Network;
 import me.paulf.wings.server.net.clientbound.MessageSyncFlight;
+import me.paulf.wings.server.winged.SimpleFlightApparatus;
+import me.paulf.wings.server.winged.FlightApparatus;
+import me.paulf.wings.util.CapabilityProviders;
 import me.paulf.wings.util.ItemAccessor;
+import me.paulf.wings.util.SimpleStorage;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.common.capabilities.CapabilityManager;
+
+import java.util.function.Consumer;
 
 public abstract class Proxy {
 	protected final Network network = new Network();
@@ -20,6 +27,7 @@ public abstract class Proxy {
 	public void preinit() {
 		FlightCapability.register();
 		InSomniableCapability.register();
+		CapabilityManager.INSTANCE.register(FlightApparatus.class, SimpleStorage.ofVoid(), SimpleFlightApparatus.builder()::build);
 		WingsFixes.register();
 	}
 
@@ -49,4 +57,8 @@ public abstract class Proxy {
 	public final ItemAccessor<EntityPlayer> getWingsAccessor() {
 		return wingsAccessor;
 	}
+
+	public abstract Consumer<CapabilityProviders.CompositeBuilder> createAvianWings(String name);
+
+	public abstract Consumer<CapabilityProviders.CompositeBuilder> createInsectoidWings(String name);
 }

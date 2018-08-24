@@ -1,6 +1,6 @@
 package me.paulf.wings.server.flight.state;
 
-import me.paulf.wings.server.flight.Animator;
+import me.paulf.wings.client.flight.Animator;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.math.BlockPos;
 

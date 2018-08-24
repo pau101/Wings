@@ -1,22 +1,46 @@
 package me.paulf.wings.client;
 
 import me.paulf.wings.Proxy;
+import me.paulf.wings.WingsMod;
+import me.paulf.wings.client.flight.Animator;
 import me.paulf.wings.client.flight.FlightViewCapability;
+import me.paulf.wings.client.model.ModelWings;
+import me.paulf.wings.client.model.ModelWingsAvian;
+import me.paulf.wings.client.model.ModelWingsInsectoid;
 import me.paulf.wings.client.renderer.LayerWings;
+import me.paulf.wings.client.winged.WingForm;
+import me.paulf.wings.client.winged.FlightApparatusView;
+import me.paulf.wings.client.winged.FlightApparatusViews;
 import me.paulf.wings.server.flight.Flight;
+import me.paulf.wings.server.flight.animator.AnimatorAvian;
+import me.paulf.wings.server.flight.animator.AnimatorInsectoid;
 import me.paulf.wings.server.item.WingsItems;
 import me.paulf.wings.server.net.serverbound.MessageControlFlying;
+import me.paulf.wings.util.CapabilityProviders;
+import me.paulf.wings.util.SimpleStorage;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.color.ItemColors;
 import net.minecraft.client.renderer.entity.RenderPlayer;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.common.capabilities.CapabilityManager;
+
+import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 public final class ClientProxy extends Proxy {
+	private final ModelWings<AnimatorAvian> avianWings = new ModelWingsAvian();
+
+	private final ModelWings<AnimatorInsectoid> insectoidWings = new ModelWingsInsectoid();
+
 	@Override
 	public void preinit() {
 		super.preinit();
 		FlightViewCapability.register();
+		CapabilityManager.INSTANCE.register(FlightApparatusView.class, SimpleStorage.ofVoid(), () -> {
+			throw new UnsupportedOperationException();
+		});
 	}
 
 	@Override
@@ -46,5 +70,24 @@ public final class ClientProxy extends Proxy {
 			);
 			flight.registerSyncListener(players -> players.notify(notifier));
 		}
+	}
+
+	@Override
+	public Consumer<CapabilityProviders.CompositeBuilder> createAvianWings(String name) {
+		return createWings(name, AnimatorAvian::new, avianWings);
+	}
+
+	@Override
+	public Consumer<CapabilityProviders.CompositeBuilder> createInsectoidWings(String name) {
+		return createWings(name, AnimatorInsectoid::new, insectoidWings);
+	}
+
+	private <A extends Animator> Consumer<CapabilityProviders.CompositeBuilder> createWings(String name, Supplier<A> animator, ModelWings<A> model) {
+		WingForm<A> form = WingForm.of(
+			animator,
+			model,
+			new ResourceLocation(WingsMod.ID, String.format("textures/entity/wings/%s.png", name))
+		);
+		return builder -> builder.add(FlightApparatusViews.providerBuilder(FlightApparatusViews.create(form)).build());
 	}
 }

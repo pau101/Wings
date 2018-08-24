@@ -1,7 +1,7 @@
 package me.paulf.wings.server.flight.animator;
 
 import com.google.common.collect.ImmutableMap;
-import me.paulf.wings.server.flight.Animator;
+import me.paulf.wings.client.flight.Animator;
 import me.paulf.wings.util.Mth;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.gen.NoiseGeneratorSimplex;
@@ -60,20 +60,18 @@ public final class AnimatorAvian implements Animator {
 		beginMovement(new LiftMovement(), LIFT_TRANSITION_DURATION);
 	}
 
-	@Override
 	public Vec3d getWingRotation(int index, float delta) {
 		return movement.getWingRotation(index, delta);
 	}
 
-	@Override
 	public Vec3d getFeatherRotation(int index, float delta) {
 		return movement.getFeatherRotation(index, delta);
 	}
 
 	@Override
-	public void update(double dx, double dy, double dz) {
+	public void update() {
 		prevFlapCycle = flapCycle;
-		flap(movement.update(dx, dy, dz));
+		flap(movement.update());
 	}
 
 	private interface Movement {
@@ -81,7 +79,7 @@ public final class AnimatorAvian implements Animator {
 
 		Vec3d getFeatherRotation(int index, float delta);
 
-		float update(double dx, double dy, double dz);
+		float update();
 
 		default void onEnd() {}
 	}
@@ -109,7 +107,7 @@ public final class AnimatorAvian implements Animator {
 		}
 
 		@Override
-		public float update(double dx, double dy, double dz) {
+		public float update() {
 			return 0.0F;
 		}
 	}
@@ -136,7 +134,7 @@ public final class AnimatorAvian implements Animator {
 		}
 
 		@Override
-		public float update(double dx, double dy, double dz) {
+		public float update() {
 			return 0.67F;
 		}
 	}
@@ -161,7 +159,7 @@ public final class AnimatorAvian implements Animator {
 		}
 
 		@Override
-		public float update(double dx, double dy, double dz) {
+		public float update() {
 			time++;
 			return 0.045F;
 		}
@@ -197,7 +195,7 @@ public final class AnimatorAvian implements Animator {
 		}
 
 		@Override
-		public float update(double dx, double dy, double dz) {
+		public float update() {
 			return 0.035F;
 		}
 	}
@@ -224,7 +222,7 @@ public final class AnimatorAvian implements Animator {
 		}
 
 		@Override
-		public float update(double dx, double dy, double dz) {
+		public float update() {
 			float flap = Mth.lerp(0.375F, 0.225F, (float) beginTime / beginDuration);
 			if (beginTime < beginDuration) {
 				beginTime++;
@@ -272,10 +270,10 @@ public final class AnimatorAvian implements Animator {
 		}
 
 		@Override
-		public float update(double dx, double dy, double dz) {
+		public float update() {
 			lastTime = time;
-			float flapStart = start.update(dx, dy, dz);
-			float flapEnd = end.update(dx, dy, dz);
+			float flapStart = start.update();
+			float flapEnd = end.update();
 			float flap = Mth.lerp(flapStart, flapEnd, (float) time / duration);
 			if (time < duration) {
 				time++;

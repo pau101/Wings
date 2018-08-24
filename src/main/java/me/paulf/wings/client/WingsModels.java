@@ -2,7 +2,6 @@ package me.paulf.wings.client;
 
 import me.paulf.wings.WingsMod;
 import me.paulf.wings.server.block.WingsBlocks;
-import me.paulf.wings.server.item.StandardWing;
 import me.paulf.wings.server.item.WingsItems;
 import me.paulf.wings.util.Util;
 import net.minecraft.block.Block;
@@ -20,31 +19,41 @@ public final class WingsModels {
 	private WingsModels() {}
 
 	@SubscribeEvent
-	public static void register(ModelRegistryEvent event) {
-		StandardWing.stream()
-			.map(StandardWing::getId)
-			.map(Util::requireItem)
-			.forEach(WingsModels::register);
-		register(WingsBlocks.FAIRY_DUST_ORE);
-		register(WingsBlocks.AMETHYST_ORE);
-		register(WingsItems.FAIRY_DUST);
-		register(WingsItems.AMETHYST);
-		register(WingsItems.BAT_BLOOD);
+	public static void onRegister(ModelRegistryEvent event) {
+		bindAll(WingsItems.ANGEL_WINGS);
+		bindAll(WingsItems.SLIME_WINGS);
+		bindAll(WingsItems.BLUE_BUTTERFLY_WINGS);
+		bindAll(WingsItems.MONARCH_BUTTERFLY_WINGS);
+		bindAll(WingsItems.FIRE_WINGS);
+		bindAll(WingsItems.BAT_WINGS);
+		bindAll(WingsItems.FAIRY_WINGS);
+		bindAll(WingsItems.EVIL_WINGS);
+		bindAll(WingsItems.DRAGON_WINGS);
+		bindOne(WingsBlocks.FAIRY_DUST_ORE);
+		bindOne(WingsBlocks.AMETHYST_ORE);
+		bindOne(WingsItems.FAIRY_DUST);
+		bindOne(WingsItems.AMETHYST);
+		bindOne(WingsItems.BAT_BLOOD);
 	}
 
-	private static void register(Block block) {
-		register(ForgeRegistries.ITEMS.getValue(Util.getName(block)));
+	private static void bindOne(Block block) {
+		bindOne(ForgeRegistries.ITEMS.getValue(Util.getName(block)));
 	}
 
-	private static void register(Item item) {
-		register(item, 0, "inventory");
+	private static void bindAll(Item item) {
+		ModelResourceLocation location = createInventoryLocation(item);
+		ModelLoader.setCustomMeshDefinition(item, stack -> location);
 	}
 
-	private static void register(Item item, int meta, String variant) {
-		register(item, meta, Util.getName(item).toString(), variant);
+	private static void bindOne(Item item) {
+		bind(item, 0, createInventoryLocation(item));
 	}
 
-	private static void register(Item item, int meta, String location, String variant) {
-		ModelLoader.setCustomModelResourceLocation(item, meta, new ModelResourceLocation(location, variant));
+	private static void bind(Item item, int meta, ModelResourceLocation location) {
+		ModelLoader.setCustomModelResourceLocation(item, meta, location);
+	}
+
+	private static ModelResourceLocation createInventoryLocation(Item item) {
+		return new ModelResourceLocation(Util.getName(item), "inventory");
 	}
 }

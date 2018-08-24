@@ -1,11 +1,14 @@
 package me.paulf.wings.server.flight;
 
 import com.google.common.collect.Lists;
-import me.paulf.wings.server.item.ItemWings;
+import me.paulf.wings.server.winged.FlightApparatus;
+import me.paulf.wings.server.winged.FlightApparatuses;
 import me.paulf.wings.util.CubicBezier;
 import me.paulf.wings.util.Mth;
 import me.paulf.wings.util.NBTSerializer;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Items;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.PacketBuffer;
@@ -31,25 +34,24 @@ public final class FlightDefault implements Flight {
 
 	private static final float PITCH_OFFSET = 30.0F;
 
-	private static final int DAMAGE_RATE = 60;
-
 	private final List<FlyingListener> flyingListeners = Lists.newArrayList();
 
 	private final List<SyncListener> syncListeners = Lists.newArrayList();
+
+	private final WingState voidState = new WingState(Items.AIR, FlightApparatus.FlightState.VOID);
 
 	private int prevTimeFlying = INITIAL_TIME_FLYING;
 
 	private int timeFlying = INITIAL_TIME_FLYING;
 
-	private int flightTime;
-
 	private boolean isFlying;
+
+	private WingState state = voidState;
 
 	@Override
 	public void setIsFlying(boolean isFlying, PlayerSet players) {
 		if (this.isFlying != isFlying) {
 			this.isFlying = isFlying;
-			flightTime = 0;
 			flyingListeners.forEach(FlyingListener.onChangeUsing(isFlying));
 			sync(players);
 		}
@@ -95,7 +97,9 @@ public final class FlightDefault implements Flight {
 
 	@Override
 	public boolean canFly(EntityPlayer player) {
-		return ItemWings.isUsable(ItemWings.get(player));
+		ItemStack stack = FlightApparatuses.find(player);
+		FlightApparatus wf = FlightApparatuses.get(stack);
+		return wf != null && wf.isUsable(stack);
 	}
 
 	private void onWornUpdate(EntityPlayer player, ItemStack wings) {
@@ -122,15 +126,17 @@ public final class FlightDefault implements Flight {
 			}
 			player.fallDistance = 0.0F;
 		}
-		if (!player.world.isRemote && isFlying()) {
-			if (flightTime % DAMAGE_RATE == (DAMAGE_RATE - 1)) {
-				wings.damageItem(1, player);
-				if (!ItemWings.isUsable(wings)) {
-					setIsFlying(false, PlayerSet.ofAll());
-				}
+		if (!player.world.isRemote) {
+			FlightApparatus wf = FlightApparatuses.get(wings);
+			if (wf == null) {
+				state = state.next();
+			} else if (wf.isUsable(wings)) {
+				(state = state.next(wings, wf)).onUpdate(player, wings);
+			} else if (isFlying()) {
+				setIsFlying(false, PlayerSet.ofAll());
+				state = state.next();
 			}
 		}
-		flightTime++;
 	}
 
 	@Override
@@ -203,6 +209,33 @@ public final class FlightDefault implements Flight {
 			f.setIsFlying(compound.getBoolean(IS_FLYING));
 			f.setTimeFlying(compound.getInteger(TIME_FLYING));
 			return f;
+		}
+	}
+
+	private final class WingState {
+		private final Item item;
+
+		private final FlightApparatus.FlightState activity;
+
+		private WingState(Item item, FlightApparatus.FlightState activity) {
+			this.item = item;
+			this.activity = activity;
+		}
+
+		private WingState next() {
+			return voidState;
+		}
+
+		private WingState next(ItemStack stack, FlightApparatus wf) {
+			Item item = stack.getItem();
+			if (this.item.equals(item)) {
+				return this;
+			}
+			return new WingState(item, wf.createState(FlightDefault.this));
+		}
+
+		private void onUpdate(EntityPlayer player, ItemStack stack) {
+			activity.onUpdate(player, stack);
 		}
 	}
 }

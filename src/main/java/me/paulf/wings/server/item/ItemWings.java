@@ -2,35 +2,37 @@ package me.paulf.wings.server.item;
 
 import com.google.common.collect.ImmutableSet;
 import me.paulf.wings.WingsMod;
-import me.paulf.wings.server.flight.WingType;
 import me.paulf.wings.server.sound.WingsSounds;
+import me.paulf.wings.server.winged.SimpleFlightApparatus;
+import me.paulf.wings.server.winged.FlightApparatus;
+import me.paulf.wings.server.winged.FlightApparatuses;
+import me.paulf.wings.util.CapabilityProviders;
 import me.paulf.wings.util.HandlerSlot;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnumEnchantmentType;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumHand;
 import net.minecraft.world.World;
+import net.minecraftforge.common.capabilities.ICapabilityProvider;
+
+import javax.annotation.Nullable;
+import java.util.function.Consumer;
 
 public final class ItemWings extends Item {
 	private final ImmutableSet<EnumEnchantmentType> allowedEnchantmentTypes;
 
-	private final StandardWing type;
+	private final Consumer<CapabilityProviders.CompositeBuilder> capabilities;
 
-	private ItemWings(StandardWing type, ImmutableSet<EnumEnchantmentType> allowedEnchantmentTypes) {
-		this.type = type;
+	private ItemWings(ImmutableSet<EnumEnchantmentType> allowedEnchantmentTypes, Consumer<CapabilityProviders.CompositeBuilder> capabilities) {
 		this.allowedEnchantmentTypes = allowedEnchantmentTypes;
+		this.capabilities = capabilities;
 	}
-
-	public StandardWing getType() {
-		return type;
-	}
-
 	@Override
 	public EntityEquipmentSlot getEquipmentSlot(ItemStack stack) {
 		return EntityEquipmentSlot.CHEST;
@@ -66,43 +68,42 @@ public final class ItemWings extends Item {
 		return new ActionResult<>(EnumActionResult.FAIL, stack);
 	}
 
-	public static boolean isUsable(ItemStack stack) {
-		return !stack.isEmpty() && stack.getItemDamage() < stack.getMaxDamage() - 1;
-	}
-
-	public static ItemStack get(EntityPlayer player) {
-		for (HandlerSlot slot : WingsMod.instance().getWingsAccessor().enumerate(player)) {
-			ItemStack stack = slot.get();
-			if (stack.getItem() instanceof ItemWings) {
-				return stack;
-			}
-			if (!stack.isEmpty() && !(stack.getItem() instanceof ItemArmor)) {
-				break;
-			}
-		}
-		return ItemStack.EMPTY;
-	}
-
-	public static WingType getType(ItemStack stack) {
-		Item item = stack.getItem();
-		if (item instanceof ItemWings) {
-			return ((ItemWings) item).getType();
-		}
-		return WingType.ABSENT;
-	}
-
-	public static boolean test(ItemStack stack) {
-		return stack.getItem() instanceof ItemWings;
-	}
-
-	public static ItemWings create(StandardWing type) {
-		ItemWings wings = new ItemWings(type, ImmutableSet.of(
+	public static ItemWings create(Consumer<CapabilityProviders.CompositeBuilder> capabilities) {
+		ItemWings wings = new ItemWings(ImmutableSet.of(
 			EnumEnchantmentType.ALL,
 			EnumEnchantmentType.BREAKABLE,
 			EnumEnchantmentType.WEARABLE
-		));
+		), capabilities);
 		wings.setMaxStackSize(1);
-		wings.setMaxDamage(480);
+		wings.setMaxDamage(180);
 		return wings;
+	}
+
+	@Override
+	public ICapabilityProvider initCapabilities(ItemStack stack, @Nullable NBTTagCompound tag) {
+		CapabilityProviders.CompositeBuilder builder = CapabilityProviders.builder()
+			.add(FlightApparatuses.providerBuilder(SimpleFlightApparatus.builder()
+				.withUsability(s -> s.getItemDamage() < s.getMaxDamage() - 1)
+				.withVitality(flight -> new FlightApparatus.FlightState() {
+					private static final int DAMAGE_RATE = 20;
+
+					private int flightTime;
+
+					@Override
+					public void onUpdate(EntityPlayer player, ItemStack stack) {
+						if (flight.isFlying()) {
+							if (flightTime++ % DAMAGE_RATE == (DAMAGE_RATE - 1)) {
+								stack.damageItem(1, player);
+							}
+						} else {
+							flightTime = 0;
+						}
+					}
+				})
+				.build()
+			)
+			.build());
+		capabilities.accept(builder);
+		return builder.build();
 	}
 }

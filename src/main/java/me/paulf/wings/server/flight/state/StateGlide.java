@@ -1,6 +1,6 @@
 package me.paulf.wings.server.flight.state;
 
-import me.paulf.wings.server.flight.Animator;
+import me.paulf.wings.client.flight.Animator;
 
 public final class StateGlide extends State {
 	private static final int LIFT_STATE_DELAY = 6;

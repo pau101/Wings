@@ -1,11 +1,10 @@
 package me.paulf.wings.client.model;
 
 import com.google.common.collect.ImmutableList;
-import me.paulf.wings.client.flight.FlightView;
+import me.paulf.wings.server.flight.animator.AnimatorAvian;
 import net.minecraft.client.model.ModelRenderer;
-import net.minecraft.entity.player.EntityPlayer;
 
-public final class ModelWingsAvian extends ModelWings {
+public final class ModelWingsAvian extends ModelWings<AnimatorAvian> {
 	private final ModelRenderer root;
 
 	private final ImmutableList<ModelRenderer> bonesLeft, bonesRight;
@@ -92,16 +91,16 @@ public final class ModelWingsAvian extends ModelWings {
 	}
 
 	@Override
-	public void render(EntityPlayer player, FlightView flight, float delta, float scale) {
+	public void render(AnimatorAvian animator, float delta, float scale) {
 		for (int i = 0; i < bonesLeft.size(); i++) {
 			ModelRenderer left = bonesLeft.get(i);
 			ModelRenderer right = bonesRight.get(i);
-			setAngles(left, right, flight.getWingRotation(i, delta));
+			setAngles(left, right, animator.getWingRotation(i, delta));
 		}
 		for (int i = 0; i < feathersLeft.size(); i++) {
 			ModelRenderer left = feathersLeft.get(i);
 			ModelRenderer right = feathersRight.get(i);
-			setAngles(left, right, flight.getFeatherRotation(i, delta));
+			setAngles(left, right, animator.getFeatherRotation(i, delta));
 		}
 		root.render(scale);
 	}
