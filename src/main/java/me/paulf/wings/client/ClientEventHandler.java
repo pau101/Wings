@@ -2,12 +2,13 @@ package me.paulf.wings.client;
 
 import me.paulf.wings.WingsMod;
 import me.paulf.wings.client.audio.WingsSound;
-import me.paulf.wings.client.flight.FlightViewCapability;
+import me.paulf.wings.client.flight.FlightView;
+import me.paulf.wings.client.flight.FlightViews;
+import me.paulf.wings.server.apparatus.FlightApparatuses;
 import me.paulf.wings.server.asm.EmptyOffHandPresentEvent;
 import me.paulf.wings.server.asm.GetCameraEyeHeightEvent;
 import me.paulf.wings.server.flight.Flight;
-import me.paulf.wings.server.flight.FlightCapability;
-import me.paulf.wings.server.winged.FlightApparatuses;
+import me.paulf.wings.server.flight.Flights;
 import me.paulf.wings.util.Mth;
 import net.ilexiconn.llibrary.client.event.ApplyRenderRotationsEvent;
 import net.ilexiconn.llibrary.client.event.PlayerModelEvent;
@@ -42,8 +43,8 @@ public final class ClientEventHandler {
 	public static void onKey(InputEvent.KeyInputEvent event) {
 		if (FLY.isPressed()) {
 			EntityPlayer player = Minecraft.getMinecraft().player;
-			Flight flight = FlightCapability.get(player);
-			if (flight.canFly(player)) {
+			Flight flight = Flights.get(player);
+			if (flight != null && flight.canFly(player)) {
 				flight.toggleIsFlying(Flight.PlayerSet.ofOthers());
 			}
 		}
@@ -53,8 +54,9 @@ public final class ClientEventHandler {
 	public static void onSetRotationAngles(PlayerModelEvent.SetRotationAngles event) {
 		EntityPlayer player = event.getEntityPlayer();
 		float delta = event.getRotation() - player.ticksExisted;
-		float amt = FlightCapability.get(player).getFlyingAmount(delta);
-		if (amt > 0.0F) {
+		Flight flight = Flights.get(player);
+		float amt;
+		if (flight != null && (amt = flight.getFlyingAmount(delta)) > 0.0F) {
 			ModelBiped model = event.getModel();
 			float pitch = event.getRotationPitch();
 			model.bipedHead.rotateAngleX = Mth.toRadians(Mth.lerp(pitch, pitch / 4.0F - 90.0F, amt));
@@ -75,7 +77,7 @@ public final class ClientEventHandler {
 
 	@SubscribeEvent
 	public static void onApplyRenderRotations(ApplyRenderRotationsEvent.Post event) {
-		FlightCapability.ifPlayer(event.getEntity(), (player, flight) -> {
+		Flights.ifPlayer(event.getEntity(), (player, flight) -> {
 			float delta = event.getPartialTicks();
 			float amt = flight.getFlyingAmount(delta);
 			if (amt > 0.0F) {
@@ -95,14 +97,15 @@ public final class ClientEventHandler {
 	@SubscribeEvent
 	public static void onGetCameraEyeHeight(GetCameraEyeHeightEvent event) {
 		Entity entity = event.getEntity();
-		if (entity instanceof AbstractClientPlayer) {
-			FlightViewCapability.get((AbstractClientPlayer) entity).onUpdateEyeHeight(event.getValue(), event.getDelta(), event::setValue);
+		FlightView flight;
+		if (entity instanceof AbstractClientPlayer && (flight = FlightViews.get((AbstractClientPlayer) entity)) != null) {
+			flight.onUpdateEyeHeight(event.getValue(), event.getDelta(), event::setValue);
 		}
 	}
 
 	@SubscribeEvent
 	public static void onCameraSetup(EntityViewRenderEvent.CameraSetup event) {
-		FlightCapability.ifPlayer(event.getEntity(), (player, flight) -> {
+		Flights.ifPlayer(event.getEntity(), (player, flight) -> {
 			float delta = (float) event.getRenderPartialTicks();
 			float amt = flight.getFlyingAmount(delta);
 			if (amt > 0.0F) {
@@ -118,14 +121,15 @@ public final class ClientEventHandler {
 
 	@SubscribeEvent
 	public static void onRenderEmptyHandCheckEvent(EmptyOffHandPresentEvent event) {
-		if (FlightCapability.get(event.getPlayer()).getFlyingAmount(1.0F) > 0.0F) {
+		Flight flight = Flights.get(event.getPlayer());
+		if (flight != null && flight.getFlyingAmount(1.0F) > 0.0F) {
 			event.setResult(Event.Result.ALLOW);
 		}
 	}
 
 	@SubscribeEvent
 	public static void onEntityJoinWorld(EntityJoinWorldEvent event) {
-		FlightCapability.ifPlayer(event.getEntity(), EntityPlayer::isUser, (player, flight) ->
+		Flights.ifPlayer(event.getEntity(), EntityPlayer::isUser, (player, flight) ->
 			Minecraft.getMinecraft().getSoundHandler().playSound(new WingsSound(player, flight))
 		);
 	}
@@ -135,7 +139,10 @@ public final class ClientEventHandler {
 		EntityPlayer entity;
 		if (event.phase == TickEvent.Phase.END && (entity = event.player) instanceof AbstractClientPlayer) {
 			AbstractClientPlayer player = (AbstractClientPlayer) entity;
-			FlightViewCapability.get(player).onUpdate(player, FlightApparatuses.find(player));
+			FlightView flight = FlightViews.get(player);
+			if (flight != null) {
+				flight.onUpdate(player, FlightApparatuses.find(player));
+			}
 		}
 	}
 

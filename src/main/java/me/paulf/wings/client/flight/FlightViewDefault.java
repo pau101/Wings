@@ -1,8 +1,8 @@
 package me.paulf.wings.client.flight;
 
-import me.paulf.wings.client.winged.WingForm;
-import me.paulf.wings.client.winged.FlightApparatusView;
-import me.paulf.wings.client.winged.FlightApparatusViews;
+import me.paulf.wings.client.apparatus.WingForm;
+import me.paulf.wings.client.apparatus.FlightApparatusView;
+import me.paulf.wings.client.apparatus.FlightApparatusViews;
 import me.paulf.wings.server.flight.Flight;
 import me.paulf.wings.server.flight.state.State;
 import me.paulf.wings.server.flight.state.StateIdle;

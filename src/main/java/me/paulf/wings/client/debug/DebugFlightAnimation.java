@@ -2,7 +2,8 @@ package me.paulf.wings.client.debug;
 
 import com.mojang.authlib.GameProfile;
 import me.paulf.wings.WingsMod;
-import me.paulf.wings.server.flight.FlightCapability;
+import me.paulf.wings.server.flight.Flight;
+import me.paulf.wings.server.flight.Flights;
 import me.paulf.wings.server.item.WingsItems;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityOtherPlayerMP;
@@ -67,7 +68,10 @@ public final class DebugFlightAnimation {
 					Item item = WingsItems.EVIL_WINGS;
 					player.setHeldItem(EnumHand.MAIN_HAND, new ItemStack(item));
 					item.onItemRightClick(world, player, EnumHand.MAIN_HAND);
-					FlightCapability.get(player).setIsFlying(true);
+					Flight flight = Flights.get(player);
+					if (flight != null) {
+						flight.setIsFlying(true);
+					}
 					IntHashMap<Entity> entities = ReflectionHelper.getPrivateValue(World.class, world, "entitiesById");
 					entities.addKey(player.getEntityId(), player);
 				}

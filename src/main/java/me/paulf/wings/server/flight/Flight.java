@@ -34,7 +34,7 @@ public interface Flight {
 
 	void onUpdate(EntityPlayer player, ItemStack wings);
 
-	void clone(Flight other, PlayerSet players);
+	void clone(Flight other);
 
 	void sync(PlayerSet players);
 

@@ -4,7 +4,7 @@ import me.paulf.wings.client.renderer.LayerWings;
 import me.paulf.wings.server.asm.mobends.GetMoBendsPlayerAnimationEvent;
 import me.paulf.wings.server.asm.plugin.Integration;
 import me.paulf.wings.server.flight.Flight;
-import me.paulf.wings.server.flight.FlightCapability;
+import me.paulf.wings.server.flight.Flights;
 import me.paulf.wings.util.Mth;
 import net.gobbob.mobends.animatedentity.AnimatedEntity;
 import net.gobbob.mobends.animation.Animation;
@@ -12,7 +12,6 @@ import net.gobbob.mobends.client.event.EventHandlerRenderPlayer;
 import net.gobbob.mobends.client.model.ModelRendererBends;
 import net.gobbob.mobends.client.model.entity.ModelBendsPlayer;
 import net.gobbob.mobends.client.renderer.entity.RenderBendsPlayer;
-import net.gobbob.mobends.data.Data_Player;
 import net.gobbob.mobends.data.EntityData;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelRenderer;
@@ -61,8 +60,8 @@ public final class WingsMoBendsIntegration {
 			MinecraftForge.EVENT_BUS.register(new Object() {
 				@SubscribeEvent
 				public void onGetMoBendsPlayerAnimation(GetMoBendsPlayerAnimationEvent event) {
-					EntityPlayer player = event.getPlayer();
-					if (FlightCapability.get(player).getFlyingAmount(1.0F) > 0.0F) {
+					Flight flight = Flights.get(event.getPlayer());
+					if (flight != null && flight.getFlyingAmount(1.0F) > 0.0F) {
 						event.set("wings");
 					}
 				}
@@ -91,10 +90,14 @@ public final class WingsMoBendsIntegration {
 
 		@Override
 		public void animate(EntityLivingBase entity, ModelBase model, EntityData data) {
-			animate((EntityPlayer) entity, (ModelBendsPlayer) model, (Data_Player) data);
+			EntityPlayer player = (EntityPlayer) entity;
+			Flight flight = Flights.get(player);
+			if (flight != null) {
+				animate((ModelBendsPlayer) model, flight);
+			}
 		}
 
-		private static void animate(EntityPlayer player, ModelBendsPlayer model, Data_Player data) {
+		private static void animate(ModelBendsPlayer model, Flight flight) {
 			bends(model.bipedBody).pre_rotation.setSmooth(new Vector3f(0.0F, 0.0F, 0.0F), 0.5F);
 			bends(model.bipedBody).rotation.setSmooth(new Vector3f(0.0F, 0.0F, 0.0F), 0.5F);
 			bends(model.bipedRightArm).pre_rotation.setSmooth(new Vector3f(0.0F, 0.0F, 0.0F));
@@ -106,7 +109,6 @@ public final class WingsMoBendsIntegration {
 			bends(model.bipedHead).pre_rotation.setSmooth(new Vector3f(0.0F, 0.0F, 0.0F));
 			bends(model.bipedLeftLeg).rotation.setSmooth(new Vector3f(0.0F, 0.0F, 0.0F), 0.5F);
 			bends(model.bipedRightLeg).rotation.setSmooth(new Vector3f(0.0F, 0.0F, 0.0F), 0.5F);
-			Flight flight = FlightCapability.get(player);
 			float amt = flight.getFlyingAmount(EventHandlerRenderPlayer.partialTicks);
 			bends(model.bipedHead).rotation.set(Mth.lerp(model.headRotationX, model.headRotationX / 4.0F - 90.0F, amt), model.headRotationY, 0.0F);
 			bends(model.bipedLeftArm).rotation.setSmooth(new Vector3f(Mth.toDegrees(-3.2F) * amt, 0.0F, 0.0F), 1.0F);

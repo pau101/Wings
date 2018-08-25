@@ -2,12 +2,12 @@ package me.paulf.wings.server;
 
 import me.paulf.wings.WingsMod;
 import me.paulf.wings.server.flight.ConstructWingsAccessorEvent;
-import me.paulf.wings.server.winged.FlightApparatuses;
+import me.paulf.wings.server.flight.Flights;
+import me.paulf.wings.server.apparatus.FlightApparatuses;
 import me.paulf.wings.util.ItemPlacing;
 import me.paulf.wings.server.asm.GetLivingHeadLimitEvent;
 import me.paulf.wings.server.asm.PlayerFlightCheckEvent;
 import me.paulf.wings.server.flight.Flight;
-import me.paulf.wings.server.flight.FlightCapability;
 import me.paulf.wings.server.item.WingsItems;
 import net.minecraft.entity.passive.EntityBat;
 import net.minecraft.entity.player.EntityPlayer;
@@ -69,7 +69,7 @@ public final class ServerEventHandler {
 	@SubscribeEvent
 	public static void onMount(EntityMountEvent event) {
 		if (event.isMounting()) {
-			FlightCapability.ifPlayer(event.getEntityMounting(), (player, flight) -> {
+			Flights.ifPlayer(event.getEntityMounting(), (player, flight) -> {
 				if (flight.isFlying()) {
 					event.setCanceled(true);
 				}
@@ -79,28 +79,30 @@ public final class ServerEventHandler {
 
 	@SubscribeEvent
 	public static void onPlayerUpdate(TickEvent.PlayerTickEvent event) {
-		if (event.phase == TickEvent.Phase.END) {
-			FlightCapability.get(event.player).onUpdate(event.player, FlightApparatuses.find(event.player));
+		Flight flight;
+		if (event.phase == TickEvent.Phase.END && (flight = Flights.get(event.player)) != null) {
+			flight.onUpdate(event.player, FlightApparatuses.find(event.player));
 		}
 	}
 
 	@SubscribeEvent
 	public static void onPlayerDeath(LivingDeathEvent event) {
-		FlightCapability.ifPlayer(event.getEntityLiving(), (player, flight) ->
+		Flights.ifPlayer(event.getEntityLiving(), (player, flight) ->
 			flight.setIsFlying(false, Flight.PlayerSet.ofAll())
 		);
 	}
 
 	@SubscribeEvent
 	public static void onFlightCheck(PlayerFlightCheckEvent event) {
-		if (FlightCapability.get(event.getEntityPlayer()).isFlying()) {
+		Flight flight = Flights.get(event.getEntityPlayer());
+		if (flight != null && flight.isFlying()) {
 			event.setResult(Event.Result.ALLOW);
 		}
 	}
 
 	@SubscribeEvent
 	public static void onGetLivingHeadLimit(GetLivingHeadLimitEvent event) {
-		FlightCapability.ifPlayer(event.getEntityLiving(), (player, flight) -> {
+		Flights.ifPlayer(event.getEntityLiving(), (player, flight) -> {
 			if (flight.isFlying()) {
 				event.setHardLimit(50.0F);
 				event.disableSoftLimit();

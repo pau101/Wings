@@ -1,8 +1,7 @@
 package me.paulf.wings.server.flight;
 
 import me.paulf.wings.WingsMod;
-import me.paulf.wings.util.CapabilityProviders;
-import me.paulf.wings.util.SimpleStorage;
+import me.paulf.wings.util.CapabilityHolder;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -10,7 +9,6 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityInject;
-import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -19,28 +17,29 @@ import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerChangedDimensio
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerRespawnEvent;
 
+import javax.annotation.Nullable;
 import java.util.function.BiConsumer;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
 @Mod.EventBusSubscriber(modid = WingsMod.ID)
-public final class FlightCapability {
-	private FlightCapability() {}
+public final class Flights {
+	private Flights() {}
 
-	private static final ResourceLocation FLIGHT_ID = new ResourceLocation(WingsMod.ID, "flight");
+	private static final CapabilityHolder<EntityPlayer, Flight, CapabilityHolder.State<EntityPlayer, Flight>> HOLDER = CapabilityHolder.create();
 
-	@CapabilityInject(Flight.class)
-	private static final Capability<Flight> CAPABILITY = null;
-
-	public static void register() {
-		CapabilityManager.INSTANCE.register(Flight.class, SimpleStorage.ofVoid(), FlightDefault::new);
+	public static boolean has(EntityPlayer player) {
+		return HOLDER.state().has(player, null);
 	}
 
+	@Nullable
 	public static Flight get(EntityPlayer player) {
-		if (player.hasCapability(CAPABILITY, null)) {
-			return player.getCapability(CAPABILITY, null);
-		}
-		throw new IllegalStateException("Missing capability: " + player);
+		return HOLDER.state().get(player, null);
+	}
+
+	@CapabilityInject(Flight.class)
+	static void inject(Capability<Flight> capability) {
+		HOLDER.inject(capability);
 	}
 
 	public static void ifPlayer(Entity entity, BiConsumer<EntityPlayer, Flight> action) {
@@ -49,8 +48,9 @@ public final class FlightCapability {
 
 	public static void ifPlayer(Entity entity, Predicate<EntityPlayer> condition, BiConsumer<EntityPlayer, Flight> action) {
 		EntityPlayer player;
-		if (entity instanceof EntityPlayer && condition.test(player = (EntityPlayer) entity)) {
-			action.accept(player, get(player));
+		Flight flight;
+		if (entity instanceof EntityPlayer && (flight = get(player = (EntityPlayer) entity)) != null && condition.test(player)) {
+			action.accept(player, flight);
 		}
 	}
 
@@ -65,8 +65,8 @@ public final class FlightCapability {
 			};
 			FlightDefault flight = factory.get();
 			event.addCapability(
-				FLIGHT_ID,
-				CapabilityProviders.builder(CAPABILITY, flight)
+				new ResourceLocation(WingsMod.ID, "flight"),
+				HOLDER.state().providerBuilder(flight)
 					.serializedBy(new FlightDefault.Serializer(factory))
 					.build()
 			);
@@ -76,22 +76,34 @@ public final class FlightCapability {
 
 	@SubscribeEvent
 	public static void onPlayerClone(PlayerEvent.Clone event) {
-		get(event.getEntityPlayer()).clone(get(event.getOriginal()), Flight.PlayerSet.empty());
+		Flight oldInstance = get(event.getOriginal()), newInstance;
+		if (oldInstance != null && (newInstance = get(event.getEntityPlayer())) != null) {
+			oldInstance.clone(newInstance);
+		}
 	}
 
 	@SubscribeEvent
 	public static void onPlayerRespawn(PlayerRespawnEvent event) {
-		get(event.player).sync(Flight.PlayerSet.ofSelf());
+		Flight flight = get(event.player);
+		if (flight != null) {
+			flight.sync(Flight.PlayerSet.ofSelf());
+		}
 	}
 
 	@SubscribeEvent
 	public static void onPlayerChangedDimension(PlayerChangedDimensionEvent event) {
-		get(event.player).sync(Flight.PlayerSet.ofSelf());
+		Flight flight = get(event.player);
+		if (flight != null) {
+			flight.sync(Flight.PlayerSet.ofSelf());
+		}
 	}
 
 	@SubscribeEvent
 	public static void onPlayerLoggedIn(PlayerLoggedInEvent event) {
-		get(event.player).sync(Flight.PlayerSet.ofSelf());
+		Flight flight = get(event.player);
+		if (flight != null) {
+			flight.sync(Flight.PlayerSet.ofSelf());
+		}
 	}
 
 	@SubscribeEvent

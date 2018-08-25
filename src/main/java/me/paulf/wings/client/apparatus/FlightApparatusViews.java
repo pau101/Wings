@@ -1,4 +1,4 @@
-package me.paulf.wings.client.winged;
+package me.paulf.wings.client.apparatus;
 
 import me.paulf.wings.util.CapabilityHolder;
 import me.paulf.wings.util.CapabilityProviders;
@@ -26,13 +26,13 @@ public final class FlightApparatusViews {
 		return HOLDER.state().get(stack, null);
 	}
 
-	public static <T extends FlightApparatusView> CapabilityProviders.NonSerializingSingleBuilder<T> providerBuilder(T instance) {
-		return HOLDER.state().providerBuilder(instance);
-	}
-
 	@CapabilityInject(FlightApparatusView.class)
 	static void inject(Capability<FlightApparatusView> capability) {
 		HOLDER.inject(capability);
+	}
+
+	public static <T extends FlightApparatusView> CapabilityProviders.NonSerializingSingleBuilder<T> providerBuilder(T instance) {
+		return HOLDER.state().providerBuilder(instance);
 	}
 
 	private interface WingedState extends CapabilityHolder.State<ItemStack, FlightApparatusView> {

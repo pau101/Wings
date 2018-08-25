@@ -3,14 +3,14 @@ package me.paulf.wings.client;
 import me.paulf.wings.Proxy;
 import me.paulf.wings.WingsMod;
 import me.paulf.wings.client.flight.Animator;
-import me.paulf.wings.client.flight.FlightViewCapability;
+import me.paulf.wings.client.flight.FlightView;
 import me.paulf.wings.client.model.ModelWings;
 import me.paulf.wings.client.model.ModelWingsAvian;
 import me.paulf.wings.client.model.ModelWingsInsectoid;
 import me.paulf.wings.client.renderer.LayerWings;
-import me.paulf.wings.client.winged.WingForm;
-import me.paulf.wings.client.winged.FlightApparatusView;
-import me.paulf.wings.client.winged.FlightApparatusViews;
+import me.paulf.wings.client.apparatus.WingForm;
+import me.paulf.wings.client.apparatus.FlightApparatusView;
+import me.paulf.wings.client.apparatus.FlightApparatusViews;
 import me.paulf.wings.server.flight.Flight;
 import me.paulf.wings.server.flight.animator.AnimatorAvian;
 import me.paulf.wings.server.flight.animator.AnimatorInsectoid;
@@ -37,7 +37,9 @@ public final class ClientProxy extends Proxy {
 	@Override
 	public void preinit() {
 		super.preinit();
-		FlightViewCapability.register();
+		CapabilityManager.INSTANCE.register(FlightView.class, SimpleStorage.ofVoid(), () -> {
+			throw new UnsupportedOperationException();
+		});
 		CapabilityManager.INSTANCE.register(FlightApparatusView.class, SimpleStorage.ofVoid(), () -> {
 			throw new UnsupportedOperationException();
 		});

@@ -1,7 +1,7 @@
 package me.paulf.wings.server.net.clientbound;
 
 import me.paulf.wings.server.flight.Flight;
-import me.paulf.wings.server.flight.FlightCapability;
+import me.paulf.wings.server.flight.Flights;
 import me.paulf.wings.server.flight.FlightDefault;
 import me.paulf.wings.server.net.Message;
 import net.minecraft.entity.player.EntityPlayer;
@@ -41,8 +41,8 @@ public final class MessageSyncFlight extends Message {
 
 	@Override
 	protected void process(MessageContext ctx) {
-		FlightCapability.ifPlayer(FMLClientHandler.instance().getWorldClient().getEntityByID(playerId),
-			(player, flight) -> flight.clone(this.flight, Flight.PlayerSet.empty())
+		Flights.ifPlayer(FMLClientHandler.instance().getWorldClient().getEntityByID(playerId),
+			(player, flight) -> flight.clone(this.flight)
 		);
 	}
 }

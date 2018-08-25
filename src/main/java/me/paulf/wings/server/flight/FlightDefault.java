@@ -1,8 +1,8 @@
 package me.paulf.wings.server.flight;
 
 import com.google.common.collect.Lists;
-import me.paulf.wings.server.winged.FlightApparatus;
-import me.paulf.wings.server.winged.FlightApparatuses;
+import me.paulf.wings.server.apparatus.FlightApparatus;
+import me.paulf.wings.server.apparatus.FlightApparatuses;
 import me.paulf.wings.util.CubicBezier;
 import me.paulf.wings.util.Mth;
 import me.paulf.wings.util.NBTSerializer;
@@ -98,8 +98,8 @@ public final class FlightDefault implements Flight {
 	@Override
 	public boolean canFly(EntityPlayer player) {
 		ItemStack stack = FlightApparatuses.find(player);
-		FlightApparatus wf = FlightApparatuses.get(stack);
-		return wf != null && wf.isUsable(stack);
+		FlightApparatus apparatus = FlightApparatuses.get(stack);
+		return apparatus != null && apparatus.isUsable(stack);
 	}
 
 	private void onWornUpdate(EntityPlayer player, ItemStack wings) {
@@ -127,11 +127,11 @@ public final class FlightDefault implements Flight {
 			player.fallDistance = 0.0F;
 		}
 		if (!player.world.isRemote) {
-			FlightApparatus wf = FlightApparatuses.get(wings);
-			if (wf == null) {
+			FlightApparatus apparatus = FlightApparatuses.get(wings);
+			if (apparatus == null) {
 				state = state.next();
-			} else if (wf.isUsable(wings)) {
-				(state = state.next(wings, wf)).onUpdate(player, wings);
+			} else if (apparatus.isUsable(wings)) {
+				(state = state.next(wings, apparatus)).onUpdate(player, wings);
 			} else if (isFlying()) {
 				setIsFlying(false, PlayerSet.ofAll());
 				state = state.next();
@@ -161,10 +161,9 @@ public final class FlightDefault implements Flight {
 	}
 
 	@Override
-	public void clone(Flight other, PlayerSet players) {
+	public void clone(Flight other) {
 		setIsFlying(other.isFlying());
 		setTimeFlying(other.getTimeFlying());
-		sync(players);
 	}
 
 	@Override

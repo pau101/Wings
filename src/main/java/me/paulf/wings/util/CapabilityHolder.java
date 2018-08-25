@@ -31,6 +31,8 @@ public final class CapabilityHolder<T extends ICapabilityProvider, R, S extends 
 
 		@Nullable
 		R get(T provider, @Nullable EnumFacing side);
+
+		<U extends R> CapabilityProviders.NonSerializingSingleBuilder<U> providerBuilder(U instance);
 	}
 
 	public static abstract class AbsentState<T extends ICapabilityProvider, R> implements State<T, R> {
@@ -43,6 +45,11 @@ public final class CapabilityHolder<T extends ICapabilityProvider, R, S extends 
 		@Override
 		public final R get(T provider, @Nullable EnumFacing side) {
 			return null;
+		}
+
+		@Override
+		public <U extends R> CapabilityProviders.NonSerializingSingleBuilder<U> providerBuilder(U instance) {
+			return CapabilityProviders.emptyBuilder();
 		}
 	}
 
@@ -62,6 +69,11 @@ public final class CapabilityHolder<T extends ICapabilityProvider, R, S extends 
 		@Override
 		public final R get(T provider, @Nullable EnumFacing side) {
 			return provider.getCapability(capability, side);
+		}
+
+		@Override
+		public <U extends R> CapabilityProviders.NonSerializingSingleBuilder<U> providerBuilder(U instance) {
+			return CapabilityProviders.builder(capability, instance);
 		}
 	}
 

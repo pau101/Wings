@@ -1,4 +1,4 @@
-package me.paulf.wings.server.winged;
+package me.paulf.wings.server.apparatus;
 
 import me.paulf.wings.WingsMod;
 import me.paulf.wings.util.CapabilityHolder;
@@ -40,8 +40,6 @@ public final class FlightApparatuses {
 	}
 
 	private interface WingedState extends CapabilityHolder.State<ItemStack, FlightApparatus> {
-		<T extends FlightApparatus> CapabilityProviders.NonSerializingSingleBuilder<T> providerBuilder(T instance);
-
 		ItemStack find(EntityPlayer player);
 	}
 

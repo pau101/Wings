@@ -1,4 +1,4 @@
-package me.paulf.wings.client.winged;
+package me.paulf.wings.client.apparatus;
 
 import me.paulf.wings.client.model.ModelWings;
 import me.paulf.wings.client.flight.Animator;

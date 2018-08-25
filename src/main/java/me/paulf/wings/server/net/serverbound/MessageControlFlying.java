@@ -1,7 +1,7 @@
 package me.paulf.wings.server.net.serverbound;
 
 import me.paulf.wings.server.flight.Flight;
-import me.paulf.wings.server.flight.FlightCapability;
+import me.paulf.wings.server.flight.Flights;
 import me.paulf.wings.server.net.Message;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.PacketBuffer;
@@ -33,8 +33,8 @@ public final class MessageControlFlying extends Message {
 	@Override
 	protected void process(MessageContext ctx) {
 		EntityPlayer player = ctx.getServerHandler().player;
-		Flight flight = FlightCapability.get(player);
-		if (flight.canFly(player)) {
+		Flight flight = Flights.get(player);
+		if (flight != null && flight.canFly(player)) {
 			flight.setIsFlying(isFlying(), Flight.PlayerSet.ofOthers());
 		}
 	}

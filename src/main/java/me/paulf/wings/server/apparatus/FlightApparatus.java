@@ -1,4 +1,4 @@
-package me.paulf.wings.server.winged;
+package me.paulf.wings.server.apparatus;
 
 import me.paulf.wings.server.flight.Flight;
 import net.minecraft.entity.player.EntityPlayer;

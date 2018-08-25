@@ -1,7 +1,8 @@
 package me.paulf.wings.client.renderer;
 
-import me.paulf.wings.client.flight.FlightViewCapability;
-import me.paulf.wings.server.winged.FlightApparatuses;
+import me.paulf.wings.client.flight.FlightView;
+import me.paulf.wings.client.flight.FlightViews;
+import me.paulf.wings.server.apparatus.FlightApparatuses;
 import me.paulf.wings.util.function.FloatConsumer;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.model.ModelBase;
@@ -25,8 +26,9 @@ public final class LayerWings implements LayerRenderer<AbstractClientPlayer> {
 	@Override
 	public void doRenderLayer(AbstractClientPlayer player, float limbSwing, float limbSwingAmount, float delta, float age, float yawHead, float headPitch, float scale) {
 		ItemStack stack;
-		if (!player.isInvisible() && !(stack = FlightApparatuses.find(player)).isEmpty()) {
-			FlightViewCapability.get(player).ifFormPresent(form -> {
+		FlightView flight;
+		if (!player.isInvisible() && !(stack = FlightApparatuses.find(player)).isEmpty() && (flight = FlightViews.get(player)) != null) {
+			flight.ifFormPresent(form -> {
 				renderer.bindTexture(form.getTexture());
 				GlStateManager.pushMatrix();
 				transform.apply(player, scale, renderer.getMainModel().bipedBody::postRender);

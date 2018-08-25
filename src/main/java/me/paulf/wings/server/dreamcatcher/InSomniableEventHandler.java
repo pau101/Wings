@@ -30,8 +30,9 @@ public final class InSomniableEventHandler {
 			Block block = world.getBlockState(pos).getBlock();
 			if (block == Blocks.NOTEBLOCK && canEdit((EntityPlayerMP) player, block)) {
 				TileEntity entity = world.getTileEntity(pos);
-				if (entity instanceof TileEntityNote) {
-					InSomniableCapability.get((TileEntityNote) entity).setPlayer(player.getUniqueID());
+				Playable playable;
+				if (entity instanceof TileEntityNote && (playable = InSomniableCapability.getPlayable((TileEntityNote) entity)) != null) {
+					playable.setPlayer(player.getUniqueID());
 				}
 			}
 		}
@@ -57,11 +58,13 @@ public final class InSomniableEventHandler {
 		World world = event.getWorld();
 		if (!world.isRemote) {
 			TileEntity entity = world.getTileEntity(event.getPos());
-			if (entity instanceof TileEntityNote) {
-				InSomniableCapability.get((TileEntityNote) entity).ifPlayerPresent(playerId -> {
+			Playable playable;
+			if (entity instanceof TileEntityNote && (playable = InSomniableCapability.getPlayable((TileEntityNote) entity)) != null) {
+				playable.ifPlayerPresent(playerId -> {
 					EntityPlayer player = world.getPlayerEntityByUUID(playerId);
-					if (player != null) {
-						InSomniableCapability.get(player).onPlay(world, player, event.getPos(), event.getVanillaNoteId());
+					InSomniable inSomniable;
+					if (player != null && (inSomniable = InSomniableCapability.getInSomniable(player)) != null) {
+						inSomniable.onPlay(world, player, event.getPos(), event.getVanillaNoteId());
 					}
 				});
 			}
