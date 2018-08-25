@@ -1,4 +1,4 @@
-package me.paulf.wings.server.flight.state;
+package me.paulf.wings.client.flight.state;
 
 import me.paulf.wings.client.flight.Animator;
 

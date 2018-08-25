@@ -1,7 +1,7 @@
 package me.paulf.wings.client.model;
 
 import com.google.common.collect.ImmutableList;
-import me.paulf.wings.server.flight.animator.AnimatorAvian;
+import me.paulf.wings.client.flight.AnimatorAvian;
 import net.minecraft.client.model.ModelRenderer;
 
 public final class ModelWingsAvian extends ModelWings<AnimatorAvian> {

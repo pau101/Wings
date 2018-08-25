@@ -1,7 +1,6 @@
-package me.paulf.wings.server.flight.animator;
+package me.paulf.wings.client.flight;
 
 import com.google.common.collect.ImmutableMap;
-import me.paulf.wings.client.flight.Animator;
 import me.paulf.wings.util.Mth;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.gen.NoiseGeneratorSimplex;

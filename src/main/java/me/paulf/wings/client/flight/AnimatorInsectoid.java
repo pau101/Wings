@@ -1,4 +1,4 @@
-package me.paulf.wings.server.flight.animator;
+package me.paulf.wings.client.flight;
 
 import me.paulf.wings.client.flight.Animator;
 import me.paulf.wings.util.Mth;

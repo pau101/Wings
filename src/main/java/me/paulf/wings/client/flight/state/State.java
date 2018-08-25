@@ -1,4 +1,4 @@
-package me.paulf.wings.server.flight.state;
+package me.paulf.wings.client.flight.state;
 
 import me.paulf.wings.client.flight.Animator;
 import me.paulf.wings.util.Mth;
@@ -8,7 +8,7 @@ import net.minecraft.util.math.MathHelper;
 import java.util.function.Consumer;
 
 public abstract class State {
-	protected static final int STATE_DELAY = 2;
+	static final int STATE_DELAY = 2;
 
 	private final int stateDelay;
 

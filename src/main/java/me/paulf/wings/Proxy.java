@@ -1,5 +1,7 @@
 package me.paulf.wings;
 
+import me.paulf.wings.server.apparatus.FlightApparatus;
+import me.paulf.wings.server.apparatus.SimpleFlightApparatus;
 import me.paulf.wings.server.dreamcatcher.InSomniable;
 import me.paulf.wings.server.dreamcatcher.Playable;
 import me.paulf.wings.server.fix.WingsFixes;
@@ -8,8 +10,6 @@ import me.paulf.wings.server.flight.Flight;
 import me.paulf.wings.server.flight.FlightDefault;
 import me.paulf.wings.server.net.Network;
 import me.paulf.wings.server.net.clientbound.MessageSyncFlight;
-import me.paulf.wings.server.apparatus.SimpleFlightApparatus;
-import me.paulf.wings.server.apparatus.FlightApparatus;
 import me.paulf.wings.util.CapabilityProviders;
 import me.paulf.wings.util.ItemAccessor;
 import me.paulf.wings.util.SimpleStorage;
@@ -27,9 +27,9 @@ public abstract class Proxy {
 
 	public void preinit() {
 		CapabilityManager.INSTANCE.register(Flight.class, SimpleStorage.ofVoid(), FlightDefault::new);
+		CapabilityManager.INSTANCE.register(FlightApparatus.class, SimpleStorage.ofVoid(), SimpleFlightApparatus.builder()::build);
 		CapabilityManager.INSTANCE.register(InSomniable.class, SimpleStorage.ofVoid(), InSomniable::new);
 		CapabilityManager.INSTANCE.register(Playable.class, SimpleStorage.ofVoid(), Playable::new);
-		CapabilityManager.INSTANCE.register(FlightApparatus.class, SimpleStorage.ofVoid(), SimpleFlightApparatus.builder()::build);
 		WingsFixes.register();
 	}
 

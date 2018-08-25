@@ -48,7 +48,7 @@ public final class CapabilityHolder<T extends ICapabilityProvider, R, S extends 
 		}
 
 		@Override
-		public <U extends R> CapabilityProviders.NonSerializingSingleBuilder<U> providerBuilder(U instance) {
+		public final <U extends R> CapabilityProviders.NonSerializingSingleBuilder<U> providerBuilder(U instance) {
 			return CapabilityProviders.emptyBuilder();
 		}
 	}
@@ -72,7 +72,7 @@ public final class CapabilityHolder<T extends ICapabilityProvider, R, S extends 
 		}
 
 		@Override
-		public <U extends R> CapabilityProviders.NonSerializingSingleBuilder<U> providerBuilder(U instance) {
+		public final <U extends R> CapabilityProviders.NonSerializingSingleBuilder<U> providerBuilder(U instance) {
 			return CapabilityProviders.builder(capability, instance);
 		}
 	}

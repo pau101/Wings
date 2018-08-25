@@ -1,6 +1,6 @@
 package me.paulf.wings.client.model;
 
-import me.paulf.wings.server.flight.animator.AnimatorInsectoid;
+import me.paulf.wings.client.flight.AnimatorInsectoid;
 import net.minecraft.client.model.ModelRenderer;
 
 public final class ModelWingsInsectoid extends ModelWings<AnimatorInsectoid> {

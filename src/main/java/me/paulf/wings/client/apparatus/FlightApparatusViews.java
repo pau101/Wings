@@ -11,7 +11,7 @@ import javax.annotation.Nullable;
 public final class FlightApparatusViews {
 	private FlightApparatusViews() {}
 
-	private static final CapabilityHolder<ItemStack, FlightApparatusView, WingedState> HOLDER = CapabilityHolder.create(WingedAbsentState::new, WingedPresentState::new);
+	private static final CapabilityHolder<ItemStack, FlightApparatusView, CapabilityHolder.State<ItemStack, FlightApparatusView>> HOLDER = CapabilityHolder.create();
 
 	public static FlightApparatusView create(WingForm<?> form) {
 		return () -> form;
@@ -26,34 +26,12 @@ public final class FlightApparatusViews {
 		return HOLDER.state().get(stack, null);
 	}
 
-	@CapabilityInject(FlightApparatusView.class)
-	static void inject(Capability<FlightApparatusView> capability) {
-		HOLDER.inject(capability);
-	}
-
 	public static <T extends FlightApparatusView> CapabilityProviders.NonSerializingSingleBuilder<T> providerBuilder(T instance) {
 		return HOLDER.state().providerBuilder(instance);
 	}
 
-	private interface WingedState extends CapabilityHolder.State<ItemStack, FlightApparatusView> {
-		<T extends FlightApparatusView> CapabilityProviders.NonSerializingSingleBuilder<T> providerBuilder(T instance);
-	}
-
-	private static final class WingedAbsentState extends CapabilityHolder.AbsentState<ItemStack, FlightApparatusView> implements WingedState {
-		@Override
-		public <T extends FlightApparatusView> CapabilityProviders.NonSerializingSingleBuilder<T> providerBuilder(T instance) {
-			return CapabilityProviders.emptyBuilder();
-		}
-	}
-
-	private static final class WingedPresentState extends CapabilityHolder.PresentState<ItemStack, FlightApparatusView> implements WingedState {
-		private WingedPresentState(Capability<FlightApparatusView> capability) {
-			super(capability);
-		}
-
-		@Override
-		public <T extends FlightApparatusView> CapabilityProviders.NonSerializingSingleBuilder<T> providerBuilder(T instance) {
-			return CapabilityProviders.builder(capability, instance);
-		}
+	@CapabilityInject(FlightApparatusView.class)
+	static void inject(Capability<FlightApparatusView> capability) {
+		HOLDER.inject(capability);
 	}
 }

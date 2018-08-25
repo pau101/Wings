@@ -45,11 +45,6 @@ public final class FlightApparatuses {
 
 	private static final class WingedAbsentState extends CapabilityHolder.AbsentState<ItemStack, FlightApparatus> implements WingedState {
 		@Override
-		public <T extends FlightApparatus> CapabilityProviders.NonSerializingSingleBuilder<T> providerBuilder(T instance) {
-			return CapabilityProviders.emptyBuilder();
-		}
-
-		@Override
 		public ItemStack find(EntityPlayer player) {
 			return ItemStack.EMPTY;
 		}
@@ -58,11 +53,6 @@ public final class FlightApparatuses {
 	private static final class WingedPresentState extends CapabilityHolder.PresentState<ItemStack, FlightApparatus> implements WingedState {
 		private WingedPresentState(Capability<FlightApparatus> capability) {
 			super(capability);
-		}
-
-		@Override
-		public <T extends FlightApparatus> CapabilityProviders.NonSerializingSingleBuilder<T> providerBuilder(T instance) {
-			return CapabilityProviders.builder(capability, instance);
 		}
 
 		@Override
