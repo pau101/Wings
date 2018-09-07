@@ -33,7 +33,7 @@ import org.lwjgl.util.vector.Vector3f;
 	condition = "required-after:wings;after:mobends@[0.24,0.25)"
 )
 public final class WingsMoBendsIntegration {
-	@SidedProxy
+	@SidedProxy(modId = "mobends_wings")
 	private static Proxy proxy = new Proxy();
 
 	@Mod.EventHandler
