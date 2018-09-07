@@ -15,8 +15,7 @@ import java.util.function.Consumer;
 	modid = WingsMod.ID,
 	name = WingsMod.NAME,
 	version = WingsMod.VERSION,
-	dependencies = "required-after:forge@[14.23.4.2705,);required-after:llibrary@[1.7,1.8)",
-	acceptedMinecraftVersions = "[1.12]"
+	dependencies = "required-after:forge@[14.23.4.2705,);required-after:llibrary@[1.7,1.8)"
 )
 public final class WingsMod {
 	public static final String ID = "wings";
