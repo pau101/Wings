@@ -37,32 +37,39 @@ public final class WingsMod {
 
 	@Mod.EventHandler
 	public void init(FMLPreInitializationEvent event) {
-		proxy.preinit();
+		requireProxy().preinit();
 	}
 
 	@Mod.EventHandler
 	public void init(FMLInitializationEvent event) {
-		proxy.init();
+		requireProxy().init();
 	}
 
 	public void addFlightListeners(EntityPlayer player, Flight instance) {
-		proxy.addFlightListeners(player, instance);
+		requireProxy().addFlightListeners(player, instance);
 	}
 
 	public ItemAccessor<EntityPlayer> getWingsAccessor() {
-		return proxy.getWingsAccessor();
+		return requireProxy().getWingsAccessor();
 	}
 
 	public Consumer<CapabilityProviders.CompositeBuilder> createAvianWings(String name) {
-		return proxy.createAvianWings(name);
+		return requireProxy().createAvianWings(name);
 	}
 
 	public Consumer<CapabilityProviders.CompositeBuilder> createInsectoidWings(String name) {
-		return proxy.createInsectoidWings(name);
+		return requireProxy().createInsectoidWings(name);
 	}
 
 	@Mod.InstanceFactory
 	public static WingsMod instance() {
 		return Holder.INSTANCE;
+	}
+
+	private Proxy requireProxy() {
+		if (proxy == null) {
+			throw new IllegalStateException("Proxy not initialized");
+		}
+		return proxy;
 	}
 }
