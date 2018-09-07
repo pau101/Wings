@@ -42,8 +42,8 @@ public final class GenerationHandler {
 
 	private static WorldGenerator newVeinFeature(VeinSettings settings, Supplier<IBlockState> block) {
 		return new FeatureRange(
-			new FeatureVein(block, settings.getCount()),
-			settings.getSize(),
+			new FeatureVein(block, settings.getSize()),
+			settings.getCount(),
 			settings.getMinHeight(),
 			settings.getMaxHeight()
 		);
