@@ -68,14 +68,14 @@ public final class ItemWings extends Item {
 		return new ActionResult<>(EnumActionResult.FAIL, stack);
 	}
 
-	public static ItemWings create(Consumer<CapabilityProviders.CompositeBuilder> capabilities) {
+	public static ItemWings create(int durability, Consumer<CapabilityProviders.CompositeBuilder> capabilities) {
 		ItemWings wings = new ItemWings(ImmutableSet.of(
 			EnumEnchantmentType.ALL,
 			EnumEnchantmentType.BREAKABLE,
 			EnumEnchantmentType.WEARABLE
 		), capabilities);
 		wings.setMaxStackSize(1);
-		wings.setMaxDamage(180);
+		wings.setMaxDamage(durability);
 		return wings;
 	}
 

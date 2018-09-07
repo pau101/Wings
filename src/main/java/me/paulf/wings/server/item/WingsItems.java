@@ -59,20 +59,20 @@ public final class WingsItems {
 				.setCreativeTab(ItemGroupWings.instance())
 				.setContainerItem(Items.GLASS_BOTTLE), "bat_blood"
 			),
-			createWings("angel", WingsMod.instance()::createAvianWings),
-			createWings("slime", WingsMod.instance()::createInsectoidWings),
-			createWings("blue_butterfly", WingsMod.instance()::createInsectoidWings),
-			createWings("monarch_butterfly", WingsMod.instance()::createInsectoidWings),
-			createWings("fire", WingsMod.instance()::createAvianWings),
-			createWings("bat", WingsMod.instance()::createAvianWings),
-			createWings("fairy", WingsMod.instance()::createInsectoidWings),
-			createWings("evil", WingsMod.instance()::createAvianWings),
-			createWings("dragon", WingsMod.instance()::createAvianWings)
+			createWings("angel", 120, WingsMod.instance()::createAvianWings),
+			createWings("slime", 180, WingsMod.instance()::createInsectoidWings),
+			createWings("blue_butterfly", 120, WingsMod.instance()::createInsectoidWings),
+			createWings("monarch_butterfly", 120, WingsMod.instance()::createInsectoidWings),
+			createWings("fire", 180, WingsMod.instance()::createAvianWings),
+			createWings("bat", 180, WingsMod.instance()::createAvianWings),
+			createWings("fairy", 120, WingsMod.instance()::createInsectoidWings),
+			createWings("evil", 340, WingsMod.instance()::createAvianWings),
+			createWings("dragon", 360, WingsMod.instance()::createAvianWings)
 		);
 	}
 
-	private static Item createWings(String name, Function<String, Consumer<CapabilityProviders.CompositeBuilder>> capabilities) {
-		return Reg.withName(ItemWings.create(capabilities.apply(name)), String.format("%s_wings", name))
+	private static Item createWings(String name, int durability, Function<String, Consumer<CapabilityProviders.CompositeBuilder>> capabilities) {
+		return Reg.withName(ItemWings.create(durability, capabilities.apply(name)), String.format("%s_wings", name))
 			.setCreativeTab(ItemGroupWings.instance());
 	}
 }
