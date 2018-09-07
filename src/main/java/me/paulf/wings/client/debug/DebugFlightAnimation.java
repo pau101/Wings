@@ -33,16 +33,39 @@ import java.util.UUID;
 public final class DebugFlightAnimation {
 	private DebugFlightAnimation() {}
 
-	private static final boolean DEBUG = false;
-
-	private static Object handler = DEBUG ? null : new Object();
+	private static State state = new DisabledState();
 
 	@SubscribeEvent
 	public static void init(ModelRegistryEvent event) {
-		if (handler == null) {
-			MinecraftForge.EVENT_BUS.register(handler = new Handler());
+		state = state.init();
+	}
+
+	private interface State {
+		State init();
+	}
+
+	protected static final class DisabledState implements State {
+		@Override
+		public State init() {
+			return this;
 		}
 	}
+
+	private static final class EnabledState implements State {
+		@Override
+		public State init() {
+			return this;
+		}
+	}
+
+	private static final class EnableState implements State {
+		@Override
+		public State init() {
+			MinecraftForge.EVENT_BUS.register(new Handler());
+			return new EnabledState();
+		}
+	}
+
 
 	private static final class Handler {
 		private static final GameProfile PROFILE = new GameProfile(
@@ -65,7 +88,7 @@ public final class DebugFlightAnimation {
 					player.setPosition(0.0D, 62.0D, 0.0D);
 					player.prevPosZ = -1.0D;
 					player.prevPosY = 63.0D;
-					Item item = WingsItems.EVIL_WINGS;
+					Item item = WingsItems.ANGEL_WINGS;
 					player.setHeldItem(EnumHand.MAIN_HAND, new ItemStack(item));
 					item.onItemRightClick(world, player, EnumHand.MAIN_HAND);
 					Flight flight = Flights.get(player);
