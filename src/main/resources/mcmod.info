@@ -8,7 +8,7 @@
 	"updateUrl": "",
 	"authorList": [ "pau101" ],
 	"credits": "LDShadowLady for concept design",
-	"logoFile": "",
+	"logoFile": "logo.png",
 	"screenshots": [],
 	"dependencies": []
 }]
