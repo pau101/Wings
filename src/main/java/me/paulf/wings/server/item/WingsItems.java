@@ -2,6 +2,7 @@ package me.paulf.wings.server.item;
 
 import me.paulf.wings.WingsMod;
 import me.paulf.wings.server.block.WingsBlocks;
+import me.paulf.wings.server.config.WingsItemsConfig;
 import me.paulf.wings.server.item.group.ItemGroupWings;
 import me.paulf.wings.util.CapabilityProviders;
 import me.paulf.wings.util.Reg;
@@ -59,15 +60,15 @@ public final class WingsItems {
 				.setCreativeTab(ItemGroupWings.instance())
 				.setContainerItem(Items.GLASS_BOTTLE), "bat_blood"
 			),
-			createWings("angel", 120, WingsMod.instance()::createAvianWings),
-			createWings("slime", 180, WingsMod.instance()::createInsectoidWings),
-			createWings("blue_butterfly", 120, WingsMod.instance()::createInsectoidWings),
-			createWings("monarch_butterfly", 120, WingsMod.instance()::createInsectoidWings),
-			createWings("fire", 180, WingsMod.instance()::createAvianWings),
-			createWings("bat", 180, WingsMod.instance()::createAvianWings),
-			createWings("fairy", 120, WingsMod.instance()::createInsectoidWings),
-			createWings("evil", 340, WingsMod.instance()::createAvianWings),
-			createWings("dragon", 360, WingsMod.instance()::createAvianWings)
+			createWings("angel", WingsItemsConfig.DURABILITY.angel(), WingsMod.instance()::createAvianWings),
+			createWings("slime", WingsItemsConfig.DURABILITY.slime(), WingsMod.instance()::createInsectoidWings),
+			createWings("blue_butterfly", WingsItemsConfig.DURABILITY.blueButterfly(), WingsMod.instance()::createInsectoidWings),
+			createWings("monarch_butterfly", WingsItemsConfig.DURABILITY.monarchButterfly(), WingsMod.instance()::createInsectoidWings),
+			createWings("fire", WingsItemsConfig.DURABILITY.fire(), WingsMod.instance()::createAvianWings),
+			createWings("bat", WingsItemsConfig.DURABILITY.bat(), WingsMod.instance()::createAvianWings),
+			createWings("fairy", WingsItemsConfig.DURABILITY.fairy(), WingsMod.instance()::createInsectoidWings),
+			createWings("evil", WingsItemsConfig.DURABILITY.evil(), WingsMod.instance()::createAvianWings),
+			createWings("dragon", WingsItemsConfig.DURABILITY.dragon(), WingsMod.instance()::createAvianWings)
 		);
 	}
 

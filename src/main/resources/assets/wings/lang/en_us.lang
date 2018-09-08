@@ -29,6 +29,8 @@ wings.dreamcatcher.gahyeon=Gahyeon's Wings
 
 subtitles.wings.item.armor.equip_wings=Wings rustle
 
+wings/ores.tooltip=Customize Wings Ores
+
 config.wings.ores.entry.fairy_dust=Fairy Dust Ore Generation
 config.wings.ores.entry.amethyst=Amethyst Ore Generation
 config.wings.ores.entry.fairy_dust.tooltip=Customize vein distribution and shape
@@ -42,3 +44,27 @@ config.wings.ores.settings.size.tooltip=Vein size in blocks scaled by 8
 config.wings.ores.settings.count.tooltip=Vein generation attempt count
 config.wings.ores.settings.minHeight.tooltip=Vein placement from lowest Y level
 config.wings.ores.settings.maxHeight.tooltip=Vein placement to highest Y level
+
+wings/items.tooltip=Customize Wings Items
+
+config.wings.items.durability=Item Durability
+config.wings.items.durability.tooltip=Customize item durability
+
+config.wings.items.durability.angel=Angel Wings Durability
+config.wings.items.durability.slime=Slime Wings Durability
+config.wings.items.durability.blue_butterfly=Blue Butterfly Wings Durability
+config.wings.items.durability.monarch_butterfly=Monarch Butterfly Wings Durability
+config.wings.items.durability.fire=Fire Wings Durability
+config.wings.items.durability.bat=Bat Wings Durability
+config.wings.items.durability.fairy=Fairy Wings Durability
+config.wings.items.durability.evil=Evil Wings Durability
+config.wings.items.durability.dragon=Dragon Wings Durability
+config.wings.items.durability.angel.tooltip=Infinite durability specified by 0
+config.wings.items.durability.slime.tooltip=Infinite durability specified by 0
+config.wings.items.durability.blue_butterfly.tooltip=Infinite durability specified by 0
+config.wings.items.durability.monarch_butterfly.tooltip=Infinite durability specified by 0
+config.wings.items.durability.fire.tooltip=Infinite durability specified by 0
+config.wings.items.durability.bat.tooltip=Infinite durability specified by 0
+config.wings.items.durability.fairy.tooltip=Infinite durability specified by 0
+config.wings.items.durability.evil.tooltip=Infinite durability specified by 0
+config.wings.items.durability.dragon.tooltip=Infinite durability specified by 0
