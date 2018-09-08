@@ -50,6 +50,8 @@ public final class WingsSound extends MovingSound {
 			} else {
 				pitch = 1.0F;
 			}
+		} else {
+			volume = 0.0F;
 		}
 	}
 }
