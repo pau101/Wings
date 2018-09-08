@@ -1,7 +1,7 @@
 [{
 	"modid": "wings",
 	"name": "Wings",
-	"description": "The Wings mod introduces an assortment of avian and insectoid wings for all of your arial travel needs.",
+	"description": "The Wings mod introduces an assortment of avian and insectoid wings for all of your aerial travel needs.",
 	"version": "${version}",
 	"mcversion": "${mcversion}",
 	"url": "",
