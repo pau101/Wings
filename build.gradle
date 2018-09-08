@@ -27,7 +27,7 @@ apply plugin: "net.minecraftforge.gradle.forge"
 project.ext.corePlugin = "me.paulf.wings.server.asm.plugin.WingsLoadingPlugin"
 project.ext.modVersion = "1.0.1"
 project.ext.llibraryVersion = "1.7.9"
-version = "${modVersion}-1.12"
+version = "${modVersion}-1.12.2"
 group = "me.paulf.wings"
 archivesBaseName = "wings"
 sourceCompatibility = targetCompatibility = JavaVersion.VERSION_1_8
