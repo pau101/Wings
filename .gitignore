@@ -13,6 +13,5 @@ eclipse/
 *.iws
 out/
 .gradle/
-gradle*
 build/
 server_run/
