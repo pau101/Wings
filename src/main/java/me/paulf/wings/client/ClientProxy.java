@@ -2,21 +2,23 @@ package me.paulf.wings.client;
 
 import me.paulf.wings.Proxy;
 import me.paulf.wings.WingsMod;
+import me.paulf.wings.client.apparatus.FlightApparatusView;
+import me.paulf.wings.client.apparatus.FlightApparatusViews;
+import me.paulf.wings.client.apparatus.WingForm;
 import me.paulf.wings.client.flight.Animator;
+import me.paulf.wings.client.flight.AnimatorAvian;
+import me.paulf.wings.client.flight.AnimatorInsectoid;
 import me.paulf.wings.client.flight.FlightView;
 import me.paulf.wings.client.model.ModelWings;
 import me.paulf.wings.client.model.ModelWingsAvian;
 import me.paulf.wings.client.model.ModelWingsInsectoid;
 import me.paulf.wings.client.renderer.LayerWings;
-import me.paulf.wings.client.apparatus.WingForm;
-import me.paulf.wings.client.apparatus.FlightApparatusView;
-import me.paulf.wings.client.apparatus.FlightApparatusViews;
 import me.paulf.wings.server.flight.Flight;
-import me.paulf.wings.client.flight.AnimatorAvian;
-import me.paulf.wings.client.flight.AnimatorInsectoid;
+import me.paulf.wings.server.flight.Flights;
 import me.paulf.wings.server.item.WingsItems;
 import me.paulf.wings.server.net.serverbound.MessageControlFlying;
 import me.paulf.wings.util.CapabilityProviders;
+import me.paulf.wings.util.KeyInputListener;
 import me.paulf.wings.util.SimpleStorage;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
@@ -24,7 +26,11 @@ import net.minecraft.client.renderer.color.ItemColors;
 import net.minecraft.client.renderer.entity.RenderPlayer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.client.settings.KeyConflictContext;
+import net.minecraftforge.client.settings.KeyModifier;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.CapabilityManager;
+import org.lwjgl.input.Keyboard;
 
 import java.util.function.Consumer;
 import java.util.function.Supplier;
@@ -43,6 +49,18 @@ public final class ClientProxy extends Proxy {
 		CapabilityManager.INSTANCE.register(FlightApparatusView.class, SimpleStorage.ofVoid(), () -> {
 			throw new UnsupportedOperationException();
 		});
+		MinecraftForge.EVENT_BUS.register(KeyInputListener.builder()
+			.category("key.categories.wings")
+				.key("key.wings.fly", KeyConflictContext.IN_GAME, KeyModifier.NONE, Keyboard.KEY_R)
+					.onPress(() -> {
+						EntityPlayer player = Minecraft.getMinecraft().player;
+						Flight flight = Flights.get(player);
+						if (flight != null && flight.canFly(player)) {
+							flight.toggleIsFlying(Flight.PlayerSet.ofOthers());
+						}
+					})
+			.build()
+		);
 	}
 
 	@Override

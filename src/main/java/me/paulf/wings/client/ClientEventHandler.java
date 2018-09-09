@@ -18,37 +18,19 @@ import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.model.ModelPlayer;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.client.event.EntityViewRenderEvent;
-import net.minecraftforge.client.settings.KeyConflictContext;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
-import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.Event;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.InputEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.relauncher.Side;
-import org.lwjgl.input.Keyboard;
 
 @Mod.EventBusSubscriber(value = Side.CLIENT, modid = WingsMod.ID)
 public final class ClientEventHandler {
 	private ClientEventHandler() {}
-
-	private static final KeyBinding FLY = newKeyBinding("fly", KeyConflictContext.IN_GAME, Keyboard.KEY_R);
-
-	@SubscribeEvent
-	public static void onKey(InputEvent.KeyInputEvent event) {
-		if (FLY.isPressed()) {
-			EntityPlayer player = Minecraft.getMinecraft().player;
-			Flight flight = Flights.get(player);
-			if (flight != null && flight.canFly(player)) {
-				flight.toggleIsFlying(Flight.PlayerSet.ofOthers());
-			}
-		}
-	}
 
 	@SubscribeEvent
 	public static void onSetRotationAngles(PlayerModelEvent.SetRotationAngles event) {
@@ -144,13 +126,5 @@ public final class ClientEventHandler {
 				flight.onUpdate(player, FlightApparatuses.find(player));
 			}
 		}
-	}
-
-	private static KeyBinding newKeyBinding(String name, KeyConflictContext keyContext, int keyCode) {
-		String desc = "key." + WingsMod.ID + "." + name;
-		String category = "key.categories." + WingsMod.ID;
-		KeyBinding kb = new KeyBinding(desc, keyContext, keyCode, category);
-		ClientRegistry.registerKeyBinding(kb);
-		return kb;
 	}
 }
