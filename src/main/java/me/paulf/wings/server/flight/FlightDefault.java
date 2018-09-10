@@ -105,7 +105,7 @@ public final class FlightDefault implements Flight {
 
 	@Override
 	public boolean canLand(EntityPlayer player) {
-		return getHunger(player) >= 4;
+		return getHunger(player) >= 2;
 	}
 
 	private void onWornUpdate(EntityPlayer player, ItemStack wings) {
