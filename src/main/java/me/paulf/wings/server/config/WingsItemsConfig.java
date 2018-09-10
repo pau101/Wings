@@ -14,59 +14,65 @@ public class WingsItemsConfig {
 	public static final class DurabilitySet {
 		private DurabilitySet() {}
 
+		private static final int EASIEST = 960;
+
+		private static final int MODERATE = 1920;
+
+		private static final int HARDEST = 2880;
+
 		@Deprecated
 		@Config.LangKey("config.wings.items.durability.angel")
 		@Config.RangeInt(min = 0, max = Short.MAX_VALUE)
 		@Config.RequiresMcRestart
-		public int angel = 120;
+		public int angel = EASIEST;
 
 		@Deprecated
 		@Config.LangKey("config.wings.items.durability.slime")
 		@Config.RangeInt(min = 0, max = Short.MAX_VALUE)
 		@Config.RequiresMcRestart
-		public int slime = 180;
+		public int slime = EASIEST;
 
 		@Deprecated
 		@Config.LangKey("config.wings.items.durability.blue_butterfly")
 		@Config.RangeInt(min = 0, max = Short.MAX_VALUE)
 		@Config.RequiresMcRestart
-		public int blueButterfly = 120;
+		public int blueButterfly = EASIEST;
 
 		@Deprecated
 		@Config.LangKey("config.wings.items.durability.monarch_butterfly")
 		@Config.RangeInt(min = 0, max = Short.MAX_VALUE)
 		@Config.RequiresMcRestart
-		public int monarchButterfly = 120;
+		public int monarchButterfly = EASIEST;
 
 		@Deprecated
 		@Config.LangKey("config.wings.items.durability.fire")
 		@Config.RangeInt(min = 0, max = Short.MAX_VALUE)
 		@Config.RequiresMcRestart
-		public int fire = 180;
+		public int fire = MODERATE;
 
 		@Deprecated
 		@Config.LangKey("config.wings.items.durability.bat")
 		@Config.RangeInt(min = 0, max = Short.MAX_VALUE)
 		@Config.RequiresMcRestart
-		public int bat = 180;
+		public int bat = MODERATE;
 
 		@Deprecated
 		@Config.LangKey("config.wings.items.durability.fairy")
 		@Config.RangeInt(min = 0, max = Short.MAX_VALUE)
 		@Config.RequiresMcRestart
-		public int fairy = 120;
+		public int fairy = EASIEST;
 
 		@Deprecated
 		@Config.LangKey("config.wings.items.durability.evil")
 		@Config.RangeInt(min = 0, max = Short.MAX_VALUE)
 		@Config.RequiresMcRestart
-		public int evil = 240;
+		public int evil = MODERATE;
 
 		@Deprecated
 		@Config.LangKey("config.wings.items.durability.dragon")
 		@Config.RangeInt(min = 0, max = Short.MAX_VALUE)
 		@Config.RequiresMcRestart
-		public int dragon = 360;
+		public int dragon = HARDEST;
 
 		public int angel() {
 			return angel;
