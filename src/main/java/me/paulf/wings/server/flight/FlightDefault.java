@@ -184,7 +184,7 @@ public final class FlightDefault implements Flight {
 				if (distance > 0) {
 					player.addExhaustion(distance * 0.001F);
 				}
-			} else if (player.motionY < 0.0D) {
+			} else if (player.motionY < -0.5D) {
 				player.addExhaustion(0.08F);
 			}
 		}
