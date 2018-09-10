@@ -1,6 +1,7 @@
 package me.paulf.wings.client.flight.state;
 
 import me.paulf.wings.client.flight.Animator;
+import me.paulf.wings.server.flight.Flight;
 import me.paulf.wings.util.Mth;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.math.MathHelper;
@@ -25,55 +26,59 @@ public abstract class State {
 		this.animation = animation;
 	}
 
-	public final State update(boolean isFlying, double velX, double velY, double velZ, EntityPlayer player) {
+	public final State update(Flight flight, double x, double y, double z, EntityPlayer player) {
 		if (time++ > stateDelay) {
-			return getNext(isFlying, velX, velY, velZ, player);
+			return getNext(flight, x, y, z, player);
 		}
 		return this;
 	}
 
-	private State getNext(boolean isFlying, double velX, double velY, double velZ, EntityPlayer player) {
-		if (isFlying) {
-			if (velY < 0 && player.rotationPitch >= getPitch(velX, velY, velZ)) {
-				return getGlide();
+	private State getNext(Flight flight, double x, double y, double z, EntityPlayer player) {
+		if (flight.isFlying()) {
+			if (y < 0 && player.rotationPitch >= getPitch(x, y, z)) {
+				return createGlide();
 			}
-			return getLift();
+			return createLift();
 		}
-		if (velY < 0) {
-			return getFalling(player);
+		if (y < 0) {
+			return getDescent(flight, player);
 		}
-		return getDefault(velY);
+		return getDefault(y);
 	}
 
-	private float getPitch(double velX, double velY, double velZ) {
-		return Mth.toDegrees((float) -Math.atan2(velY, MathHelper.sqrt(velX * velX + velZ * velZ)));
+	private float getPitch(double x, double y, double z) {
+		return Mth.toDegrees((float) -Math.atan2(y, MathHelper.sqrt(x * x + z * z)));
 	}
 
 	public final void beginAnimation(Animator animator) {
 		animation.accept(animator);
 	}
 
-	protected State getFall() {
-		return new StateFall();
+	protected State createLand() {
+		return new StateLand();
 	}
 
-	protected State getLift() {
+	protected State createLift() {
 		return new StateLift();
 	}
 
-	protected State getGlide() {
+	protected State createGlide() {
 		return new StateGlide();
 	}
 
-	protected State getIdle() {
+	protected State createIdle() {
 		return new StateIdle();
 	}
 
-	protected State getDefault(double velocityY) {
-		return getIdle();
+	protected State createFall() {
+		return new StateFall();
 	}
 
-	protected State getFalling(EntityPlayer player) {
-		return getFall();
+	protected State getDefault(double y) {
+		return createIdle();
+	}
+
+	protected State getDescent(Flight flight, EntityPlayer player) {
+		return flight.canLand(player) ? createLand() : createFall();
 	}
 }

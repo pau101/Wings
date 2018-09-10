@@ -1,6 +1,7 @@
 package me.paulf.wings.client.flight.state;
 
 import me.paulf.wings.client.flight.Animator;
+import me.paulf.wings.server.flight.Flight;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.math.BlockPos;
 
@@ -10,16 +11,16 @@ public final class StateIdle extends State {
 	}
 
 	@Override
-	protected State getIdle() {
+	protected State createIdle() {
 		return this;
 	}
 
 	@Override
-	protected State getFalling(EntityPlayer player) {
+	protected State getDescent(Flight flight, EntityPlayer player) {
 		BlockPos below = new BlockPos(player.posX, player.posY - 0.25D, player.posZ);
 		if (player.world.isAirBlock(below) && player.world.isAirBlock(below.down())) {
-			return super.getFalling(player);
+			return super.getDescent(flight, player);
 		}
-		return getIdle();
+		return createIdle();
 	}
 }

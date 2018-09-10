@@ -6,13 +6,15 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.gen.NoiseGeneratorSimplex;
 
 public final class AnimatorAvian implements Animator {
-	private static final int FALL_TRANSITION_DURATION = 2;
+	private static final int LAND_TRANSITION_DURATION = 2;
 
 	private static final int GLIDE_TRANSITION_DURATION = 60;
 
 	private static final int IDLE_TRANSITION_DURATION = 18;
 
 	private static final int LIFT_TRANSITION_DURATION = 20;
+
+	private static final int FALL_TRANSITION_DURATION = 8;
 
 	private final Movement restPosition = new RestPosition();
 
@@ -40,8 +42,8 @@ public final class AnimatorAvian implements Animator {
 	}
 
 	@Override
-	public void beginFall() {
-		beginMovement(new FallMovement(), FALL_TRANSITION_DURATION);
+	public void beginLand() {
+		beginMovement(new LandMovement(), LAND_TRANSITION_DURATION);
 	}
 
 	@Override
@@ -57,6 +59,11 @@ public final class AnimatorAvian implements Animator {
 	@Override
 	public void beginLift() {
 		beginMovement(new LiftMovement(), LIFT_TRANSITION_DURATION);
+	}
+
+	@Override
+	public void beginFall() {
+		beginMovement(new FallMovement(), FALL_TRANSITION_DURATION);
 	}
 
 	public Vec3d getWingRotation(int index, float delta) {
@@ -115,7 +122,7 @@ public final class AnimatorAvian implements Animator {
 		return Math.min(Math.abs(index - 1), 2) / 2.0F;
 	}
 
-	private final class FallMovement implements Movement {
+	private final class LandMovement implements Movement {
 		@Override
 		public Vec3d getWingRotation(int index, float delta) {
 			float pos = getWeight(index + 1);
@@ -227,6 +234,37 @@ public final class AnimatorAvian implements Animator {
 				beginTime++;
 			}
 			return flap;
+		}
+	}
+
+	private final class FallMovement implements Movement {
+		private final NoiseGeneratorSimplex noise = new NoiseGeneratorSimplex();
+
+		private final WingPose wing = WingPose.builder()
+			.with(0, 30.0D, -23.0D, -50.0D)
+			.with(1, -10.0D, 5.0D, -10.0D)
+			.with(2, -30.0D, -20.0D, -20.0D)
+			.with(3, -20.0D, 0.0D, 20.0D)
+			.build();
+
+		private int time;
+
+		@Override
+		public Vec3d getWingRotation(int index, float delta) {
+			double n = noise.getValue((time + delta) * 0.18D, index * 0.13D) * 0.92D * (index + 1);
+			return wing.get(index).add(n, 0.0D, n);
+		}
+
+		@Override
+		public Vec3d getFeatherRotation(int index, float delta) {
+			double n = noise.getValue((time + delta) * 0.2D, index * 0.13D) * 1.75D;
+			return new Vec3d(-n, n * 4.0D, 0.0D);
+		}
+
+		@Override
+		public float update() {
+			time++;
+			return 0.0F;
 		}
 	}
 

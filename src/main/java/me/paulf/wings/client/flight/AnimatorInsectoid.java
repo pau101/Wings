@@ -1,6 +1,5 @@
 package me.paulf.wings.client.flight;
 
-import me.paulf.wings.client.flight.Animator;
 import me.paulf.wings.util.Mth;
 import net.minecraft.util.math.Vec3d;
 
@@ -18,7 +17,7 @@ public final class AnimatorInsectoid implements Animator {
 	private float flapCycle;
 
 	@Override
-	public void beginFall() {
+	public void beginLand() {
 		beginLift();
 	}
 
@@ -35,6 +34,11 @@ public final class AnimatorInsectoid implements Animator {
 	@Override
 	public void beginLift() {
 		targetFlapRate = LIFT_FLAP_RATE;
+	}
+
+	@Override
+	public void beginFall() {
+		beginIdle();
 	}
 
 	public Vec3d getRotation(float delta) {

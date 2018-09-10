@@ -12,12 +12,12 @@ public final class StateLift extends State {
 	}
 
 	@Override
-	protected State getLift() {
+	protected State createLift() {
 		return this;
 	}
 
 	@Override
-	protected State getDefault(double velocityY) {
-		return velocityY >= 0 ? getGlide() : super.getDefault(velocityY);
+	protected State getDefault(double y) {
+		return y >= 0 ? createGlide() : super.getDefault(y);
 	}
 }

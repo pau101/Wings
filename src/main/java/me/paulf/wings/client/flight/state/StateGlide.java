@@ -10,12 +10,12 @@ public final class StateGlide extends State {
 	}
 
 	@Override
-	protected State getLift() {
+	protected State createLift() {
 		return new StateLift(LIFT_STATE_DELAY);
 	}
 
 	@Override
-	protected State getGlide() {
+	protected State createGlide() {
 		return this;
 	}
 }

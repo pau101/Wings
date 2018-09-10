@@ -4,6 +4,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketBuffer;
+import net.minecraft.util.math.Vec3d;
 
 import java.util.function.Consumer;
 
@@ -32,7 +33,11 @@ public interface Flight {
 
 	boolean canFly(EntityPlayer player);
 
+	boolean canLand(EntityPlayer player);
+
 	void onUpdate(EntityPlayer player, ItemStack wings);
+
+	void onFlown(EntityPlayer player, ItemStack wings, Vec3d direction);
 
 	void clone(Flight other);
 

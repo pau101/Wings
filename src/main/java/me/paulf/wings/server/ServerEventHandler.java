@@ -1,14 +1,15 @@
 package me.paulf.wings.server;
 
 import me.paulf.wings.WingsMod;
-import me.paulf.wings.server.flight.ConstructWingsAccessorEvent;
-import me.paulf.wings.server.flight.Flights;
 import me.paulf.wings.server.apparatus.FlightApparatuses;
-import me.paulf.wings.util.ItemPlacing;
 import me.paulf.wings.server.asm.GetLivingHeadLimitEvent;
+import me.paulf.wings.server.asm.PlayerFlownEvent;
 import me.paulf.wings.server.asm.PlayerFlightCheckEvent;
+import me.paulf.wings.server.flight.ConstructWingsAccessorEvent;
 import me.paulf.wings.server.flight.Flight;
+import me.paulf.wings.server.flight.Flights;
 import me.paulf.wings.server.item.WingsItems;
+import me.paulf.wings.util.ItemPlacing;
 import net.minecraft.entity.passive.EntityBat;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
@@ -97,6 +98,15 @@ public final class ServerEventHandler {
 		Flight flight = Flights.get(event.getEntityPlayer());
 		if (flight != null && flight.isFlying()) {
 			event.setResult(Event.Result.ALLOW);
+		}
+	}
+
+	@SubscribeEvent
+	public static void onPlayerFlown(PlayerFlownEvent event) {
+		EntityPlayer player = event.getEntityPlayer();
+		Flight flight = Flights.get(player);
+		if (flight != null) {
+			flight.onFlown(player, FlightApparatuses.find(event.getEntityPlayer()), event.getDirection());
 		}
 	}
 

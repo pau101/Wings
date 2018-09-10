@@ -8,7 +8,7 @@ public final class StateFall extends State {
 	}
 
 	@Override
-	protected State getFall() {
+	protected State createFall() {
 		return this;
 	}
 }

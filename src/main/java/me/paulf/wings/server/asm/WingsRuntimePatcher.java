@@ -16,6 +16,8 @@ import net.minecraft.network.NetHandlerPlayServer;
 import net.minecraft.network.play.client.CPacketPlayer;
 import net.minecraft.util.EnumHand;
 import net.minecraftforge.client.ForgeHooksClient;
+import org.objectweb.asm.tree.AbstractInsnNode;
+import org.objectweb.asm.tree.IntInsnNode;
 
 import java.util.function.Predicate;
 
@@ -49,6 +51,14 @@ public final class WingsRuntimePatcher extends RuntimePatcher {
 						EntityPlayer.class, boolean.class,
 						boolean.class
 					)
+				).pop()
+			.patchMethod("addMovementStat", double.class, double.class, double.class, void.class)
+				.apply(Patch.BEFORE, addMovementStatTarget(), m -> m
+					.var(ALOAD, 0)
+					.var(DLOAD, 1)
+					.var(DLOAD, 3)
+					.var(DLOAD, 5)
+					.method(INVOKESTATIC, WingsHooks.class, "onAddFlown", EntityPlayer.class, double.class, double.class, double.class, void.class)
 				);
 		patchClass(NetHandlerPlayServer.class)
 			.patchMethod("processPlayer", CPacketPlayer.class, void.class)
@@ -141,5 +151,11 @@ public final class WingsRuntimePatcher extends RuntimePatcher {
 			data.node.getNext().getNext() != null &&
 			isInvisible.test(data.node.getNext().getNext().getNext())
 		);
+	}
+
+	private static Predicate<MethodPatcher.PredicateData> addMovementStatTarget() {
+		InsnPredicate iload7 = new InsnPredicate.Var().var(7).opcode(ILOAD);
+		Predicate<AbstractInsnNode> bipush25 = node -> node instanceof IntInsnNode && ((IntInsnNode) node).operand == 25;
+		return iload7.and(data -> data.node.getNext() != null && bipush25.test(data.node.getNext()));
 	}
 }

@@ -97,7 +97,7 @@ public final class FlightViewDefault implements FlightView {
 				public void update(EntityPlayer player) {
 					animator.update();
 					State state = this.state.update(
-						flight.isFlying(),
+						flight,
 						player.posX - player.prevPosX,
 						player.posY - player.prevPosY,
 						player.posZ - player.prevPosZ,

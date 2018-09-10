@@ -4,6 +4,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.eventhandler.Event;
 
@@ -37,5 +38,9 @@ public final class WingsHooks {
 		if (theta * theta > sLimit * sLimit) {
 			living.renderYawOffset += theta * 0.2F;
 		}
+	}
+
+	public static void onAddFlown(EntityPlayer player, double x, double y, double z) {
+		MinecraftForge.EVENT_BUS.post(new PlayerFlownEvent(player, new Vec3d(x, y, z)));
 	}
 }
