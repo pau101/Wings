@@ -25,8 +25,8 @@ repositories {
 apply plugin: "net.minecraftforge.gradle.forge"
 
 project.ext.corePlugin = "me.paulf.wings.server.asm.plugin.WingsLoadingPlugin"
-project.ext.modVersion = "1.0.4"
-project.ext.llibraryVersion = "1.7.9"
+project.ext.modVersion = "1.0.5"
+project.ext.llibraryVersion = "1.7.15"
 version = "${modVersion}-1.12.2"
 group = "me.paulf.wings"
 archivesBaseName = "wings"
@@ -35,7 +35,7 @@ sourceCompatibility = targetCompatibility = JavaVersion.VERSION_1_8
 minecraft {
 	version = "1.12.2-14.23.4.2705"
 	runDir = "run"
-	mappings = "snapshot_20180718"
+	mappings = "stable_39"
 	makeObfSourceJar = false
 	clientJvmArgs = serverJvmArgs = [ "-Dfml.coreMods.load=$project.corePlugin" ]
 }
