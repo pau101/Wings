@@ -7,7 +7,7 @@
 	],
 	"key": {
 		"E": { "item": "minecraft:emerald" },
-		"M": { "item": "wings:amethyst" },
+		"M": { "type": "forge:ore_dict", "ore": "gemAmethyst" },
 		"G": { "type": "forge:ore_dict", "ore": "ingotGold" },
 		"A": { "type": "forge:ore_dict", "ore": "dustFairy" },
 		"D": { "type": "forge:ore_dict", "ore": "gemDiamond" }
