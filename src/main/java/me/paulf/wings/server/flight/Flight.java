@@ -33,7 +33,7 @@ public interface Flight {
 
 	boolean canFly(EntityPlayer player);
 
-	boolean canLand(EntityPlayer player);
+	boolean canLand(EntityPlayer player, ItemStack wings);
 
 	void onUpdate(EntityPlayer player, ItemStack wings);
 

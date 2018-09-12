@@ -1,113 +1,56 @@
 package me.paulf.wings.server.config;
 
+import com.google.common.collect.ImmutableMap;
 import me.paulf.wings.WingsMod;
+import me.paulf.wings.server.item.WingSettings;
+import me.paulf.wings.server.item.WingsItems;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.config.Config;
 
+import java.util.stream.Stream;
+
 @Config(modid = WingsMod.ID, name = WingsMod.ID + "/items", category = "")
-public class WingsItemsConfig {
+public final class WingsItemsConfig {
 	private WingsItemsConfig() {}
 
-	@Config.LangKey("config.wings.items.durability")
-	public static final DurabilitySet DURABILITY = new DurabilitySet();
+	@Config.LangKey("config.wings.items.entry.angel")
+	@Config.RequiresMcRestart
+	public static final ConfigWingSettings ANGEL = new ConfigWingSettings(WingsItems.Names.ANGEL);
 
-	@SuppressWarnings("DeprecatedIsStillUsed")
-	public static final class DurabilitySet {
-		private DurabilitySet() {}
+	@Config.LangKey("config.wings.items.entry.slime")
+	@Config.RequiresMcRestart
+	public static final ConfigWingSettings SLIME = new ConfigWingSettings(WingsItems.Names.SLIME);
 
-		private static final int EASIEST = 960;
+	@Config.LangKey("config.wings.items.entry.blue_butterfly")
+	@Config.RequiresMcRestart
+	public static final ConfigWingSettings BLUE_BUTTERFLY = new ConfigWingSettings(WingsItems.Names.BLUE_BUTTERFLY);
 
-		private static final int MODERATE = 1920;
+	@Config.LangKey("config.wings.items.entry.monarch_butterfly")
+	@Config.RequiresMcRestart
+	public static final ConfigWingSettings MONARCH_BUTTERFLY = new ConfigWingSettings(WingsItems.Names.MONARCH_BUTTERFLY);
 
-		private static final int HARDEST = 2880;
+	@Config.LangKey("config.wings.items.entry.fire")
+	@Config.RequiresMcRestart
+	public static final ConfigWingSettings FIRE = new ConfigWingSettings(WingsItems.Names.FIRE);
 
-		@Deprecated
-		@Config.LangKey("config.wings.items.durability.angel")
-		@Config.RangeInt(min = 0, max = Short.MAX_VALUE)
-		@Config.RequiresMcRestart
-		public int angel = EASIEST;
+	@Config.LangKey("config.wings.items.entry.bat")
+	@Config.RequiresMcRestart
+	public static final ConfigWingSettings BAT = new ConfigWingSettings(WingsItems.Names.BAT);
 
-		@Deprecated
-		@Config.LangKey("config.wings.items.durability.slime")
-		@Config.RangeInt(min = 0, max = Short.MAX_VALUE)
-		@Config.RequiresMcRestart
-		public int slime = EASIEST;
+	@Config.LangKey("config.wings.items.entry.fairy")
+	@Config.RequiresMcRestart
+	public static final ConfigWingSettings FAIRY = new ConfigWingSettings(WingsItems.Names.FAIRY);
 
-		@Deprecated
-		@Config.LangKey("config.wings.items.durability.blue_butterfly")
-		@Config.RangeInt(min = 0, max = Short.MAX_VALUE)
-		@Config.RequiresMcRestart
-		public int blueButterfly = EASIEST;
+	@Config.LangKey("config.wings.items.entry.evil")
+	@Config.RequiresMcRestart
+	public static final ConfigWingSettings EVIL = new ConfigWingSettings(WingsItems.Names.EVIL);
 
-		@Deprecated
-		@Config.LangKey("config.wings.items.durability.monarch_butterfly")
-		@Config.RangeInt(min = 0, max = Short.MAX_VALUE)
-		@Config.RequiresMcRestart
-		public int monarchButterfly = EASIEST;
+	@Config.LangKey("config.wings.items.entry.dragon")
+	@Config.RequiresMcRestart
+	public static final ConfigWingSettings DRAGON = new ConfigWingSettings(WingsItems.Names.DRAGON);
 
-		@Deprecated
-		@Config.LangKey("config.wings.items.durability.fire")
-		@Config.RangeInt(min = 0, max = Short.MAX_VALUE)
-		@Config.RequiresMcRestart
-		public int fire = MODERATE;
-
-		@Deprecated
-		@Config.LangKey("config.wings.items.durability.bat")
-		@Config.RangeInt(min = 0, max = Short.MAX_VALUE)
-		@Config.RequiresMcRestart
-		public int bat = MODERATE;
-
-		@Deprecated
-		@Config.LangKey("config.wings.items.durability.fairy")
-		@Config.RangeInt(min = 0, max = Short.MAX_VALUE)
-		@Config.RequiresMcRestart
-		public int fairy = EASIEST;
-
-		@Deprecated
-		@Config.LangKey("config.wings.items.durability.evil")
-		@Config.RangeInt(min = 0, max = Short.MAX_VALUE)
-		@Config.RequiresMcRestart
-		public int evil = MODERATE;
-
-		@Deprecated
-		@Config.LangKey("config.wings.items.durability.dragon")
-		@Config.RangeInt(min = 0, max = Short.MAX_VALUE)
-		@Config.RequiresMcRestart
-		public int dragon = HARDEST;
-
-		public int angel() {
-			return angel;
-		}
-
-		public int slime() {
-			return slime;
-		}
-
-		public int blueButterfly() {
-			return blueButterfly;
-		}
-
-		public int monarchButterfly() {
-			return monarchButterfly;
-		}
-
-		public int fire() {
-			return fire;
-		}
-
-		public int bat() {
-			return bat;
-		}
-
-		public int fairy() {
-			return fairy;
-		}
-
-		public int evil() {
-			return evil;
-		}
-
-		public int dragon() {
-			return dragon;
-		}
+	public static ImmutableMap<ResourceLocation, WingSettings> createWingAttributes() {
+		return Stream.of(ANGEL, SLIME, BLUE_BUTTERFLY, MONARCH_BUTTERFLY, FIRE, BAT, FAIRY, EVIL, DRAGON)
+			.collect(ImmutableMap.toImmutableMap(ConfigWingSettings::getKey, ConfigWingSettings::toImmutable));
 	}
 }

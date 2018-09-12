@@ -100,12 +100,13 @@ public final class FlightDefault implements Flight {
 	public boolean canFly(EntityPlayer player) {
 		ItemStack stack = FlightApparatuses.find(player);
 		FlightApparatus apparatus = FlightApparatuses.get(stack);
-		return apparatus != null && canFly(player, stack, apparatus);
+		return apparatus != null && apparatus.isUsable(player, stack);
 	}
 
 	@Override
-	public boolean canLand(EntityPlayer player) {
-		return getHunger(player) >= 2;
+	public boolean canLand(EntityPlayer player, ItemStack wings) {
+		FlightApparatus apparatus = FlightApparatuses.get(wings);
+		return apparatus != null && apparatus.isLandable(player, wings);
 	}
 
 	private void onWornUpdate(EntityPlayer player, ItemStack wings) {
@@ -127,7 +128,7 @@ public final class FlightDefault implements Flight {
 				player.motionY += vy * speed + Y_BOOST * (player.rotationPitch > 0.0F ? elevationBoost : 1.0D);
 				player.motionZ += vz * vxz * speed;
 			}
-			if (canLand(player)) {
+			if (canLand(player, wings)) {
 				if (player.motionY < 0.0D) {
 					player.motionY *= FALL_REDUCTION;
 				}
@@ -138,17 +139,13 @@ public final class FlightDefault implements Flight {
 			FlightApparatus apparatus = FlightApparatuses.get(wings);
 			if (apparatus == null) {
 				state = state.next();
-			} else if (canFly(player, wings, apparatus)) {
+			} else if (apparatus.isUsable(player, wings)) {
 				(state = state.next(wings, apparatus)).onUpdate(player, wings);
 			} else if (isFlying()) {
 				setIsFlying(false, PlayerSet.ofAll());
 				state = state.next();
 			}
 		}
-	}
-
-	private boolean canFly(EntityPlayer player, ItemStack stack, FlightApparatus apparatus) {
-		return apparatus.isUsable(stack) && getHunger(player) > 6;
 	}
 
 	private int getHunger(EntityPlayer player) {
@@ -178,14 +175,12 @@ public final class FlightDefault implements Flight {
 
 	@Override
 	public void onFlown(EntityPlayer player, ItemStack wings, Vec3d direction) {
-		if (!wings.isEmpty()) {
+		FlightApparatus apparatus;
+		if (!wings.isEmpty() && (apparatus = FlightApparatuses.get(wings)) != null) {
 			if (isFlying()) {
-				int distance = Math.round((float) direction.length() * 100.0F);
-				if (distance > 0) {
-					player.addExhaustion(distance * 0.001F);
-				}
+				apparatus.onFlight(player, wings, direction);
 			} else if (player.motionY < -0.5D) {
-				player.addExhaustion(0.08F);
+				apparatus.onLanding(player, wings, direction);
 			}
 		}
 	}

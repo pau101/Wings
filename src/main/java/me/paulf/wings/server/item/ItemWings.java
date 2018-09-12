@@ -2,10 +2,10 @@ package me.paulf.wings.server.item;
 
 import com.google.common.collect.ImmutableSet;
 import me.paulf.wings.WingsMod;
-import me.paulf.wings.server.sound.WingsSounds;
-import me.paulf.wings.server.apparatus.SimpleFlightApparatus;
 import me.paulf.wings.server.apparatus.FlightApparatus;
 import me.paulf.wings.server.apparatus.FlightApparatuses;
+import me.paulf.wings.server.apparatus.SimpleFlightApparatus;
+import me.paulf.wings.server.sound.WingsSounds;
 import me.paulf.wings.util.CapabilityProviders;
 import me.paulf.wings.util.HandlerSlot;
 import net.minecraft.enchantment.Enchantment;
@@ -29,10 +29,18 @@ public final class ItemWings extends Item {
 
 	private final Consumer<CapabilityProviders.CompositeBuilder> capabilities;
 
-	private ItemWings(ImmutableSet<EnumEnchantmentType> allowedEnchantmentTypes, Consumer<CapabilityProviders.CompositeBuilder> capabilities) {
+	private WingSettings settings;
+
+	private ItemWings(ImmutableSet<EnumEnchantmentType> allowedEnchantmentTypes, Consumer<CapabilityProviders.CompositeBuilder> capabilities, WingSettings settings) {
 		this.allowedEnchantmentTypes = allowedEnchantmentTypes;
 		this.capabilities = capabilities;
+		this.settings = settings;
 	}
+
+	public void setSettings(WingSettings settings) {
+		this.settings = settings;
+	}
+
 	@Override
 	public EntityEquipmentSlot getEquipmentSlot(ItemStack stack) {
 		return EntityEquipmentSlot.CHEST;
@@ -68,12 +76,16 @@ public final class ItemWings extends Item {
 		return new ActionResult<>(EnumActionResult.FAIL, stack);
 	}
 
-	public static ItemWings create(int durability, Consumer<CapabilityProviders.CompositeBuilder> capabilities) {
-		ItemWings wings = new ItemWings(ImmutableSet.of(
-			EnumEnchantmentType.ALL,
-			EnumEnchantmentType.BREAKABLE,
-			EnumEnchantmentType.WEARABLE
-		), capabilities);
+	public static ItemWings create(int durability, Consumer<CapabilityProviders.CompositeBuilder> capabilities, WingSettings attributes) {
+		ItemWings wings = new ItemWings(
+			ImmutableSet.of(
+				EnumEnchantmentType.ALL,
+				EnumEnchantmentType.BREAKABLE,
+				EnumEnchantmentType.WEARABLE
+			),
+			capabilities,
+			attributes
+		);
 		wings.setMaxStackSize(1);
 		wings.setMaxDamage(durability);
 		return wings;
@@ -83,7 +95,15 @@ public final class ItemWings extends Item {
 	public ICapabilityProvider initCapabilities(ItemStack stack, @Nullable NBTTagCompound tag) {
 		CapabilityProviders.CompositeBuilder builder = CapabilityProviders.builder()
 			.add(FlightApparatuses.providerBuilder(SimpleFlightApparatus.builder()
-				.withUsability(s -> s.getItemDamage() < s.getMaxDamage() - 1)
+				.withFlight(((player, wings, direction) -> {
+					int distance = Math.round((float) direction.length() * 100.0F);
+					if (distance > 0) {
+						player.addExhaustion(distance * settings.getFlyingExertion());
+					}
+				}))
+				.withLanding(((player, wings, direction) -> player.addExhaustion(settings.getLandingExertion())))
+				.withUsability((player, wings) -> wings.getItemDamage() < wings.getMaxDamage() - 1 && player.getFoodStats().getFoodLevel() >= settings.getRequiredFlightSatiation())
+				.withLandability((player, wings) -> player.getFoodStats().getFoodLevel() >= settings.getRequiredLandSatiation())
 				.withVitality(flight -> new FlightApparatus.FlightState() {
 					private static final int DAMAGE_RATE = 20;
 

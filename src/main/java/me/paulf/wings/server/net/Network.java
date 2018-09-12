@@ -1,10 +1,12 @@
 package me.paulf.wings.server.net;
 
 import me.paulf.wings.WingsMod;
+import me.paulf.wings.server.net.clientbound.MessageSetWingSettings;
 import me.paulf.wings.server.net.clientbound.MessageSyncFlight;
 import me.paulf.wings.server.net.serverbound.MessageControlFlying;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.network.Packet;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
@@ -19,6 +21,7 @@ public final class Network implements IMessageHandler<Message, IMessage> {
 	public Network() {
 		register(MessageControlFlying.class, 0, Side.SERVER);
 		register(MessageSyncFlight.class, 1, Side.CLIENT);
+		register(MessageSetWingSettings.class, 2, Side.CLIENT);
 	}
 
 	public void sendToServer(IMessage message) {
@@ -37,6 +40,10 @@ public final class Network implements IMessageHandler<Message, IMessage> {
 	public IMessage onMessage(Message message, MessageContext ctx) {
 		FMLCommonHandler.instance().getWorldThread(ctx.netHandler).addScheduledTask(() -> message.process(ctx));
 		return null;
+	}
+
+	public Packet<?> createPacket(IMessage message) {
+		return network.getPacketFrom(message);
 	}
 
 	private void register(Class<? extends Message> cls, int id, Side side) {

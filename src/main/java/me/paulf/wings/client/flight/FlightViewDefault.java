@@ -1,11 +1,12 @@
 package me.paulf.wings.client.flight;
 
-import me.paulf.wings.client.apparatus.WingForm;
 import me.paulf.wings.client.apparatus.FlightApparatusView;
 import me.paulf.wings.client.apparatus.FlightApparatusViews;
-import me.paulf.wings.server.flight.Flight;
+import me.paulf.wings.client.apparatus.WingForm;
 import me.paulf.wings.client.flight.state.State;
 import me.paulf.wings.client.flight.state.StateIdle;
+import me.paulf.wings.server.apparatus.FlightApparatuses;
+import me.paulf.wings.server.flight.Flight;
 import me.paulf.wings.util.Mth;
 import me.paulf.wings.util.SmoothingFunction;
 import me.paulf.wings.util.function.FloatConsumer;
@@ -101,7 +102,8 @@ public final class FlightViewDefault implements FlightView {
 						player.posX - player.prevPosX,
 						player.posY - player.prevPosY,
 						player.posZ - player.prevPosZ,
-						player
+						player,
+						FlightApparatuses.find(player)
 					);
 					if (!this.state.equals(state)) {
 						state.beginAnimation(animator);

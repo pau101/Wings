@@ -2,6 +2,7 @@ package me.paulf.wings;
 
 import me.paulf.wings.server.apparatus.FlightApparatus;
 import me.paulf.wings.server.apparatus.SimpleFlightApparatus;
+import me.paulf.wings.server.config.WingsItemsConfig;
 import me.paulf.wings.server.dreamcatcher.InSomniable;
 import me.paulf.wings.server.dreamcatcher.Playable;
 import me.paulf.wings.server.fix.WingsFixes;
@@ -9,14 +10,18 @@ import me.paulf.wings.server.flight.ConstructWingsAccessorEvent;
 import me.paulf.wings.server.flight.Flight;
 import me.paulf.wings.server.flight.FlightDefault;
 import me.paulf.wings.server.net.Network;
+import me.paulf.wings.server.net.clientbound.MessageSetWingSettings;
 import me.paulf.wings.server.net.clientbound.MessageSyncFlight;
 import me.paulf.wings.util.CapabilityProviders;
 import me.paulf.wings.util.ItemAccessor;
 import me.paulf.wings.util.SimpleStorage;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.network.NetHandlerPlayServer;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.CapabilityManager;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.network.FMLNetworkEvent;
 
 import java.util.function.Consumer;
 
@@ -31,6 +36,12 @@ public abstract class Proxy {
 		CapabilityManager.INSTANCE.register(InSomniable.class, SimpleStorage.ofVoid(), InSomniable::new);
 		CapabilityManager.INSTANCE.register(Playable.class, SimpleStorage.ofVoid(), Playable::new);
 		WingsFixes.register();
+		MinecraftForge.EVENT_BUS.register(new Object() {
+			@SubscribeEvent
+			public void onClientConnectedEvent(FMLNetworkEvent.ServerConnectionFromClientEvent event) {
+				((NetHandlerPlayServer) event.getHandler()).sendPacket(network.createPacket(new MessageSetWingSettings(WingsItemsConfig.createWingAttributes())));
+			}
+		});
 	}
 
 	protected void init() {
