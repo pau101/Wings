@@ -14,9 +14,7 @@ import java.util.Map;
 @IFMLLoadingPlugin.SortingIndex(1002)
 @IFMLLoadingPlugin.TransformerExclusions("me.paulf.wings.server.asm.plugin.")
 public final class WingsLoadingPlugin implements IFMLLoadingPlugin {
-	public WingsLoadingPlugin() {
-		ModContainerFactory.instance().registerContainerType(Type.getType(Integration.class), IntegrationContainer.class);
-	}
+	public WingsLoadingPlugin() {}
 
 	@Override
 	public String[] getASMTransformerClass() {
@@ -38,7 +36,9 @@ public final class WingsLoadingPlugin implements IFMLLoadingPlugin {
 	}
 
 	@Override
-	public void injectData(Map<String, Object> data) {}
+	public void injectData(Map<String, Object> data) {
+		ModContainerFactory.instance().registerContainerType(Type.getType(Integration.class), IntegrationContainer.class);
+	}
 
 	@Override
 	public String getAccessTransformerClass() {
