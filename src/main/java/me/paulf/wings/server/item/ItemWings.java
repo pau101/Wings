@@ -102,7 +102,7 @@ public final class ItemWings extends Item {
 					}
 				}))
 				.withLanding(((player, wings, direction) -> player.addExhaustion(settings.getLandingExertion())))
-				.withUsability((player, wings) -> wings.getItemDamage() < wings.getMaxDamage() - 1 && player.getFoodStats().getFoodLevel() >= settings.getRequiredFlightSatiation())
+				.withUsability((player, wings) -> (!wings.isItemStackDamageable() || wings.getItemDamage() < wings.getMaxDamage() - 1) && player.getFoodStats().getFoodLevel() >= settings.getRequiredFlightSatiation())
 				.withLandability((player, wings) -> player.getFoodStats().getFoodLevel() >= settings.getRequiredLandSatiation())
 				.withVitality(flight -> new FlightApparatus.FlightState() {
 					private static final int DAMAGE_RATE = 20;
