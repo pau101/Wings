@@ -81,7 +81,7 @@ public final class ClientEventHandler {
 		Entity entity = event.getEntity();
 		FlightView flight;
 		if (entity instanceof AbstractClientPlayer && (flight = FlightViews.get((AbstractClientPlayer) entity)) != null) {
-			flight.onUpdateEyeHeight(event.getValue(), event.getDelta(), event::setValue);
+			flight.tickEyeHeight(event.getValue(), event.getDelta(), event::setValue);
 		}
 	}
 
@@ -102,7 +102,7 @@ public final class ClientEventHandler {
 	}
 
 	@SubscribeEvent
-	public static void onRenderEmptyHandCheckEvent(EmptyOffHandPresentEvent event) {
+	public static void onEmptyOffHandPresentEvent(EmptyOffHandPresentEvent event) {
 		Flight flight = Flights.get(event.getPlayer());
 		if (flight != null && flight.getFlyingAmount(1.0F) > 0.0F) {
 			event.setResult(Event.Result.ALLOW);
@@ -117,13 +117,13 @@ public final class ClientEventHandler {
 	}
 
 	@SubscribeEvent
-	public static void onPlayerUpdate(TickEvent.PlayerTickEvent event) {
+	public static void onPlayerTick(TickEvent.PlayerTickEvent event) {
 		EntityPlayer entity;
 		if (event.phase == TickEvent.Phase.END && (entity = event.player) instanceof AbstractClientPlayer) {
 			AbstractClientPlayer player = (AbstractClientPlayer) entity;
 			FlightView flight = FlightViews.get(player);
 			if (flight != null) {
-				flight.onUpdate(player, FlightApparatuses.find(player));
+				flight.tick(player, FlightApparatuses.find(player));
 			}
 		}
 	}

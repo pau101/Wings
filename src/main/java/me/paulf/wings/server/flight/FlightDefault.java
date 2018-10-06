@@ -148,12 +148,8 @@ public final class FlightDefault implements Flight {
 		}
 	}
 
-	private int getHunger(EntityPlayer player) {
-		return player.getFoodStats().getFoodLevel();
-	}
-
 	@Override
-	public void onUpdate(EntityPlayer player, ItemStack wings) {
+	public void tick(EntityPlayer player, ItemStack wings) {
 		if (!wings.isEmpty()) {
 			onWornUpdate(player, wings);
 		} else if (!player.world.isRemote && isFlying()) {

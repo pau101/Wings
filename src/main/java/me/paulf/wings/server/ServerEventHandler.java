@@ -35,7 +35,7 @@ public final class ServerEventHandler {
 	private ServerEventHandler() {}
 
 	@SubscribeEvent
-	public static void onInteract(PlayerInteractEvent.EntityInteract event) {
+	public static void onPlayerEntityInteract(PlayerInteractEvent.EntityInteract event) {
 		EntityPlayer player = event.getEntityPlayer();
 		EnumHand hand = event.getHand();
 		ItemStack stack = player.getHeldItem(hand);
@@ -68,7 +68,7 @@ public final class ServerEventHandler {
 	}
 
 	@SubscribeEvent
-	public static void onMount(EntityMountEvent event) {
+	public static void onEntityMount(EntityMountEvent event) {
 		if (event.isMounting()) {
 			Flights.ifPlayer(event.getEntityMounting(), (player, flight) -> {
 				if (flight.isFlying()) {
@@ -79,22 +79,22 @@ public final class ServerEventHandler {
 	}
 
 	@SubscribeEvent
-	public static void onPlayerUpdate(TickEvent.PlayerTickEvent event) {
+	public static void onPlayerTick(TickEvent.PlayerTickEvent event) {
 		Flight flight;
 		if (event.phase == TickEvent.Phase.END && (flight = Flights.get(event.player)) != null) {
-			flight.onUpdate(event.player, FlightApparatuses.find(event.player));
+			flight.tick(event.player, FlightApparatuses.find(event.player));
 		}
 	}
 
 	@SubscribeEvent
-	public static void onPlayerDeath(LivingDeathEvent event) {
+	public static void onLivingDeath(LivingDeathEvent event) {
 		Flights.ifPlayer(event.getEntityLiving(), (player, flight) ->
 			flight.setIsFlying(false, Flight.PlayerSet.ofAll())
 		);
 	}
 
 	@SubscribeEvent
-	public static void onFlightCheck(PlayerFlightCheckEvent event) {
+	public static void onPlayerFlightCheck(PlayerFlightCheckEvent event) {
 		Flight flight = Flights.get(event.getEntityPlayer());
 		if (flight != null && flight.isFlying()) {
 			event.setResult(Event.Result.ALLOW);

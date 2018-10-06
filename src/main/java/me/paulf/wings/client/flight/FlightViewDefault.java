@@ -43,7 +43,7 @@ public final class FlightViewDefault implements FlightView {
 	}
 
 	@Override
-	public void onUpdate(EntityPlayer player, ItemStack wings) {
+	public void tick(EntityPlayer player, ItemStack wings) {
 		if (!wings.isEmpty()) {
 			FlightApparatusView view = FlightApparatusViews.get(wings);
 			if (view == null) {
@@ -56,7 +56,7 @@ public final class FlightViewDefault implements FlightView {
 	}
 
 	@Override
-	public void onUpdateEyeHeight(float value, float delta, FloatConsumer valueOut) {
+	public void tickEyeHeight(float value, float delta, FloatConsumer valueOut) {
 		eyeHeightFunc.accept(flight.getFlyingAmount(delta), SmoothingFunction.Sign.valueOf(flight.isFlying()), value, valueOut);
 	}
 

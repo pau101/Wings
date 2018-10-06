@@ -10,9 +10,9 @@ import java.util.function.Consumer;
 public interface FlightView {
 	void ifFormPresent(Consumer<FormRenderer> consumer);
 
-	void onUpdate(EntityPlayer player, ItemStack wings);
+	void tick(EntityPlayer player, ItemStack wings);
 
-	void onUpdateEyeHeight(float value, float delta, FloatConsumer valueOut);
+	void tickEyeHeight(float value, float delta, FloatConsumer valueOut);
 
 	interface FormRenderer {
 		ResourceLocation getTexture();

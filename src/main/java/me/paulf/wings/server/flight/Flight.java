@@ -35,7 +35,7 @@ public interface Flight {
 
 	boolean canLand(EntityPlayer player, ItemStack wings);
 
-	void onUpdate(EntityPlayer player, ItemStack wings);
+	void tick(EntityPlayer player, ItemStack wings);
 
 	void onFlown(EntityPlayer player, ItemStack wings, Vec3d direction);
 

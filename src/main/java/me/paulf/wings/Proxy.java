@@ -14,6 +14,7 @@ import me.paulf.wings.server.net.clientbound.MessageSetWingSettings;
 import me.paulf.wings.server.net.clientbound.MessageSyncFlight;
 import me.paulf.wings.util.CapabilityProviders;
 import me.paulf.wings.util.ItemAccessor;
+import me.paulf.wings.util.ModConfigSaver;
 import me.paulf.wings.util.SimpleStorage;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -42,6 +43,7 @@ public abstract class Proxy {
 				((NetHandlerPlayServer) event.getHandler()).sendPacket(network.createPacket(new MessageSetWingSettings(WingsItemsConfig.createWingAttributes())));
 			}
 		});
+		MinecraftForge.EVENT_BUS.register(ModConfigSaver.create(WingsMod.ID));
 	}
 
 	protected void init() {
