@@ -3,6 +3,9 @@ package me.paulf.wings.server.asm;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemElytra;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.common.MinecraftForge;
@@ -42,5 +45,9 @@ public final class WingsHooks {
 
 	public static void onAddFlown(EntityPlayer player, double x, double y, double z) {
 		MinecraftForge.EVENT_BUS.post(new PlayerFlownEvent(player, new Vec3d(x, y, z)));
+	}
+
+	public static boolean onReplaceItemSlotCheck(Item item, ItemStack stack) {
+		return item instanceof ItemElytra || item.getEquipmentSlot(stack) != null;
 	}
 }

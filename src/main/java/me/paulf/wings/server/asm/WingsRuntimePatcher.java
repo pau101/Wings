@@ -2,6 +2,7 @@ package me.paulf.wings.server.asm;
 
 import me.paulf.wings.server.asm.plugin.MethodExt;
 import net.ilexiconn.llibrary.server.asm.InsnPredicate;
+import net.ilexiconn.llibrary.server.asm.MappingHandler;
 import net.ilexiconn.llibrary.server.asm.MethodPatcher;
 import net.ilexiconn.llibrary.server.asm.RuntimePatcher;
 import net.minecraft.client.entity.AbstractClientPlayer;
@@ -11,6 +12,8 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemElytra;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.NetHandlerPlayServer;
 import net.minecraft.network.play.client.CPacketPlayer;
@@ -18,6 +21,7 @@ import net.minecraft.util.EnumHand;
 import net.minecraftforge.client.ForgeHooksClient;
 import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.IntInsnNode;
+import org.objectweb.asm.tree.TypeInsnNode;
 
 import java.util.function.Predicate;
 
@@ -58,7 +62,21 @@ public final class WingsRuntimePatcher extends RuntimePatcher {
 					.var(DLOAD, 1)
 					.var(DLOAD, 3)
 					.var(DLOAD, 5)
-					.method(INVOKESTATIC, WingsHooks.class, "onAddFlown", EntityPlayer.class, double.class, double.class, double.class, void.class)
+					.method(
+						INVOKESTATIC,
+						WingsHooks.class, "onAddFlown",
+						EntityPlayer.class, double.class, double.class, double.class,
+						void.class
+					)
+				).pop()
+			.patchMethod("replaceItemInInventory", int.class, ItemStack.class, boolean.class)
+				.apply(Patch.REPLACE_NODE, typeInsn(INSTANCEOF, ItemElytra.class), m -> m
+					.var(ALOAD, 2)
+					.method(INVOKESTATIC,
+						WingsHooks.class, "onReplaceItemSlotCheck",
+						Item.class, ItemStack.class,
+						boolean.class
+					)
 				);
 		patchClass(NetHandlerPlayServer.class)
 			.patchMethod("processPlayer", CPacketPlayer.class, void.class)
@@ -157,5 +175,10 @@ public final class WingsRuntimePatcher extends RuntimePatcher {
 		InsnPredicate iload7 = new InsnPredicate.Var().var(7).opcode(ILOAD);
 		Predicate<AbstractInsnNode> bipush25 = node -> node instanceof IntInsnNode && ((IntInsnNode) node).operand == 25;
 		return iload7.and(data -> data.node.getNext() != null && bipush25.test(data.node.getNext()));
+	}
+
+	private static Predicate<MethodPatcher.PredicateData> typeInsn(int opcode, Object target) {
+		String desc = MappingHandler.INSTANCE.getClassMapping(target);
+		return p -> p.node instanceof TypeInsnNode && p.node.getOpcode() == opcode && desc.equals(((TypeInsnNode) p.node).desc);
 	}
 }
