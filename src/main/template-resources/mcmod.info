@@ -1,0 +1,13 @@
+[{
+	"modid": "wings",
+	"name": "Wings",
+	"version": "${version}",
+	"description": "The Wings mod introduces an assortment of avian and insectoid wings for all of your aerial travel needs.",
+	"url": "https://minecraft.curseforge.com/projects/wings",
+	"authorList": [ "pau101" ],
+	"credits": "LDShadowLady for concept design",
+	"logoFile": "logo.png",
+	"useDependencyInformation": true,
+	"dependencies": [ "forge@[${forgeVersion},)", "llibrary@${llibraryVersionRange}", "jei@${jeiVersionRange}" ],
+	"requiredMods": [ "forge@[${forgeVersion},)", "llibrary@${llibraryVersionRange}" ]
+}]

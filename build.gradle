@@ -24,20 +24,17 @@ repositories {
 
 apply plugin: "net.minecraftforge.gradle.forge"
 
-project.ext.corePlugin = "me.paulf.wings.server.asm.plugin.WingsLoadingPlugin"
-project.ext.modVersion = "1.0.6"
-project.ext.llibraryVersion = "1.7.15"
 version = "${modVersion}-1.12.2"
 group = "me.paulf.wings"
 archivesBaseName = "wings"
-sourceCompatibility = targetCompatibility = JavaVersion.VERSION_1_8
+sourceCompatibility = JavaVersion.VERSION_1_8
 
 minecraft {
-	version = "1.12.2-14.23.4.2705"
+	version = "1.12.2-${project.forgeVersion}"
 	runDir = "run"
-	mappings = "stable_39"
+	mappings = project.mcpVersion
 	makeObfSourceJar = false
-	clientJvmArgs = serverJvmArgs = [ "-Dfml.coreMods.load=$project.corePlugin" ]
+	clientJvmArgs = serverJvmArgs = [ "-Dfml.coreMods.load=${project.corePlugin}" ]
 }
 
 jar {
@@ -49,19 +46,32 @@ jar {
 
 dependencies {
 	deobfCompile "com.azanor.baubles:Baubles:1.12-1.5.2"
-	deobfCompile "net.ilexiconn:llibrary:$project.llibraryVersion-1.12.2"
-	deobfCompile "mezz.jei:jei_1.12.2:4.8.5.159:api"
-	runtime "mezz.jei:jei_1.12.2:4.8.5.159"
+	deobfCompile "net.ilexiconn:llibrary:1.7.15-1.12.2"
+	deobfCompile "mezz.jei:jei_1.12.2:4.13.+:api"
+	runtime "mezz.jei:jei_1.12.2:4.13.+"
 }
 
-processResources {
-	inputs.property "version", project.modVersion
-	inputs.property "mcversion", project.minecraft.version
-	from (sourceSets.main.resources.srcDirs) {
-		include "mcmod.info"
-		expand "version": project.modVersion, "mcversion": project.minecraft.version
+// workaround for FML DirectoryDiscoverer limitations
+sourceSets {
+	main {
+		output.resourcesDir = output.classesDir
 	}
-	from (sourceSets.main.resources.srcDirs) {
-		exclude "mcmod.info"
+}
+
+jar {
+	duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+}
+// end workaround
+
+processResources {
+	def vars = [
+		"version": project.modVersion,
+		"forgeVersion": project.forgeVersion,
+		"llibraryVersionRange": project.llibraryVersionRange,
+		"jeiVersionRange": project.jeiVersionRange
+	]
+	inputs.properties(vars)
+	from("src/main/template-resources") {
+		expand(vars)
 	}
 }
