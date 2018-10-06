@@ -39,6 +39,7 @@ public final class ItemWings extends Item {
 
 	public void setSettings(WingSettings settings) {
 		this.settings = settings;
+		setMaxDamage(settings.getItemDurability());
 	}
 
 	@Override
@@ -76,7 +77,7 @@ public final class ItemWings extends Item {
 		return new ActionResult<>(EnumActionResult.FAIL, stack);
 	}
 
-	public static ItemWings create(int durability, Consumer<CapabilityProviders.CompositeBuilder> capabilities, WingSettings attributes) {
+	public static ItemWings create(Consumer<CapabilityProviders.CompositeBuilder> capabilities, WingSettings attributes) {
 		ItemWings wings = new ItemWings(
 			ImmutableSet.of(
 				EnumEnchantmentType.ALL,
@@ -87,7 +88,7 @@ public final class ItemWings extends Item {
 			attributes
 		);
 		wings.setMaxStackSize(1);
-		wings.setMaxDamage(durability);
+		wings.setMaxDamage(attributes.getItemDurability());
 		return wings;
 	}
 

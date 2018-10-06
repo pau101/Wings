@@ -49,7 +49,6 @@ public final class WingsItems {
 
 	@SubscribeEvent
 	public static void register(RegistryEvent.Register<Item> event) {
-		final int easiest = 960, moderate = 1920, hardest = 2880;
 		event.getRegistry().registerAll(
 			Reg.createItem(WingsBlocks.FAIRY_DUST_ORE),
 			Reg.createItem(WingsBlocks.AMETHYST_ORE),
@@ -63,21 +62,21 @@ public final class WingsItems {
 				.setCreativeTab(ItemGroupWings.instance())
 				.setContainerItem(Items.GLASS_BOTTLE), "bat_blood"
 			),
-			createWings(Names.ANGEL, easiest, WingsMod.instance()::createAvianWings, WingsItemsConfig.ANGEL),
-			createWings(Names.SLIME, easiest, WingsMod.instance()::createInsectoidWings, WingsItemsConfig.SLIME),
-			createWings(Names.BLUE_BUTTERFLY, easiest, WingsMod.instance()::createInsectoidWings, WingsItemsConfig.BLUE_BUTTERFLY),
-			createWings(Names.MONARCH_BUTTERFLY, easiest, WingsMod.instance()::createInsectoidWings, WingsItemsConfig.MONARCH_BUTTERFLY),
-			createWings(Names.FIRE, moderate, WingsMod.instance()::createAvianWings, WingsItemsConfig.FIRE),
-			createWings(Names.BAT, moderate, WingsMod.instance()::createAvianWings, WingsItemsConfig.BAT),
-			createWings(Names.FAIRY, easiest, WingsMod.instance()::createInsectoidWings, WingsItemsConfig.FAIRY),
-			createWings(Names.EVIL, moderate, WingsMod.instance()::createAvianWings, WingsItemsConfig.EVIL),
-			createWings(Names.DRAGON, hardest, WingsMod.instance()::createAvianWings, WingsItemsConfig.DRAGON)
+			createWings(Names.ANGEL, WingsMod.instance()::createAvianWings, WingsItemsConfig.ANGEL),
+			createWings(Names.SLIME, WingsMod.instance()::createInsectoidWings, WingsItemsConfig.SLIME),
+			createWings(Names.BLUE_BUTTERFLY, WingsMod.instance()::createInsectoidWings, WingsItemsConfig.BLUE_BUTTERFLY),
+			createWings(Names.MONARCH_BUTTERFLY, WingsMod.instance()::createInsectoidWings, WingsItemsConfig.MONARCH_BUTTERFLY),
+			createWings(Names.FIRE, WingsMod.instance()::createAvianWings, WingsItemsConfig.FIRE),
+			createWings(Names.BAT, WingsMod.instance()::createAvianWings, WingsItemsConfig.BAT),
+			createWings(Names.FAIRY, WingsMod.instance()::createInsectoidWings, WingsItemsConfig.FAIRY),
+			createWings(Names.EVIL, WingsMod.instance()::createAvianWings, WingsItemsConfig.EVIL),
+			createWings(Names.DRAGON, WingsMod.instance()::createAvianWings, WingsItemsConfig.DRAGON)
 		);
 	}
 
-	private static Item createWings(ResourceLocation name, int durability, Function<String, Consumer<CapabilityProviders.CompositeBuilder>> capabilities, ConfigWingSettings attributes) {
+	private static Item createWings(ResourceLocation name, Function<String, Consumer<CapabilityProviders.CompositeBuilder>> capabilities, ConfigWingSettings attributes) {
 		return Reg.withName(
-				ItemWings.create(durability, capabilities.apply(name.getPath().replace("_wings", "")), attributes.toImmutable()),
+				ItemWings.create(capabilities.apply(name.getPath().replace("_wings", "")), attributes.toImmutable()),
 				name.getPath()
 			)
 			.setCreativeTab(ItemGroupWings.instance());

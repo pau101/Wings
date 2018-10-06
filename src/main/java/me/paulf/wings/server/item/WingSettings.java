@@ -8,4 +8,6 @@ public interface WingSettings {
 	int getRequiredLandSatiation();
 
 	float getLandingExertion();
+
+	int getItemDurability();
 }
