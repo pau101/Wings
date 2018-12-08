@@ -47,8 +47,8 @@ jar {
 dependencies {
 	deobfCompile "com.azanor.baubles:Baubles:1.12-1.5.2"
 	deobfCompile "net.ilexiconn:llibrary:1.7.15-1.12.2"
-	deobfCompile "mezz.jei:jei_1.12.2:4.13.+:api"
-	runtime "mezz.jei:jei_1.12.2:4.13.+"
+	deobfCompile "mezz.jei:jei_1.12.2:4.14.+:api"
+	runtime "mezz.jei:jei_1.12.2:4.14.+"
 }
 
 // workaround for FML DirectoryDiscoverer limitations
