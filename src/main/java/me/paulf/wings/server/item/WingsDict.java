@@ -28,6 +28,6 @@ public final class WingsDict {
 	}
 
 	public static boolean test(ItemStack stack, String name) {
-		return ArrayUtils.contains(OreDictionary.getOreIDs(stack), OreDictionary.getOreID(name));
+		return !stack.isEmpty() && ArrayUtils.contains(OreDictionary.getOreIDs(stack), OreDictionary.getOreID(name));
 	}
 }
