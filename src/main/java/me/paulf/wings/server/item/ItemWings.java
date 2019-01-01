@@ -125,13 +125,13 @@ public final class ItemWings extends Item {
 					private static final int DAMAGE_RATE_ALTERNATIVE = 1;
 					//set repair value of minerals
 					private static final int REPAIR_FAIRY_DUST = 160;
-					private static final int REPAIR_AMETHYST = 1080;
+					private static final int REPAIR_AMETHYST = 2400;
 
 					private int flightTime;
 
 					//function for repair
 					public void repairStack(EntityPlayer player, ItemStack stack, Item item, int repair) {
-						if (stack.getItemDamage() >= repair) {
+						if ((stack.getItemDamage() >= repair)||(stack.getItemDamage() >= stack.getMaxDamage() - 10)) {
 							if (player.inventory.hasItemStack(new ItemStack(item))) {
 								int slot = player.inventory.getSlotFor(new ItemStack(item));
 								ItemStack itemStack = player.inventory.getStackInSlot(slot);
