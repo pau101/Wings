@@ -35,6 +35,7 @@ public final class MessageSetWingSettings extends Message {
 			buf.writeInt(value.getRequiredLandSatiation());
 			buf.writeFloat(value.getLandingExertion());
 			buf.writeShort(value.getItemDurability());
+			buf.writeBoolean(value.getAlternativeMode());
 		}
 	}
 
@@ -49,7 +50,8 @@ public final class MessageSetWingSettings extends Message {
 					buf.readFloat(),
 					buf.readInt(),
 					buf.readFloat(),
-					buf.readShort()
+					buf.readShort(),
+					buf.readBoolean()
 				)
 			);
 		}

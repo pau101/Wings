@@ -34,17 +34,23 @@ public final class ConfigWingSettings implements WingSettings {
 	@Config.RangeInt(min = 0, max = Short.MAX_VALUE)
 	public int itemDurability;
 
+	//added an alternative mode which drains minerals instead of food
+	@Deprecated
+	@Config.LangKey("config.wings.items.settings.alternativeMode")
+	public boolean alternativeMode;
+
 	ConfigWingSettings(ResourceLocation key, int itemDurability) {
-		this(key, 7, 0.001D, 2, 0.08D, itemDurability);
+		this(key, 7, 0.001D, 2, 0.08D, itemDurability, false);
 	}
 
-	private ConfigWingSettings(ResourceLocation key, int requiredFlightSatiation, double flyingExertion, int requiredLandSatiation, double landingExertion, int itemDurability) {
+	private ConfigWingSettings(ResourceLocation key, int requiredFlightSatiation, double flyingExertion, int requiredLandSatiation, double landingExertion, int itemDurability, boolean alternativeMode) {
 		this.key = key;
 		this.requiredFlightSatiation = requiredFlightSatiation;
 		this.flyingExertion = flyingExertion;
 		this.requiredLandSatiation = requiredLandSatiation;
 		this.landingExertion = landingExertion;
 		this.itemDurability = itemDurability;
+		this.alternativeMode = alternativeMode;
 	}
 
 	public ResourceLocation getKey() {
@@ -76,7 +82,12 @@ public final class ConfigWingSettings implements WingSettings {
 		return itemDurability;
 	}
 
+	@Override
+	public boolean getAlternativeMode() {
+		return alternativeMode;
+	}
+
 	public WingSettings toImmutable() {
-		return ImmutableWingSettings.of(getRequiredFlightSatiation(), getFlyingExertion(), getRequiredLandSatiation(), getLandingExertion(), getItemDurability());
+		return ImmutableWingSettings.of(getRequiredFlightSatiation(), getFlyingExertion(), getRequiredLandSatiation(), getLandingExertion(), getItemDurability(), getAlternativeMode());
 	}
 }

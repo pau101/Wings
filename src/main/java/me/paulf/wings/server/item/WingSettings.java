@@ -10,4 +10,6 @@ public interface WingSettings {
 	float getLandingExertion();
 
 	int getItemDurability();
+
+	boolean getAlternativeMode();
 }

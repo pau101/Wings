@@ -31,6 +31,8 @@ public final class ItemWings extends Item {
 
 	private WingSettings settings;
 
+	private static final float EXHAUSTION_ALTERNATIVE_FACTOR = 0.2F;
+
 	private ItemWings(ImmutableSet<EnumEnchantmentType> allowedEnchantmentTypes, Consumer<CapabilityProviders.CompositeBuilder> capabilities, WingSettings settings) {
 		this.allowedEnchantmentTypes = allowedEnchantmentTypes;
 		this.capabilities = capabilities;
@@ -99,25 +101,67 @@ public final class ItemWings extends Item {
 				.withFlight(((player, wings, direction) -> {
 					int distance = Math.round((float) direction.length() * 100.0F);
 					if (distance > 0) {
-						player.addExhaustion(distance * settings.getFlyingExertion());
+						if (settings.getAlternativeMode()) {
+							player.addExhaustion(EXHAUSTION_ALTERNATIVE_FACTOR * distance * settings.getFlyingExertion());
+						}
+						else {
+							player.addExhaustion(distance * settings.getFlyingExertion());
+						}
 					}
 				}))
-				.withLanding(((player, wings, direction) -> player.addExhaustion(settings.getLandingExertion())))
+				.withLanding(((player, wings, direction) -> {
+					if (settings.getAlternativeMode()) {
+						player.addExhaustion(EXHAUSTION_ALTERNATIVE_FACTOR * settings.getLandingExertion());
+					}
+					else {
+						player.addExhaustion(settings.getLandingExertion());
+					}
+				}))
 				.withUsability((player, wings) -> (!wings.isItemStackDamageable() || wings.getItemDamage() < wings.getMaxDamage() - 1) && player.getFoodStats().getFoodLevel() >= settings.getRequiredFlightSatiation())
 				.withLandability((player, wings) -> player.getFoodStats().getFoodLevel() >= settings.getRequiredLandSatiation())
 				.withVitality(flight -> new FlightApparatus.FlightState() {
+					//in alternative mode DAMAGE_RATE will be 1 instead of 20
 					private static final int DAMAGE_RATE = 20;
+					private static final int DAMAGE_RATE_ALTERNATIVE = 1;
+					//set repair value of minerals
+					private static final int REPAIR_FAIRY_DUST = 160;
+					private static final int REPAIR_AMETHYST = 1080;
 
 					private int flightTime;
+
+					//function for repair
+					public void repairStack(EntityPlayer player, ItemStack stack, Item item, int repair) {
+						if (stack.getItemDamage() >= repair) {
+							if (player.inventory.hasItemStack(new ItemStack(item))) {
+								int slot = player.inventory.getSlotFor(new ItemStack(item));
+								ItemStack itemStack = player.inventory.getStackInSlot(slot);
+								ItemStack updateItemStack = player.inventory.decrStackSize(slot, itemStack.getCount() - 1);
+								player.inventory.setInventorySlotContents(slot, updateItemStack);
+								stack.damageItem(-repair, player);
+							}
+						}
+					}
 
 					@Override
 					public void onUpdate(EntityPlayer player, ItemStack stack) {
 						if (flight.isFlying()) {
-							if (flightTime++ % DAMAGE_RATE == (DAMAGE_RATE - 1)) {
-								stack.damageItem(1, player);
+							if (settings.getAlternativeMode()) {
+								if (flightTime++ % DAMAGE_RATE_ALTERNATIVE == (DAMAGE_RATE_ALTERNATIVE - 1)) {
+									stack.damageItem(1, player);
+								}
+							}
+							else {
+								if (flightTime++ % DAMAGE_RATE == (DAMAGE_RATE - 1)) {
+									stack.damageItem(1, player);
+								}
 							}
 						} else {
 							flightTime = 0;
+						}
+						//consume minerals to repair
+						if (settings.getAlternativeMode()) {
+							repairStack(player, stack, WingsItems.FAIRY_DUST, REPAIR_FAIRY_DUST);
+							repairStack(player, stack, WingsItems.AMETHYST, REPAIR_AMETHYST);
 						}
 					}
 				})
