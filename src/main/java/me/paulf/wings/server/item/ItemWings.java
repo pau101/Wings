@@ -31,6 +31,7 @@ public final class ItemWings extends Item {
 
 	private WingSettings settings;
 
+	//factor of exhaustion when in alternative mode
 	private static final float EXHAUSTION_ALTERNATIVE_FACTOR = 0.2F;
 
 	private ItemWings(ImmutableSet<EnumEnchantmentType> allowedEnchantmentTypes, Consumer<CapabilityProviders.CompositeBuilder> capabilities, WingSettings settings) {
@@ -133,7 +134,7 @@ public final class ItemWings extends Item {
 					public void repairStack(EntityPlayer player, ItemStack stack, Item item, int repair) {
 						if ((stack.getItemDamage() >= repair)||(stack.getItemDamage() >= stack.getMaxDamage() - 10)) {
 							if (player.inventory.hasItemStack(new ItemStack(item))) {
-								int slot = player.inventory.getSlotFor(new ItemStack(item));
+								int slot = player.inventory.findSlotMatchingUnusedItem(new ItemStack(item));
 								ItemStack itemStack = player.inventory.getStackInSlot(slot);
 								ItemStack updateItemStack = player.inventory.decrStackSize(slot, itemStack.getCount() - 1);
 								player.inventory.setInventorySlotContents(slot, updateItemStack);
