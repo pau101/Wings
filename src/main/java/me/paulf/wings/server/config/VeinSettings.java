@@ -7,20 +7,20 @@ public final class VeinSettings {
 	@Deprecated
 	@Config.LangKey("config.wings.ores.settings.size")
 	@Config.RangeInt(min = 8, max = 32)
-	public int size;
+	int size;
 
 	@Deprecated
 	@Config.LangKey("config.wings.ores.settings.count")
 	@Config.RangeInt(min = 0, max = 128)
-	public int count;
+	int count;
 
 	@Deprecated
 	@Config.LangKey("config.wings.ores.settings.minHeight")
-	public int minHeight;
+	int minHeight;
 
 	@Deprecated
 	@Config.LangKey("config.wings.ores.settings.maxHeight")
-	public int maxHeight;
+	int maxHeight;
 
 	VeinSettings(int size, int count, int minHeight, int maxHeight) {
 		this.size = size;
