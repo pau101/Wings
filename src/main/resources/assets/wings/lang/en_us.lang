@@ -78,4 +78,4 @@ config.wings.items.settings.durability=Item Durability
 config.wings.items.settings.durability.tooltip=Infinite durability specified by 0
 
 config.wings.equipmentBlacklist=Armor Blacklist
-config.wings.equipmentBlacklist.tooltip=Wings will be disabled if you have one of these equipped
+config.wings.wearObstructions.tooltip=Customize which items when worn in the chest slot obstruct wings in the baubles body slot.
