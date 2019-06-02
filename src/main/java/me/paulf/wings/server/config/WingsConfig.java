@@ -4,7 +4,8 @@ import me.paulf.wings.WingsMod;
 import net.minecraftforge.common.config.Config;
 
 @Config(modid = WingsMod.ID, name = WingsMod.ID + "/wings", category = "")
-public final class ArmorBlacklistConfig {
+public final class WingsConfig
+{
 	@Config.LangKey("config.wings.armorblacklist")
 	public static String[] disallowedItems = new String[] {
 			"minecraft:elytra"

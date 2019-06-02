@@ -1,17 +1,18 @@
 package me.paulf.wings.server.apparatus;
 
 import me.paulf.wings.WingsMod;
-import me.paulf.wings.server.config.ArmorBlacklistConfig;
+import me.paulf.wings.server.config.WingsConfig;
 import me.paulf.wings.util.CapabilityHolder;
 import me.paulf.wings.util.CapabilityProviders;
 import me.paulf.wings.util.HandlerSlot;
+import me.paulf.wings.util.Util;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityInject;
 
 import javax.annotation.Nullable;
-import java.util.stream.Stream;
+import java.util.Arrays;
 
 public final class FlightApparatuses {
 	private FlightApparatuses() {}
@@ -63,7 +64,7 @@ public final class FlightApparatuses {
 				if (has(stack, null)) {
 					return stack;
 				}
-				if (!stack.isEmpty() && Arrays.asList(ArmorBlacklistConfig.disallowedItems).contains(Util.getName(stack.getItem()).toString())) {
+				if (!stack.isEmpty() && Arrays.asList(WingsConfig.disallowedItems).contains(Util.getName(stack.getItem()).toString())) {
 					break;
 				}
 			}
