@@ -63,7 +63,7 @@ public final class FlightApparatuses {
 				if (has(stack, null)) {
 					return stack;
 				}
-				if (!stack.isEmpty() && Stream.of(ArmorBlacklistConfig.disallowedItems).anyMatch(s -> s.equals(stack.getItem().getRegistryName().toString()))) {
+				if (!stack.isEmpty() && Arrays.asList(ArmorBlacklistConfig.disallowedItems).contains(Util.getName(stack.getItem()).toString())) {
 					break;
 				}
 			}
