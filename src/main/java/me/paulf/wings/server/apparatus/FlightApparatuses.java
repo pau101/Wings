@@ -64,7 +64,7 @@ public final class FlightApparatuses {
 				if (has(stack, null)) {
 					return stack;
 				}
-				if (!stack.isEmpty() && Arrays.asList(WingsConfig.disallowedItems).contains(Util.getName(stack.getItem()).toString())) {
+				if (!stack.isEmpty() && Arrays.asList(WingsConfig.wearObstructions).contains(Util.getName(stack.getItem()).toString())) {
 					break;
 				}
 			}

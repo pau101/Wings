@@ -6,8 +6,8 @@ import net.minecraftforge.common.config.Config;
 @Config(modid = WingsMod.ID, name = WingsMod.ID + "/wings")
 public final class WingsConfig
 {
-	@Config.LangKey("config.wings.armorblacklist")
-	public static String[] disallowedItems = new String[] {
+	@Config.LangKey("config.wings.wearObstructions")
+	public static String[] wearObstructions = new String[] {
 			"minecraft:elytra"
 	};
 }
