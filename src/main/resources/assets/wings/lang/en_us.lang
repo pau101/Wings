@@ -77,5 +77,5 @@ config.wings.items.settings.landingExertion.tooltip=The exertion amount for land
 config.wings.items.settings.durability=Item Durability
 config.wings.items.settings.durability.tooltip=Infinite durability specified by 0
 
-config.wings.wearObstructions=Armor Blacklist
+config.wings.wearObstructions=Wear Obstructions
 config.wings.wearObstructions.tooltip=Customize which items when worn in the chest slot obstruct wings in the baubles body slot.
