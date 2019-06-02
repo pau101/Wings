@@ -1,16 +1,18 @@
 package me.paulf.wings.server.apparatus;
 
 import me.paulf.wings.WingsMod;
+import me.paulf.wings.server.config.WingsConfig;
 import me.paulf.wings.util.CapabilityHolder;
 import me.paulf.wings.util.CapabilityProviders;
 import me.paulf.wings.util.HandlerSlot;
+import me.paulf.wings.util.Util;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityInject;
 
 import javax.annotation.Nullable;
+import java.util.Arrays;
 
 public final class FlightApparatuses {
 	private FlightApparatuses() {}
@@ -62,8 +64,7 @@ public final class FlightApparatuses {
 				if (has(stack, null)) {
 					return stack;
 				}
-				// TODO: predicate config for wing blocking items
-				if (!stack.isEmpty() && !(stack.getItem() instanceof ItemArmor)) {
+				if (!stack.isEmpty() && Arrays.asList(WingsConfig.wearObstructions).contains(Util.getName(stack.getItem()).toString())) {
 					break;
 				}
 			}

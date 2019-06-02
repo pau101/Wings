@@ -76,3 +76,6 @@ config.wings.items.settings.requiredLandSatiation.tooltip=The satiety level requ
 config.wings.items.settings.landingExertion.tooltip=The exertion amount for landing
 config.wings.items.settings.durability=Item Durability
 config.wings.items.settings.durability.tooltip=Infinite durability specified by 0
+
+config.wings.wearObstructions=Wear Obstructions
+config.wings.wearObstructions.tooltip=Customize which items when worn in the chest slot obstruct wings in the baubles body slot.
