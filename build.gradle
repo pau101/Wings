@@ -10,6 +10,8 @@ buildscript {
 	}
 }
 
+apply plugin: "net.minecraftforge.gradle.forge"
+
 repositories {
 	maven {
 		url "http://maven.thiakil.com"
@@ -21,8 +23,6 @@ repositories {
 		url "http://dvs1.progwml6.com/files/maven"
 	}
 }
-
-apply plugin: "net.minecraftforge.gradle.forge"
 
 version = "${modVersion}-1.12.2"
 group = "me.paulf.wings"
@@ -46,7 +46,8 @@ jar {
 
 dependencies {
 	deobfCompile "com.azanor.baubles:Baubles:1.12-1.5.2"
-	deobfCompile "net.ilexiconn:llibrary:1.7.15-1.12.2"
+	deobfCompile "net.ilexiconn:llibrary:1.7.19-1.12.2"
+	deobfCompile "net.ilexiconn:llibrary-core:1.0.11-1.12.2"
 	deobfCompile "mezz.jei:jei_1.12.2:4.15.+:api"
 	runtime "mezz.jei:jei_1.12.2:4.15.+"
 }
