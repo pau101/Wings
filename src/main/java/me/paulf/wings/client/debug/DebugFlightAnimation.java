@@ -36,7 +36,7 @@ public final class DebugFlightAnimation {
 	private static State state = new DisabledState();
 
 	@SubscribeEvent
-	public static void init(ModelRegistryEvent event) {
+	public static void init(final ModelRegistryEvent event) {
 		state = state.init();
 	}
 
@@ -76,48 +76,48 @@ public final class DebugFlightAnimation {
 		private EntityPlayer player;
 
 		@SubscribeEvent
-		public void tick(TickEvent.ClientTickEvent event) {
+		public void tick(final TickEvent.ClientTickEvent event) {
 			if (event.phase == TickEvent.Phase.END) {
-				Minecraft mc = Minecraft.getMinecraft();
-				World world = mc.world;
-				if (world != null && (player == null || player.world != world)) {
-					player = new EntityOtherPlayerMP(world, PROFILE) {{
-						getDataManager().set(PLAYER_MODEL_FLAG, (byte) 0xFF);
+				final Minecraft mc = Minecraft.getMinecraft();
+				final World world = mc.world;
+				if (world != null && (this.player == null || this.player.world != world)) {
+					this.player = new EntityOtherPlayerMP(world, PROFILE) {{
+						this.getDataManager().set(PLAYER_MODEL_FLAG, (byte) 0xFF);
 					}};
-					player.setEntityId(-player.getEntityId());
-					player.setPosition(0.0D, 62.0D, 0.0D);
-					player.prevPosZ = -1.0D;
-					player.prevPosY = 63.0D;
-					Item item = WingsItems.ANGEL_WINGS;
-					player.setHeldItem(EnumHand.MAIN_HAND, new ItemStack(item));
-					item.onItemRightClick(world, player, EnumHand.MAIN_HAND);
-					Flight flight = Flights.get(player);
+					this.player.setEntityId(-this.player.getEntityId());
+					this.player.setPosition(0.0D, 62.0D, 0.0D);
+					this.player.prevPosZ = -1.0D;
+					this.player.prevPosY = 63.0D;
+					final Item item = WingsItems.ANGEL_WINGS;
+					this.player.setHeldItem(EnumHand.MAIN_HAND, new ItemStack(item));
+					item.onItemRightClick(world, this.player, EnumHand.MAIN_HAND);
+					final Flight flight = Flights.get(this.player);
 					if (flight != null) {
 						flight.setIsFlying(true);
 					}
-					IntHashMap<Entity> entities = ReflectionHelper.getPrivateValue(World.class, world, "entitiesById");
-					entities.addKey(player.getEntityId(), player);
+					final IntHashMap<Entity> entities = ReflectionHelper.getPrivateValue(World.class, world, "entitiesById");
+					entities.addKey(this.player.getEntityId(), this.player);
 				}
-				if (player != null && mc.getConnection() != null) {
-					player.ticksExisted++;
-					player.onUpdate();
+				if (this.player != null && mc.getConnection() != null) {
+					this.player.ticksExisted++;
+					this.player.onUpdate();
 				}
 			}
 		}
 
 		@SubscribeEvent
-		public void render(RenderWorldLastEvent event) {
-			Minecraft mc = Minecraft.getMinecraft();
-			RenderManager manager = mc.getRenderManager();
+		public void render(final RenderWorldLastEvent event) {
+			final Minecraft mc = Minecraft.getMinecraft();
+			final RenderManager manager = mc.getRenderManager();
 			if (mc.world != null && mc.player != null && manager.renderViewEntity != null) {
 				GlStateManager.enableFog();
 				RenderHelper.enableStandardItemLighting();
 				GlStateManager.color(1.0F, 1.0F, 1.0F);
 				manager.renderEntity(
-					player,
-					player.posX - TileEntityRendererDispatcher.staticPlayerX,
-					player.posY - TileEntityRendererDispatcher.staticPlayerY,
-					player.posZ - TileEntityRendererDispatcher.staticPlayerZ,
+					this.player,
+					this.player.posX - TileEntityRendererDispatcher.staticPlayerX,
+					this.player.posY - TileEntityRendererDispatcher.staticPlayerY,
+					this.player.posZ - TileEntityRendererDispatcher.staticPlayerZ,
 					0.0F,
 					event.getPartialTicks(),
 					false

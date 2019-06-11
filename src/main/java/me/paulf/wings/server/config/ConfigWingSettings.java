@@ -34,11 +34,11 @@ public final class ConfigWingSettings implements WingSettings {
 	@Config.RangeInt(min = 0, max = Short.MAX_VALUE)
 	public int itemDurability;
 
-	ConfigWingSettings(ResourceLocation key, int itemDurability) {
+	ConfigWingSettings(final ResourceLocation key, final int itemDurability) {
 		this(key, 7, 0.001D, 2, 0.08D, itemDurability);
 	}
 
-	private ConfigWingSettings(ResourceLocation key, int requiredFlightSatiation, double flyingExertion, int requiredLandSatiation, double landingExertion, int itemDurability) {
+	private ConfigWingSettings(final ResourceLocation key, final int requiredFlightSatiation, final double flyingExertion, final int requiredLandSatiation, final double landingExertion, final int itemDurability) {
 		this.key = key;
 		this.requiredFlightSatiation = requiredFlightSatiation;
 		this.flyingExertion = flyingExertion;
@@ -48,35 +48,35 @@ public final class ConfigWingSettings implements WingSettings {
 	}
 
 	public ResourceLocation getKey() {
-		return key;
+		return this.key;
 	}
 
 	@Override
 	public int getRequiredFlightSatiation() {
-		return requiredFlightSatiation;
+		return this.requiredFlightSatiation;
 	}
 
 	@Override
 	public float getFlyingExertion() {
-		return (float) flyingExertion;
+		return (float) this.flyingExertion;
 	}
 
 	@Override
 	public int getRequiredLandSatiation() {
-		return requiredLandSatiation;
+		return this.requiredLandSatiation;
 	}
 
 	@Override
 	public float getLandingExertion() {
-		return (float) landingExertion;
+		return (float) this.landingExertion;
 	}
 
 	@Override
 	public int getItemDurability() {
-		return itemDurability;
+		return this.itemDurability;
 	}
 
 	public WingSettings toImmutable() {
-		return ImmutableWingSettings.of(getRequiredFlightSatiation(), getFlyingExertion(), getRequiredLandSatiation(), getLandingExertion(), getItemDurability());
+		return ImmutableWingSettings.of(this.getRequiredFlightSatiation(), this.getFlyingExertion(), this.getRequiredLandSatiation(), this.getLandingExertion(), this.getItemDurability());
 	}
 }

@@ -22,15 +22,15 @@ public final class InSomniableEventHandler {
 	private InSomniableEventHandler() {}
 
 	@SubscribeEvent(priority = EventPriority.LOW)
-	public static void onLeftClickBlock(PlayerInteractEvent.LeftClickBlock event) {
-		EntityPlayer player = event.getEntityPlayer();
+	public static void onLeftClickBlock(final PlayerInteractEvent.LeftClickBlock event) {
+		final EntityPlayer player = event.getEntityPlayer();
 		if (player instanceof EntityPlayerMP) {
-			World world = event.getWorld();
-			BlockPos pos = event.getPos();
-			Block block = world.getBlockState(pos).getBlock();
+			final World world = event.getWorld();
+			final BlockPos pos = event.getPos();
+			final Block block = world.getBlockState(pos).getBlock();
 			if (block == Blocks.NOTEBLOCK && canEdit((EntityPlayerMP) player, block)) {
-				TileEntity entity = world.getTileEntity(pos);
-				Playable playable;
+				final TileEntity entity = world.getTileEntity(pos);
+				final Playable playable;
 				if (entity instanceof TileEntityNote && (playable = InSomniableCapability.getPlayable((TileEntityNote) entity)) != null) {
 					playable.setPlayer(player.getUniqueID());
 				}
@@ -38,8 +38,8 @@ public final class InSomniableEventHandler {
 		}
 	}
 
-	private static boolean canEdit(EntityPlayerMP player, Block block) {
-		GameType gameType = player.interactionManager.getGameType();
+	private static boolean canEdit(final EntityPlayerMP player, final Block block) {
+		final GameType gameType = player.interactionManager.getGameType();
 		if (!gameType.hasLimitedInteractions()) {
 			return true;
 		}
@@ -49,20 +49,20 @@ public final class InSomniableEventHandler {
 		if (player.isAllowEdit()) {
 			return true;
 		}
-		ItemStack stack = player.getHeldItemMainhand();
+		final ItemStack stack = player.getHeldItemMainhand();
 		return !stack.isEmpty() && stack.canDestroy(block);
 	}
 
 	@SubscribeEvent(priority = EventPriority.LOW)
-	public static void onNoteBlockPlay(NoteBlockEvent.Play event) {
-		World world = event.getWorld();
+	public static void onNoteBlockPlay(final NoteBlockEvent.Play event) {
+		final World world = event.getWorld();
 		if (!world.isRemote) {
-			TileEntity entity = world.getTileEntity(event.getPos());
-			Playable playable;
+			final TileEntity entity = world.getTileEntity(event.getPos());
+			final Playable playable;
 			if (entity instanceof TileEntityNote && (playable = InSomniableCapability.getPlayable((TileEntityNote) entity)) != null) {
 				playable.ifPlayerPresent(playerId -> {
-					EntityPlayer player = world.getPlayerEntityByUUID(playerId);
-					InSomniable inSomniable;
+					final EntityPlayer player = world.getPlayerEntityByUUID(playerId);
+					final InSomniable inSomniable;
 					if (player != null && (inSomniable = InSomniableCapability.getInSomniable(player)) != null) {
 						inSomniable.onPlay(world, player, event.getPos(), event.getVanillaNoteId());
 					}

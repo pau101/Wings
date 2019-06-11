@@ -48,7 +48,7 @@ public final class WingsItems {
 	public static final Item DRAGON_WINGS = Items.AIR;
 
 	@SubscribeEvent
-	public static void register(RegistryEvent.Register<Item> event) {
+	public static void register(final RegistryEvent.Register<Item> event) {
 		event.getRegistry().registerAll(
 			Reg.createItem(WingsBlocks.FAIRY_DUST_ORE),
 			Reg.createItem(WingsBlocks.AMETHYST_ORE),
@@ -74,7 +74,7 @@ public final class WingsItems {
 		);
 	}
 
-	private static Item createWings(ResourceLocation name, Function<String, Consumer<CapabilityProviders.CompositeBuilder>> capabilities, ConfigWingSettings attributes) {
+	private static Item createWings(final ResourceLocation name, final Function<String, Consumer<CapabilityProviders.CompositeBuilder>> capabilities, final ConfigWingSettings attributes) {
 		return Reg.withName(
 				ItemWings.create(capabilities.apply(name.getPath().replace("_wings", "")), attributes.toImmutable()),
 				name.getPath()
@@ -96,7 +96,7 @@ public final class WingsItems {
 			EVIL = create("evil_wings"),
 			DRAGON = create("dragon_wings");
 
-		private static ResourceLocation create(String path) {
+		private static ResourceLocation create(final String path) {
 			return new ResourceLocation(WingsMod.ID, path);
 		}
 	}

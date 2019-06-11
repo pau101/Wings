@@ -26,29 +26,29 @@ public final class WingsMod {
 	private static Proxy proxy;
 
 	@Mod.EventHandler
-	public void init(FMLPreInitializationEvent event) {
-		requireProxy().preinit();
+	public void init(final FMLPreInitializationEvent event) {
+		this.requireProxy().preinit();
 	}
 
 	@Mod.EventHandler
-	public void init(FMLInitializationEvent event) {
-		requireProxy().init();
+	public void init(final FMLInitializationEvent event) {
+		this.requireProxy().init();
 	}
 
-	public void addFlightListeners(EntityPlayer player, Flight instance) {
-		requireProxy().addFlightListeners(player, instance);
+	public void addFlightListeners(final EntityPlayer player, final Flight instance) {
+		this.requireProxy().addFlightListeners(player, instance);
 	}
 
 	public ItemAccessor<EntityPlayer> getWingsAccessor() {
-		return requireProxy().getWingsAccessor();
+		return this.requireProxy().getWingsAccessor();
 	}
 
-	public Consumer<CapabilityProviders.CompositeBuilder> createAvianWings(String name) {
-		return requireProxy().createAvianWings(name);
+	public Consumer<CapabilityProviders.CompositeBuilder> createAvianWings(final String name) {
+		return this.requireProxy().createAvianWings(name);
 	}
 
-	public Consumer<CapabilityProviders.CompositeBuilder> createInsectoidWings(String name) {
-		return requireProxy().createInsectoidWings(name);
+	public Consumer<CapabilityProviders.CompositeBuilder> createInsectoidWings(final String name) {
+		return this.requireProxy().createInsectoidWings(name);
 	}
 
 	@Mod.InstanceFactory

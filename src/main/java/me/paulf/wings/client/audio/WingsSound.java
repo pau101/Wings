@@ -12,11 +12,11 @@ public final class WingsSound extends MovingSound {
 
 	private final Flight flight;
 
-	public WingsSound(EntityPlayer player, Flight flight) {
+	public WingsSound(final EntityPlayer player, final Flight flight) {
 		this(player, flight, true, 0, Math.nextAfter(0.0F, 1.0D));
 	}
 
-	private WingsSound(EntityPlayer player, Flight flight, boolean repeat, int repeatDelay, float volume) {
+	private WingsSound(final EntityPlayer player, final Flight flight, final boolean repeat, final int repeatDelay, final float volume) {
 		super(WingsSounds.ITEM_WINGS_FLYING, SoundCategory.PLAYERS);
 		this.player = player;
 		this.flight = flight;
@@ -27,31 +27,31 @@ public final class WingsSound extends MovingSound {
 
 	@Override
 	public void update() {
-		if (player.isDead) {
-			donePlaying = true;
-		} else if (flight.getFlyingAmount(1.0F) > 0.0F) {
-			xPosF = (float) player.posX;
-			yPosF = (float) player.posY;
-			zPosF = (float) player.posZ;
-			float velocity = MathHelper.sqrt(
-			player.motionX * player.motionX +
-				player.motionZ * player.motionZ +
-				player.motionY * player.motionY
+		if (this.player.isDead) {
+			this.donePlaying = true;
+		} else if (this.flight.getFlyingAmount(1.0F) > 0.0F) {
+			this.xPosF = (float) this.player.posX;
+			this.yPosF = (float) this.player.posY;
+			this.zPosF = (float) this.player.posZ;
+			final float velocity = MathHelper.sqrt(
+				this.player.motionX * this.player.motionX +
+				this.player.motionZ * this.player.motionZ +
+				this.player.motionY * this.player.motionY
 			);
 			if (velocity >= 0.01F) {
-				float halfVel = velocity * 0.5F;
-				volume = MathHelper.clamp(halfVel * halfVel, 0.0F, 1.0F);
+				final float halfVel = velocity * 0.5F;
+				this.volume = MathHelper.clamp(halfVel * halfVel, 0.0F, 1.0F);
 			} else {
-				volume = 0.0F;
+				this.volume = 0.0F;
 			}
 			final float cutoff = 0.8F;
-			if (volume > cutoff) {
-				pitch = 1.0F + (volume - cutoff);
+			if (this.volume > cutoff) {
+				this.pitch = 1.0F + (this.volume - cutoff);
 			} else {
-				pitch = 1.0F;
+				this.pitch = 1.0F;
 			}
 		} else {
-			volume = 0.0F;
+			this.volume = 0.0F;
 		}
 	}
 }

@@ -13,7 +13,7 @@ public final class CapabilityHolder<T extends ICapabilityProvider, R, S extends 
 
 	private S state;
 
-	private CapabilityHolder(Function<Capability<R>, S> presence, S state) {
+	private CapabilityHolder(final Function<Capability<R>, S> presence, final S state) {
 		this.presence = presence;
 		this.state = state;
 	}
@@ -22,7 +22,7 @@ public final class CapabilityHolder<T extends ICapabilityProvider, R, S extends 
 		return this.state;
 	}
 
-	public void inject(Capability<R> capability) {
+	public void inject(final Capability<R> capability) {
 		this.state = this.presence.apply(capability);
 	}
 
@@ -37,18 +37,18 @@ public final class CapabilityHolder<T extends ICapabilityProvider, R, S extends 
 
 	public static abstract class AbsentState<T extends ICapabilityProvider, R> implements State<T, R> {
 		@Override
-		public final boolean has(T provider, @Nullable EnumFacing side) {
+		public final boolean has(final T provider, @Nullable final EnumFacing side) {
 			return false;
 		}
 
 		@Nullable
 		@Override
-		public final R get(T provider, @Nullable EnumFacing side) {
+		public final R get(final T provider, @Nullable final EnumFacing side) {
 			return null;
 		}
 
 		@Override
-		public final <U extends R> CapabilityProviders.NonSerializingSingleBuilder<U> providerBuilder(U instance) {
+		public final <U extends R> CapabilityProviders.NonSerializingSingleBuilder<U> providerBuilder(final U instance) {
 			return CapabilityProviders.emptyBuilder();
 		}
 	}
@@ -56,31 +56,31 @@ public final class CapabilityHolder<T extends ICapabilityProvider, R, S extends 
 	public static abstract class PresentState<T extends ICapabilityProvider, R> implements State<T, R> {
 		protected final Capability<R> capability;
 
-		protected PresentState(Capability<R> capability) {
+		protected PresentState(final Capability<R> capability) {
 			this.capability = capability;
 		}
 
 		@Override
-		public final boolean has(T provider, @Nullable EnumFacing side) {
-			return provider.hasCapability(capability, side);
+		public final boolean has(final T provider, @Nullable final EnumFacing side) {
+			return provider.hasCapability(this.capability, side);
 		}
 
 		@Nullable
 		@Override
-		public final R get(T provider, @Nullable EnumFacing side) {
-			return provider.getCapability(capability, side);
+		public final R get(final T provider, @Nullable final EnumFacing side) {
+			return provider.getCapability(this.capability, side);
 		}
 
 		@Override
-		public final <U extends R> CapabilityProviders.NonSerializingSingleBuilder<U> providerBuilder(U instance) {
-			return CapabilityProviders.builder(capability, instance);
+		public final <U extends R> CapabilityProviders.NonSerializingSingleBuilder<U> providerBuilder(final U instance) {
+			return CapabilityProviders.builder(this.capability, instance);
 		}
 	}
 
 	private static final class SimpleAbsentState<T extends ICapabilityProvider, R> extends AbsentState<T, R> {}
 
 	private static final class SimplePresentState<T extends ICapabilityProvider, R> extends PresentState<T, R> {
-		private SimplePresentState(Capability<R> capability) {
+		private SimplePresentState(final Capability<R> capability) {
 			super(capability);
 		}
 	}
@@ -89,7 +89,7 @@ public final class CapabilityHolder<T extends ICapabilityProvider, R, S extends 
 		return create(SimpleAbsentState::new, SimplePresentState::new);
 	}
 
-	public static <T extends ICapabilityProvider, R, S extends State<T, R>> CapabilityHolder<T, R, S> create(Supplier<S> absence, Function<Capability<R>, S> presence) {
+	public static <T extends ICapabilityProvider, R, S extends State<T, R>> CapabilityHolder<T, R, S> create(final Supplier<S> absence, final Function<Capability<R>, S> presence) {
 		return new CapabilityHolder<>(presence, absence.get());
 	}
 }

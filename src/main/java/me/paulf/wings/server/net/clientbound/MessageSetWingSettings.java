@@ -19,17 +19,17 @@ public final class MessageSetWingSettings extends Message {
 
 	public MessageSetWingSettings() {}
 
-	public MessageSetWingSettings(ImmutableMap<ResourceLocation, WingSettings> settings) {
+	public MessageSetWingSettings(final ImmutableMap<ResourceLocation, WingSettings> settings) {
 		this.settings = settings;
 	}
 
 	@Override
-	protected void serialize(PacketBuffer buf) {
-		ImmutableSet<Map.Entry<ResourceLocation, WingSettings>> entries = settings.entrySet();
+	protected void serialize(final PacketBuffer buf) {
+		final ImmutableSet<Map.Entry<ResourceLocation, WingSettings>> entries = this.settings.entrySet();
 		buf.writeInt(entries.size());
-		for (Map.Entry<ResourceLocation, WingSettings> entry : entries) {
+		for (final Map.Entry<ResourceLocation, WingSettings> entry : entries) {
 			buf.writeResourceLocation(entry.getKey());
-			WingSettings value = entry.getValue();
+			final WingSettings value = entry.getValue();
 			buf.writeInt(value.getRequiredFlightSatiation());
 			buf.writeFloat(value.getFlyingExertion());
 			buf.writeInt(value.getRequiredLandSatiation());
@@ -39,8 +39,8 @@ public final class MessageSetWingSettings extends Message {
 	}
 
 	@Override
-	protected void deserialize(PacketBuffer buf) {
-		ImmutableMap.Builder<ResourceLocation, WingSettings> builder = ImmutableMap.builder();
+	protected void deserialize(final PacketBuffer buf) {
+		final ImmutableMap.Builder<ResourceLocation, WingSettings> builder = ImmutableMap.builder();
 		for (int remaining = buf.readInt(); remaining --> 0; ) {
 			builder.put(
 				buf.readResourceLocation(),
@@ -53,13 +53,13 @@ public final class MessageSetWingSettings extends Message {
 				)
 			);
 		}
-		settings = builder.build();
+		this.settings = builder.build();
 	}
 
 	@Override
-	protected void process(MessageContext ctx) {
-		for (Map.Entry<ResourceLocation, WingSettings> entry : settings.entrySet()) {
-			Item item = ForgeRegistries.ITEMS.getValue(entry.getKey());
+	protected void process(final MessageContext ctx) {
+		for (final Map.Entry<ResourceLocation, WingSettings> entry : this.settings.entrySet()) {
+			final Item item = ForgeRegistries.ITEMS.getValue(entry.getKey());
 			if (item instanceof ItemWings) {
 				((ItemWings) item).setSettings(entry.getValue());
 			}

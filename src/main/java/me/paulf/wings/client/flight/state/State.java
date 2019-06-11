@@ -18,41 +18,41 @@ public abstract class State {
 
 	private int time;
 
-	protected State(Consumer<Animator> animation) {
+	protected State(final Consumer<Animator> animation) {
 		this(STATE_DELAY, animation);
 	}
 
-	protected State(int stateDelay, Consumer<Animator> animation) {
+	protected State(final int stateDelay, final Consumer<Animator> animation) {
 		this.stateDelay = stateDelay;
 		this.animation = animation;
 	}
 
-	public final State update(Flight flight, double x, double y, double z, EntityPlayer player, ItemStack wings) {
-		if (time++ > stateDelay) {
-			return getNext(flight, x, y, z, player, wings);
+	public final State update(final Flight flight, final double x, final double y, final double z, final EntityPlayer player, final ItemStack wings) {
+		if (this.time++ > this.stateDelay) {
+			return this.getNext(flight, x, y, z, player, wings);
 		}
 		return this;
 	}
 
-	private State getNext(Flight flight, double x, double y, double z, EntityPlayer player, ItemStack wings) {
+	private State getNext(final Flight flight, final double x, final double y, final double z,final  EntityPlayer player, final ItemStack wings) {
 		if (flight.isFlying()) {
-			if (y < 0 && player.rotationPitch >= getPitch(x, y, z)) {
-				return createGlide();
+			if (y < 0 && player.rotationPitch >= this.getPitch(x, y, z)) {
+				return this.createGlide();
 			}
-			return createLift();
+			return this.createLift();
 		}
 		if (y < 0) {
-			return getDescent(flight, player, wings);
+			return this.getDescent(flight, player, wings);
 		}
-		return getDefault(y);
+		return this.getDefault(y);
 	}
 
-	private float getPitch(double x, double y, double z) {
+	private float getPitch(final double x, final double y, final double z) {
 		return Mth.toDegrees((float) -Math.atan2(y, MathHelper.sqrt(x * x + z * z)));
 	}
 
-	public final void beginAnimation(Animator animator) {
-		animation.accept(animator);
+	public final void beginAnimation(final Animator animator) {
+		this.animation.accept(animator);
 	}
 
 	protected State createLand() {
@@ -75,11 +75,11 @@ public abstract class State {
 		return new StateFall();
 	}
 
-	protected State getDefault(double y) {
-		return createIdle();
+	protected State getDefault(final double y) {
+		return this.createIdle();
 	}
 
-	protected State getDescent(Flight flight, EntityPlayer player, ItemStack wings) {
-		return flight.canLand(player, wings) ? createLand() : createFall();
+	protected State getDescent(final Flight flight, final EntityPlayer player, final ItemStack wings) {
+		return flight.canLand(player, wings) ? this.createLand() : this.createFall();
 	}
 }

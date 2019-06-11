@@ -32,15 +32,15 @@ public final class GenerationHandler {
 	);
 
 	@SubscribeEvent
-	public static void onDecorateBiome(DecorateBiomeEvent.Pre event) {
-		World world = event.getWorld();
-		Random rng = event.getRand();
-		BlockPos pos = event.getChunkPos().getBlock(8, 0, 8);
+	public static void onDecorateBiome(final DecorateBiomeEvent.Pre event) {
+		final World world = event.getWorld();
+		final Random rng = event.getRand();
+		final BlockPos pos = event.getChunkPos().getBlock(8, 0, 8);
 		FAIRY_DUST_ORE_GENERATOR.generate(world, rng, pos);
 		AMETHYST_ORE_GENERATOR.generate(world, rng, pos);
 	}
 
-	private static WorldGenerator newVeinFeature(VeinSettings settings, Supplier<IBlockState> block) {
+	private static WorldGenerator newVeinFeature(final VeinSettings settings, final Supplier<IBlockState> block) {
 		return new FeatureRange(
 			new FeatureVein(block, settings.getSize()),
 			settings.getCount(),

@@ -15,7 +15,7 @@ public final class FeatureRange extends WorldGenerator {
 
 	private final int maxHeight;
 
-	public FeatureRange(WorldGenerator feature, int count, int minHeight, int maxHeight) {
+	public FeatureRange(final WorldGenerator feature, final int count, final int minHeight, final int maxHeight) {
 		this.feature = feature;
 		this.count = count;
 		this.minHeight = minHeight;
@@ -23,12 +23,12 @@ public final class FeatureRange extends WorldGenerator {
 	}
 
 	@Override
-	public boolean generate(World world, Random rng, BlockPos pos) {
+	public boolean generate(final World world, final Random rng, final BlockPos pos) {
 		boolean result = false;
-		for (int n = count; n --> 0; ) {
-			result |= feature.generate(world, rng, pos.add(
+		for (int n = this.count; n --> 0; ) {
+			result |= this.feature.generate(world, rng, pos.add(
 				rng.nextInt(16),
-				rng.nextInt(maxHeight - minHeight) + minHeight,
+				rng.nextInt(this.maxHeight - this.minHeight) + this.minHeight,
 				rng.nextInt(16)
 			));
 		}

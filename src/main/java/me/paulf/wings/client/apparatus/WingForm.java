@@ -13,25 +13,25 @@ public final class WingForm<A extends Animator> {
 
 	private final ResourceLocation texture;
 
-	private WingForm(Supplier<A> animator, ModelWings<A> model, ResourceLocation texture) {
+	private WingForm(final Supplier<A> animator, final ModelWings<A> model, final ResourceLocation texture) {
 		this.animator = animator;
 		this.model = model;
 		this.texture = texture;
 	}
 
 	public A createAnimator() {
-		return animator.get();
+		return this.animator.get();
 	}
 
 	public ModelWings<A> getModel() {
-		return model;
+		return this.model;
 	}
 
 	public ResourceLocation getTexture() {
-		return texture;
+		return this.texture;
 	}
 
-	public static <A extends Animator> WingForm<A> of(Supplier<A> animator, ModelWings<A> model, ResourceLocation texture) {
+	public static <A extends Animator> WingForm<A> of(final Supplier<A> animator, final ModelWings<A> model, final ResourceLocation texture) {
 		return new WingForm<>(animator, model, texture);
 	}
 }

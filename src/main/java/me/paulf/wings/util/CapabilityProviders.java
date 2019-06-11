@@ -24,21 +24,21 @@ public final class CapabilityProviders {
 		return (EmptySingleBuilder<T>) EmptySingleBuilder.INSTANCE;
 	}
 
-	public static <T> NonSerializingSingleBuilder<T> builder(Capability<? super T> capability, T instance) {
+	public static <T> NonSerializingSingleBuilder<T> builder(final Capability<? super T> capability, final T instance) {
 		return new NonSerializingSingleBuilderImpl<>(capability, instance);
 	}
 
-	public static <T> SingleBuilder<T> builder(Capability<T> capability) {
+	public static <T> SingleBuilder<T> builder(final Capability<T> capability) {
 		return new NonSerializingSingleBuilderImpl<>(capability, capability.getDefaultInstance())
 			.serializedBy(new NBTSerializer<T, NBTBase>() {
 				@Override
-				public NBTBase serialize(T instance) {
+				public NBTBase serialize(final T instance) {
 					return capability.writeNBT(instance, null);
 				}
 
 				@Override
-				public T deserialize(NBTBase compound) {
-					T instance = capability.getDefaultInstance();
+				public T deserialize(final NBTBase compound) {
+					final T instance = capability.getDefaultInstance();
 					capability.readNBT(instance, null, compound);
 					return instance;
 				}
@@ -62,19 +62,19 @@ public final class CapabilityProviders {
 			this(ImmutableList.builder());
 		}
 
-		private CompositeBuilderImpl(ImmutableList.Builder<ICapabilityProvider> providers) {
+		private CompositeBuilderImpl(final ImmutableList.Builder<ICapabilityProvider> providers) {
 			this.providers = providers;
 		}
 
 		@Override
-		public CompositeBuilder add(ICapabilityProvider provider) {
-			providers.add(provider);
+		public CompositeBuilder add(final ICapabilityProvider provider) {
+			this.providers.add(provider);
 			return this;
 		}
 
 		@Override
 		public ICapabilityProvider build() {
-			ImmutableList<ICapabilityProvider> providers = this.providers.build();
+			final ImmutableList<ICapabilityProvider> providers = this.providers.build();
 			switch (providers.size()) {
 				case 0:
 					return empty();
@@ -89,13 +89,13 @@ public final class CapabilityProviders {
 	private static final class CompositeProvider implements ICapabilityProvider {
 		private final ImmutableList<ICapabilityProvider> providers;
 
-		private CompositeProvider(ImmutableList<ICapabilityProvider> providers) {
+		private CompositeProvider(final ImmutableList<ICapabilityProvider> providers) {
 			this.providers = providers;
 		}
 
 		@Override
-		public boolean hasCapability(@Nonnull Capability<?> capability, @Nullable EnumFacing facing) {
-			for (ICapabilityProvider provider : providers) {
+		public boolean hasCapability(@Nonnull final Capability<?> capability, @Nullable final EnumFacing facing) {
+			for (final ICapabilityProvider provider : this.providers) {
 				if (provider.hasCapability(capability, facing)) {
 					return true;
 				}
@@ -105,9 +105,9 @@ public final class CapabilityProviders {
 
 		@Nullable
 		@Override
-		public <T> T getCapability(@Nonnull Capability<T> capability, @Nullable EnumFacing facing) {
-			for (ICapabilityProvider provider : providers) {
-				T instance = provider.getCapability(capability, facing);
+		public <T> T getCapability(@Nonnull final Capability<T> capability, @Nullable final EnumFacing facing) {
+			for (final ICapabilityProvider provider : this.providers) {
+				final T instance = provider.getCapability(capability, facing);
 				if (instance != null) {
 					return instance;
 				}
@@ -120,12 +120,12 @@ public final class CapabilityProviders {
 		private static final EmptySingleBuilder<?> INSTANCE = new EmptySingleBuilder<>();
 
 		@Override
-		public <N extends NBTBase> SingleBuilder<T> serializedBy(NBTSerializer<T, N> serializer) {
+		public <N extends NBTBase> SingleBuilder<T> serializedBy(final NBTSerializer<T, N> serializer) {
 			return this;
 		}
 
 		@Override
-		public SingleBuilder<T> peek(Consumer<T> consumer) {
+		public SingleBuilder<T> peek(final Consumer<T> consumer) {
 			return this;
 		}
 
@@ -139,13 +139,13 @@ public final class CapabilityProviders {
 		private static final EmptyProvider INSTANCE = new EmptyProvider();
 
 		@Override
-		public boolean hasCapability(@Nonnull Capability<?> capability, @Nullable EnumFacing facing) {
+		public boolean hasCapability(@Nonnull final Capability<?> capability, @Nullable final EnumFacing facing) {
 			return false;
 		}
 
 		@Nullable
 		@Override
-		public <T> T getCapability(@Nonnull Capability<T> capability, @Nullable EnumFacing facing) {
+		public <T> T getCapability(@Nonnull final Capability<T> capability, @Nullable final EnumFacing facing) {
 			return null;
 		}
 	}
@@ -155,25 +155,25 @@ public final class CapabilityProviders {
 
 		T instance;
 
-		private SingleProvider(Capability<? super T> capability, T instance) {
+		private SingleProvider(final Capability<? super T> capability, final T instance) {
 			this.capability = capability;
 			this.instance = instance;
 		}
 
 		@Override
-		public boolean hasCapability(@Nonnull Capability<?> capability, @Nullable EnumFacing facing) {
+		public boolean hasCapability(@Nonnull final Capability<?> capability, @Nullable final EnumFacing facing) {
 			return this.capability == capability;
 		}
 
 		@Nullable
 		@Override
-		public <C> C getCapability(@Nonnull Capability<C> capability, @Nullable EnumFacing facing) {
-			return this.capability == capability ? this.capability.cast(instance) : null;
+		public <C> C getCapability(@Nonnull final Capability<C> capability, @Nullable final EnumFacing facing) {
+			return this.capability == capability ? this.capability.cast(this.instance) : null;
 		}
 	}
 
 	private static final class SimpleSingleProvider<T> extends SingleProvider<T> {
-		private SimpleSingleProvider(Capability<? super T> capability, T instance) {
+		private SimpleSingleProvider(final Capability<? super T> capability, final T instance) {
 			super(capability, instance);
 		}
 	}
@@ -181,19 +181,19 @@ public final class CapabilityProviders {
 	private static final class SerializingSingleProvider<T, N extends NBTBase> extends SingleProvider<T> implements INBTSerializable<N> {
 		final NBTSerializer<T, N> serializer;
 
-		private SerializingSingleProvider(Capability<? super T> capability, T instance, NBTSerializer<T, N> serializer) {
+		private SerializingSingleProvider(final Capability<? super T> capability, final T instance, final NBTSerializer<T, N> serializer) {
 			super(capability, instance);
 			this.serializer = serializer;
 		}
 
 		@Override
 		public N serializeNBT() {
-			return serializer.serialize(instance);
+			return this.serializer.serialize(this.instance);
 		}
 
 		@Override
-		public void deserializeNBT(N compound) {
-			instance = serializer.deserialize(compound);
+		public void deserializeNBT(final N compound) {
+			this.instance = this.serializer.deserialize(compound);
 		}
 	}
 
@@ -202,7 +202,7 @@ public final class CapabilityProviders {
 
 		final T instance;
 
-		AbstractSingleBuilder(Capability<? super T> capability, T instance) {
+		AbstractSingleBuilder(final Capability<? super T> capability, final T instance) {
 			this.capability = capability;
 			this.instance = instance;
 		}
@@ -219,44 +219,44 @@ public final class CapabilityProviders {
 	}
 
 	private static final class NonSerializingSingleBuilderImpl<T> extends AbstractSingleBuilder<T> implements NonSerializingSingleBuilder<T> {
-		private NonSerializingSingleBuilderImpl(Capability<? super T> capability, T instance) {
+		private NonSerializingSingleBuilderImpl(final Capability<? super T> capability, final T instance) {
 			super(capability, instance);
 		}
 
 		@Override
-		public <N extends NBTBase> SerializingSingleBuilderImpl<T, N> serializedBy(NBTSerializer<T, N> serializer) {
-			return new SerializingSingleBuilderImpl<>(capability, instance, serializer);
+		public <N extends NBTBase> SerializingSingleBuilderImpl<T, N> serializedBy(final NBTSerializer<T, N> serializer) {
+			return new SerializingSingleBuilderImpl<>(this.capability, this.instance, serializer);
 		}
 
 		@Override
-		public NonSerializingSingleBuilder<T> peek(Consumer<T> consumer) {
-			consumer.accept(instance);
+		public NonSerializingSingleBuilder<T> peek(final Consumer<T> consumer) {
+			consumer.accept(this.instance);
 			return this;
 		}
 
 		@Override
 		public ICapabilityProvider build() {
-			return new SimpleSingleProvider<>(capability, instance);
+			return new SimpleSingleProvider<>(this.capability, this.instance);
 		}
 	}
 
 	private static final class SerializingSingleBuilderImpl<T, N extends NBTBase> extends AbstractSingleBuilder<T> implements SingleBuilder<T> {
 		private final NBTSerializer<T, N> serializer;
 
-		private SerializingSingleBuilderImpl(Capability<? super T> capability, T instance, NBTSerializer<T, N> serializer) {
+		private SerializingSingleBuilderImpl(final Capability<? super T> capability, final T instance, final NBTSerializer<T, N> serializer) {
 			super(capability, instance);
 			this.serializer = serializer;
 		}
 
 		@Override
-		public SerializingSingleBuilderImpl<T, N> peek(Consumer<T> consumer) {
-			consumer.accept(instance);
+		public SerializingSingleBuilderImpl<T, N> peek(final Consumer<T> consumer) {
+			consumer.accept(this.instance);
 			return this;
 		}
 
 		@Override
 		public ICapabilityProvider build() {
-			return new SerializingSingleProvider<>(capability, instance, serializer);
+			return new SerializingSingleProvider<>(this.capability, this.instance, this.serializer);
 		}
 	}
 }

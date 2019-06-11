@@ -28,42 +28,42 @@ public final class Flights {
 
 	private static final CapabilityHolder<EntityPlayer, Flight, CapabilityHolder.State<EntityPlayer, Flight>> HOLDER = CapabilityHolder.create();
 
-	public static boolean has(EntityPlayer player) {
+	public static boolean has(final EntityPlayer player) {
 		return HOLDER.state().has(player, null);
 	}
 
 	@Nullable
-	public static Flight get(EntityPlayer player) {
+	public static Flight get(final EntityPlayer player) {
 		return HOLDER.state().get(player, null);
 	}
 
 	@CapabilityInject(Flight.class)
-	static void inject(Capability<Flight> capability) {
+	static void inject(final Capability<Flight> capability) {
 		HOLDER.inject(capability);
 	}
 
-	public static void ifPlayer(Entity entity, BiConsumer<EntityPlayer, Flight> action) {
+	public static void ifPlayer(final Entity entity, final BiConsumer<EntityPlayer, Flight> action) {
 		ifPlayer(entity, e -> true, action);
 	}
 
-	public static void ifPlayer(Entity entity, Predicate<EntityPlayer> condition, BiConsumer<EntityPlayer, Flight> action) {
-		EntityPlayer player;
-		Flight flight;
+	public static void ifPlayer(final Entity entity, final Predicate<EntityPlayer> condition, final BiConsumer<EntityPlayer, Flight> action) {
+		final EntityPlayer player;
+		final Flight flight;
 		if (entity instanceof EntityPlayer && (flight = get(player = (EntityPlayer) entity)) != null && condition.test(player)) {
 			action.accept(player, flight);
 		}
 	}
 
 	@SubscribeEvent
-	public static void onAttachCapabilities(AttachCapabilitiesEvent<Entity> event) {
-		Entity entity = event.getObject();
+	public static void onAttachCapabilities(final AttachCapabilitiesEvent<Entity> event) {
+		final Entity entity = event.getObject();
 		if (entity instanceof EntityPlayer) {
-			Supplier<FlightDefault> factory = () -> {
-				FlightDefault flight = new FlightDefault();
+			final Supplier<FlightDefault> factory = () -> {
+				final FlightDefault flight = new FlightDefault();
 				WingsMod.instance().addFlightListeners((EntityPlayer) entity, flight);
 				return flight;
 			};
-			FlightDefault flight = factory.get();
+			final FlightDefault flight = factory.get();
 			event.addCapability(
 				new ResourceLocation(WingsMod.ID, "flight"),
 				HOLDER.state().providerBuilder(flight)
@@ -75,39 +75,40 @@ public final class Flights {
 	}
 
 	@SubscribeEvent
-	public static void onPlayerClone(PlayerEvent.Clone event) {
-		Flight oldInstance = get(event.getOriginal()), newInstance;
+	public static void onPlayerClone(final PlayerEvent.Clone event) {
+		final Flight oldInstance = get(event.getOriginal());
+		final Flight newInstance;
 		if (oldInstance != null && (newInstance = get(event.getEntityPlayer())) != null) {
 			oldInstance.clone(newInstance);
 		}
 	}
 
 	@SubscribeEvent
-	public static void onPlayerRespawn(PlayerRespawnEvent event) {
-		Flight flight = get(event.player);
+	public static void onPlayerRespawn(final PlayerRespawnEvent event) {
+		final Flight flight = get(event.player);
 		if (flight != null) {
 			flight.sync(Flight.PlayerSet.ofSelf());
 		}
 	}
 
 	@SubscribeEvent
-	public static void onPlayerChangedDimension(PlayerChangedDimensionEvent event) {
-		Flight flight = get(event.player);
+	public static void onPlayerChangedDimension(final PlayerChangedDimensionEvent event) {
+		final Flight flight = get(event.player);
 		if (flight != null) {
 			flight.sync(Flight.PlayerSet.ofSelf());
 		}
 	}
 
 	@SubscribeEvent
-	public static void onPlayerLoggedIn(PlayerLoggedInEvent event) {
-		Flight flight = get(event.player);
+	public static void onPlayerLoggedIn(final PlayerLoggedInEvent event) {
+		final Flight flight = get(event.player);
 		if (flight != null) {
 			flight.sync(Flight.PlayerSet.ofSelf());
 		}
 	}
 
 	@SubscribeEvent
-	public static void onPlayerStartTracking(PlayerEvent.StartTracking event) {
+	public static void onPlayerStartTracking(final PlayerEvent.StartTracking event) {
 		ifPlayer(event.getTarget(), (player, flight) ->
 			flight.sync(Flight.PlayerSet.ofPlayer((EntityPlayerMP) event.getEntityPlayer()))
 		);

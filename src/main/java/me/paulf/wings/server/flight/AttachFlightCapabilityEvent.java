@@ -11,24 +11,24 @@ public final class AttachFlightCapabilityEvent extends Event {
 
 	private final Flight instance;
 
-	private AttachFlightCapabilityEvent(AttachCapabilitiesEvent<Entity> event, Flight instance) {
+	private AttachFlightCapabilityEvent(final AttachCapabilitiesEvent<Entity> event, final Flight instance) {
 		this.event = event;
 		this.instance = instance;
 	}
 
 	public Entity getObject() {
-		return event.getObject();
+		return this.event.getObject();
 	}
 
-	public void addCapability(ResourceLocation key, ICapabilityProvider cap) {
-		event.addCapability(key, cap);
+	public void addCapability(final ResourceLocation key, final ICapabilityProvider cap) {
+		this.event.addCapability(key, cap);
 	}
 
 	public Flight getInstance() {
-		return instance;
+		return this.instance;
 	}
 
-	public static AttachFlightCapabilityEvent create(AttachCapabilitiesEvent<Entity> event, Flight instance) {
+	public static AttachFlightCapabilityEvent create(final AttachCapabilitiesEvent<Entity> event, final Flight instance) {
 		return new AttachFlightCapabilityEvent(event, instance);
 	}
 }

@@ -3,7 +3,7 @@ package me.paulf.wings.util;
 import net.minecraft.nbt.NBTBase;
 
 public interface NBTSerializer<T, N extends NBTBase> {
-	N serialize(T instance);
+	N serialize(final T instance);
 
-	T deserialize(N compound);
+	T deserialize(final N compound);
 }

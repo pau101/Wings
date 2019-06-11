@@ -7,12 +7,12 @@ import net.minecraftforge.event.entity.player.PlayerEvent;
 public final class PlayerFlownEvent extends PlayerEvent {
 	private final Vec3d direction;
 
-	public PlayerFlownEvent(EntityPlayer player, Vec3d direction) {
+	public PlayerFlownEvent(final EntityPlayer player, final Vec3d direction) {
 		super(player);
 		this.direction = direction;
 	}
 
 	public Vec3d getDirection() {
-		return direction;
+		return this.direction;
 	}
 }

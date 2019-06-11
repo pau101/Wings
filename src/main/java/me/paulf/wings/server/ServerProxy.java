@@ -7,12 +7,12 @@ import java.util.function.Consumer;
 
 public final class ServerProxy extends Proxy {
 	@Override
-	public Consumer<CapabilityProviders.CompositeBuilder> createAvianWings(String name) {
+	public Consumer<CapabilityProviders.CompositeBuilder> createAvianWings(final String name) {
 		return builder -> {};
 	}
 
 	@Override
-	public Consumer<CapabilityProviders.CompositeBuilder> createInsectoidWings(String name) {
+	public Consumer<CapabilityProviders.CompositeBuilder> createInsectoidWings(final String name) {
 		return builder -> {};
 	}
 }

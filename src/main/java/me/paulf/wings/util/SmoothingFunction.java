@@ -12,45 +12,45 @@ public final class SmoothingFunction {
 
 	private Sign fromDirection;
 
-	private SmoothingFunction(FloatUnaryOperator easing) {
+	private SmoothingFunction(final FloatUnaryOperator easing) {
 		this.easing = easing;
 	}
 
-	public void accept(float delta, Sign direction, float value, FloatConsumer valueOut) {
-		if (!Float.isNaN(prevValue) && delta != 0.0F && delta != 1.0F) {
-			if (Float.isNaN(fromValue) || !fromDirection.equals(direction)) {
-				fromValue = prevValue;
-				fromDirection = direction;
+	public void accept(final float delta, final Sign direction, final float value, final FloatConsumer valueOut) {
+		if (!Float.isNaN(this.prevValue) && delta != 0.0F && delta != 1.0F) {
+			if (Float.isNaN(this.fromValue) || !this.fromDirection.equals(direction)) {
+				this.fromValue = this.prevValue;
+				this.fromDirection = direction;
 			}
-			float t = fromDirection.applyAsFloat(easing.applyAsFloat(delta));
-			float newValue = fromValue + (value - fromValue) * t;
+			final float t = this.fromDirection.applyAsFloat(this.easing.applyAsFloat(delta));
+			final float newValue = this.fromValue + (value - this.fromValue) * t;
 			valueOut.accept(newValue);
-			prevValue = newValue;
+			this.prevValue = newValue;
 		} else {
-			fromValue = Float.NaN;
-			prevValue = value;
+			this.fromValue = Float.NaN;
+			this.prevValue = value;
 		}
 	}
 
-	public static SmoothingFunction create(FloatUnaryOperator easing) {
+	public static SmoothingFunction create(final FloatUnaryOperator easing) {
 		return new SmoothingFunction(easing);
 	}
 
 	public enum Sign implements FloatUnaryOperator {
 		POSITIVE {
 			@Override
-			public float applyAsFloat(float operand) {
+			public float applyAsFloat(final float operand) {
 				return operand;
 			}
 		},
 		NEGATIVE {
 			@Override
-			public float applyAsFloat(float operand) {
+			public float applyAsFloat(final float operand) {
 				return 1.0F - operand;
 			}
 		};
 
-		public static Sign valueOf(boolean value) {
+		public static Sign valueOf(final boolean value) {
 			return value ? POSITIVE : NEGATIVE;
 		}
 	}

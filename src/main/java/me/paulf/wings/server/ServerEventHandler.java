@@ -35,10 +35,10 @@ public final class ServerEventHandler {
 	private ServerEventHandler() {}
 
 	@SubscribeEvent
-	public static void onPlayerEntityInteract(PlayerInteractEvent.EntityInteract event) {
-		EntityPlayer player = event.getEntityPlayer();
-		EnumHand hand = event.getHand();
-		ItemStack stack = player.getHeldItem(hand);
+	public static void onPlayerEntityInteract(final PlayerInteractEvent.EntityInteract event) {
+		final EntityPlayer player = event.getEntityPlayer();
+		final EnumHand hand = event.getHand();
+		final ItemStack stack = player.getHeldItem(hand);
 		if (event.getTarget() instanceof EntityBat && stack.getItem() == Items.GLASS_BOTTLE) {
 			player.world.playSound(
 				player,
@@ -48,15 +48,15 @@ public final class ServerEventHandler {
 				1.0F,
 				1.0F
 			);
-			ItemStack destroyed = stack.copy();
+			final ItemStack destroyed = stack.copy();
 			if (!player.capabilities.isCreativeMode) {
 				stack.shrink(1);
 			}
-			StatBase useStat = StatList.getObjectUseStats(Items.GLASS_BOTTLE);
+			final StatBase useStat = StatList.getObjectUseStats(Items.GLASS_BOTTLE);
 			if (useStat != null) {
 				player.addStat(useStat);
 			}
-			ItemStack batBlood = new ItemStack(WingsItems.BAT_BLOOD);
+			final ItemStack batBlood = new ItemStack(WingsItems.BAT_BLOOD);
 			if (stack.isEmpty()) {
 				ForgeEventFactory.onPlayerDestroyItem(player, destroyed, hand);
 				player.setHeldItem(hand, batBlood);
@@ -68,7 +68,7 @@ public final class ServerEventHandler {
 	}
 
 	@SubscribeEvent
-	public static void onEntityMount(EntityMountEvent event) {
+	public static void onEntityMount(final EntityMountEvent event) {
 		if (event.isMounting()) {
 			Flights.ifPlayer(event.getEntityMounting(), (player, flight) -> {
 				if (flight.isFlying()) {
@@ -79,39 +79,39 @@ public final class ServerEventHandler {
 	}
 
 	@SubscribeEvent
-	public static void onPlayerTick(TickEvent.PlayerTickEvent event) {
-		Flight flight;
+	public static void onPlayerTick(final TickEvent.PlayerTickEvent event) {
+		final Flight flight;
 		if (event.phase == TickEvent.Phase.END && (flight = Flights.get(event.player)) != null) {
 			flight.tick(event.player, FlightApparatuses.find(event.player));
 		}
 	}
 
 	@SubscribeEvent
-	public static void onLivingDeath(LivingDeathEvent event) {
+	public static void onLivingDeath(final LivingDeathEvent event) {
 		Flights.ifPlayer(event.getEntityLiving(), (player, flight) ->
 			flight.setIsFlying(false, Flight.PlayerSet.ofAll())
 		);
 	}
 
 	@SubscribeEvent
-	public static void onPlayerFlightCheck(PlayerFlightCheckEvent event) {
-		Flight flight = Flights.get(event.getEntityPlayer());
+	public static void onPlayerFlightCheck(final PlayerFlightCheckEvent event) {
+		final Flight flight = Flights.get(event.getEntityPlayer());
 		if (flight != null && flight.isFlying()) {
 			event.setResult(Event.Result.ALLOW);
 		}
 	}
 
 	@SubscribeEvent
-	public static void onPlayerFlown(PlayerFlownEvent event) {
-		EntityPlayer player = event.getEntityPlayer();
-		Flight flight = Flights.get(player);
+	public static void onPlayerFlown(final PlayerFlownEvent event) {
+		final EntityPlayer player = event.getEntityPlayer();
+		final Flight flight = Flights.get(player);
 		if (flight != null) {
 			flight.onFlown(player, FlightApparatuses.find(event.getEntityPlayer()), event.getDirection());
 		}
 	}
 
 	@SubscribeEvent
-	public static void onGetLivingHeadLimit(GetLivingHeadLimitEvent event) {
+	public static void onGetLivingHeadLimit(final GetLivingHeadLimitEvent event) {
 		Flights.ifPlayer(event.getEntityLiving(), (player, flight) -> {
 			if (flight.isFlying()) {
 				event.setHardLimit(50.0F);
@@ -121,7 +121,7 @@ public final class ServerEventHandler {
 	}
 
 	@SubscribeEvent
-	public static void onConstructWingsAccessor(ConstructWingsAccessorEvent event) {
+	public static void onConstructWingsAccessor(final ConstructWingsAccessorEvent event) {
 		event.addPlacing(ItemPlacing.forArmor(EntityEquipmentSlot.CHEST));
 	}
 }

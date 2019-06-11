@@ -33,14 +33,14 @@ public final class ClientEventHandler {
 	private ClientEventHandler() {}
 
 	@SubscribeEvent
-	public static void onSetRotationAngles(PlayerModelEvent.SetRotationAngles event) {
-		EntityPlayer player = event.getEntityPlayer();
-		float delta = event.getRotation() - player.ticksExisted;
-		Flight flight = Flights.get(player);
-		float amt;
+	public static void onSetRotationAngles(final PlayerModelEvent.SetRotationAngles event) {
+		final EntityPlayer player = event.getEntityPlayer();
+		final float delta = event.getRotation() - player.ticksExisted;
+		final Flight flight = Flights.get(player);
+		final float amt;
 		if (flight != null && (amt = flight.getFlyingAmount(delta)) > 0.0F) {
-			ModelBiped model = event.getModel();
-			float pitch = event.getRotationPitch();
+			final ModelBiped model = event.getModel();
+			final float pitch = event.getRotationPitch();
 			model.bipedHead.rotateAngleX = Mth.toRadians(Mth.lerp(pitch, pitch / 4.0F - 90.0F, amt));
 			model.bipedLeftArm.rotateAngleX = Mth.lerp(model.bipedLeftArm.rotateAngleX, -3.2F, amt);
 			model.bipedRightArm.rotateAngleX = Mth.lerp(model.bipedRightArm.rotateAngleX, -3.2F, amt);
@@ -48,7 +48,7 @@ public final class ClientEventHandler {
 			model.bipedRightLeg.rotateAngleX = Mth.lerp(model.bipedRightLeg.rotateAngleX, 0.0F, amt);
 			ModelBase.copyModelAngles(model.bipedHead, model.bipedHeadwear);
 			if (model instanceof ModelPlayer) {
-				ModelPlayer playerModel = (ModelPlayer) model;
+				final ModelPlayer playerModel = (ModelPlayer) model;
 				ModelBase.copyModelAngles(playerModel.bipedLeftLeg, playerModel.bipedLeftLegwear);
 				ModelBase.copyModelAngles(playerModel.bipedRightLeg, playerModel.bipedRightLegwear);
 				ModelBase.copyModelAngles(playerModel.bipedLeftArm, playerModel.bipedLeftArmwear);
@@ -58,17 +58,17 @@ public final class ClientEventHandler {
 	}
 
 	@SubscribeEvent
-	public static void onApplyRenderRotations(ApplyRenderRotationsEvent.Post event) {
+	public static void onApplyRenderRotations(final ApplyRenderRotationsEvent.Post event) {
 		Flights.ifPlayer(event.getEntity(), (player, flight) -> {
-			float delta = event.getPartialTicks();
-			float amt = flight.getFlyingAmount(delta);
+			final float delta = event.getPartialTicks();
+			final float amt = flight.getFlyingAmount(delta);
 			if (amt > 0.0F) {
-				float roll = Mth.lerpDegrees(
+				final float roll = Mth.lerpDegrees(
 					player.prevRenderYawOffset - player.prevRotationYaw,
 					player.renderYawOffset - player.rotationYaw,
 					delta
 				);
-				float pitch = -Mth.lerpDegrees(player.prevRotationPitch, player.rotationPitch, delta) - 90;
+				final float pitch = -Mth.lerpDegrees(player.prevRotationPitch, player.rotationPitch, delta) - 90;
 				GlStateManager.rotate(Mth.lerpDegrees(0.0F, roll, amt), 0.0F, 0.0F, 1.0F);
 				GlStateManager.rotate(Mth.lerpDegrees(0.0F, pitch, amt), 1.0F, 0.0F, 0.0F);
 				GlStateManager.translate(0.0F, -1.2F * Mth.easeInOut(amt), 0.0F);
@@ -77,21 +77,21 @@ public final class ClientEventHandler {
 	}
 
 	@SubscribeEvent
-	public static void onGetCameraEyeHeight(GetCameraEyeHeightEvent event) {
-		Entity entity = event.getEntity();
-		FlightView flight;
+	public static void onGetCameraEyeHeight(final GetCameraEyeHeightEvent event) {
+		final Entity entity = event.getEntity();
+		final FlightView flight;
 		if (entity instanceof AbstractClientPlayer && (flight = FlightViews.get((AbstractClientPlayer) entity)) != null) {
 			flight.tickEyeHeight(event.getValue(), event.getDelta(), event::setValue);
 		}
 	}
 
 	@SubscribeEvent
-	public static void onCameraSetup(EntityViewRenderEvent.CameraSetup event) {
+	public static void onCameraSetup(final EntityViewRenderEvent.CameraSetup event) {
 		Flights.ifPlayer(event.getEntity(), (player, flight) -> {
-			float delta = (float) event.getRenderPartialTicks();
-			float amt = flight.getFlyingAmount(delta);
+			final float delta = (float) event.getRenderPartialTicks();
+			final float amt = flight.getFlyingAmount(delta);
 			if (amt > 0.0F) {
-				float roll = Mth.lerpDegrees(
+				final float roll = Mth.lerpDegrees(
 					player.prevRenderYawOffset - player.prevRotationYaw,
 					player.renderYawOffset - player.rotationYaw,
 					delta
@@ -102,26 +102,26 @@ public final class ClientEventHandler {
 	}
 
 	@SubscribeEvent
-	public static void onEmptyOffHandPresentEvent(EmptyOffHandPresentEvent event) {
-		Flight flight = Flights.get(event.getPlayer());
+	public static void onEmptyOffHandPresentEvent(final EmptyOffHandPresentEvent event) {
+		final Flight flight = Flights.get(event.getPlayer());
 		if (flight != null && flight.getFlyingAmount(1.0F) > 0.0F) {
 			event.setResult(Event.Result.ALLOW);
 		}
 	}
 
 	@SubscribeEvent
-	public static void onEntityJoinWorld(EntityJoinWorldEvent event) {
+	public static void onEntityJoinWorld(final EntityJoinWorldEvent event) {
 		Flights.ifPlayer(event.getEntity(), EntityPlayer::isUser, (player, flight) ->
 			Minecraft.getMinecraft().getSoundHandler().playSound(new WingsSound(player, flight))
 		);
 	}
 
 	@SubscribeEvent
-	public static void onPlayerTick(TickEvent.PlayerTickEvent event) {
-		EntityPlayer entity;
+	public static void onPlayerTick(final TickEvent.PlayerTickEvent event) {
+		final EntityPlayer entity;
 		if (event.phase == TickEvent.Phase.END && (entity = event.player) instanceof AbstractClientPlayer) {
-			AbstractClientPlayer player = (AbstractClientPlayer) entity;
-			FlightView flight = FlightViews.get(player);
+			final AbstractClientPlayer player = (AbstractClientPlayer) entity;
+			final FlightView flight = FlightViews.get(player);
 			if (flight != null) {
 				flight.tick(player, FlightApparatuses.find(player));
 			}

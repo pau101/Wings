@@ -8,24 +8,24 @@ public final class GetMoBendsPlayerAnimationEvent extends Event {
 
 	private String name;
 
-	private GetMoBendsPlayerAnimationEvent(EntityPlayer player, String name) {
+	private GetMoBendsPlayerAnimationEvent(final EntityPlayer player, final String name) {
 		this.player = player;
 		this.name = name;
 	}
 
 	public EntityPlayer getPlayer() {
-		return player;
+		return this.player;
 	}
 
-	public void set(String name) {
+	public void set(final String name) {
 		this.name = name;
 	}
 
 	public String get() {
-		return name;
+		return this.name;
 	}
 
-	public static GetMoBendsPlayerAnimationEvent create(EntityPlayer player) {
+	public static GetMoBendsPlayerAnimationEvent create(final EntityPlayer player) {
 		return new GetMoBendsPlayerAnimationEvent(player, "");
 	}
 }

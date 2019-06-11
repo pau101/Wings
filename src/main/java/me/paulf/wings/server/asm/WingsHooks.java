@@ -14,25 +14,25 @@ import net.minecraftforge.fml.common.eventhandler.Event;
 public final class WingsHooks {
 	private WingsHooks() {}
 
-	public static boolean onFlightCheck(EntityPlayer player, boolean defaultValue) {
-		PlayerFlightCheckEvent ev = new PlayerFlightCheckEvent(player);
+	public static boolean onFlightCheck(final EntityPlayer player, final boolean defaultValue) {
+		final PlayerFlightCheckEvent ev = new PlayerFlightCheckEvent(player);
 		MinecraftForge.EVENT_BUS.post(ev);
 		return ev.getResult() == Event.Result.ALLOW || ev.getResult() == Event.Result.DEFAULT && defaultValue;
 	}
 
-	public static float onGetCameraEyeHeight(Entity entity, float delta) {
-		GetCameraEyeHeightEvent ev = GetCameraEyeHeightEvent.create(entity, delta);
+	public static float onGetCameraEyeHeight(final Entity entity, final float delta) {
+		final GetCameraEyeHeightEvent ev = GetCameraEyeHeightEvent.create(entity, delta);
 		MinecraftForge.EVENT_BUS.post(ev);
 		return ev.getValue();
 	}
 
-	public static void onUpdateBodyRotation(EntityLivingBase living, float movementYaw) {
+	public static void onUpdateBodyRotation(final EntityLivingBase living, final float movementYaw) {
 		living.renderYawOffset += MathHelper.wrapDegrees(movementYaw - living.renderYawOffset) * 0.3F;
-		GetLivingHeadLimitEvent ev = GetLivingHeadLimitEvent.create(living);
+		final GetLivingHeadLimitEvent ev = GetLivingHeadLimitEvent.create(living);
 		MinecraftForge.EVENT_BUS.post(ev);
-		float hLimit = ev.getHardLimit();
-		float sLimit = ev.getSoftLimit();
-		float theta = MathHelper.clamp(
+		final float hLimit = ev.getHardLimit();
+		final float sLimit = ev.getSoftLimit();
+		final float theta = MathHelper.clamp(
 			MathHelper.wrapDegrees(living.rotationYaw - living.renderYawOffset),
 			-hLimit,
 			hLimit
@@ -43,11 +43,11 @@ public final class WingsHooks {
 		}
 	}
 
-	public static void onAddFlown(EntityPlayer player, double x, double y, double z) {
+	public static void onAddFlown(final EntityPlayer player, final double x, final double y, final double z) {
 		MinecraftForge.EVENT_BUS.post(new PlayerFlownEvent(player, new Vec3d(x, y, z)));
 	}
 
-	public static boolean onReplaceItemSlotCheck(Item item, ItemStack stack) {
+	public static boolean onReplaceItemSlotCheck(final Item item, final ItemStack stack) {
 		return item instanceof ItemElytra || item.getEquipmentSlot(stack) != null;
 	}
 }

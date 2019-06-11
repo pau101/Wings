@@ -7,11 +7,11 @@ public enum HarvestClass {
 
 	private final String name;
 
-	HarvestClass(String name) {
+	HarvestClass(final String name) {
 		this.name = name;
 	}
 
 	public String getName() {
-		return name;
+		return this.name;
 	}
 }

@@ -19,34 +19,34 @@ public final class Network implements IMessageHandler<Message, IMessage> {
 	private final SimpleNetworkWrapper network = NetworkRegistry.INSTANCE.newSimpleChannel(WingsMod.ID);
 
 	public Network() {
-		register(MessageControlFlying.class, 0, Side.SERVER);
-		register(MessageSyncFlight.class, 1, Side.CLIENT);
-		register(MessageSetWingSettings.class, 2, Side.CLIENT);
+		this.register(MessageControlFlying.class, 0, Side.SERVER);
+		this.register(MessageSyncFlight.class, 1, Side.CLIENT);
+		this.register(MessageSetWingSettings.class, 2, Side.CLIENT);
 	}
 
-	public void sendToServer(IMessage message) {
-		network.sendToServer(message);
+	public void sendToServer(final IMessage message) {
+		this.network.sendToServer(message);
 	}
 
-	public void sendToPlayer(IMessage message, EntityPlayerMP player) {
-		network.sendTo(message, player);
+	public void sendToPlayer(final IMessage message, final EntityPlayerMP player) {
+		this.network.sendTo(message, player);
 	}
 
-	public void sendToAllTracking(IMessage message, Entity entity) {
-		network.sendToAllTracking(message, entity);
+	public void sendToAllTracking(final IMessage message, final Entity entity) {
+		this.network.sendToAllTracking(message, entity);
 	}
 
 	@Override
-	public IMessage onMessage(Message message, MessageContext ctx) {
+	public IMessage onMessage(final Message message, final MessageContext ctx) {
 		FMLCommonHandler.instance().getWorldThread(ctx.netHandler).addScheduledTask(() -> message.process(ctx));
 		return null;
 	}
 
-	public Packet<?> createPacket(IMessage message) {
-		return network.getPacketFrom(message);
+	public Packet<?> createPacket(final IMessage message) {
+		return this.network.getPacketFrom(message);
 	}
 
-	private void register(Class<? extends Message> cls, int id, Side side) {
-		network.registerMessage(this, cls, id, side);
+	private void register(final Class<? extends Message> cls, final int id, final Side side) {
+		this.network.registerMessage(this, cls, id, side);
 	}
 }

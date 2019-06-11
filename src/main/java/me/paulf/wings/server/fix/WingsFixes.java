@@ -25,7 +25,7 @@ public final class WingsFixes {
 	private static final ResourceLocation WINGS_KEY = new ResourceLocation(WINGS);
 
 	@SubscribeEvent
-	public static void onMissingMappings(RegistryEvent.MissingMappings<Item> event) {
+	public static void onMissingMappings(final RegistryEvent.MissingMappings<Item> event) {
 		event.getMappings().stream()
 			.filter(mapping -> WINGS_KEY.equals(mapping.key))
 			.forEach(RegistryEvent.MissingMappings.Mapping::ignore);
@@ -34,14 +34,14 @@ public final class WingsFixes {
 	public static void register() {
 		FMLCommonHandler.instance().getDataFixer().registerWalker(FixTypes.PLAYER, (fixer, compound, version) -> {
 			if (compound.hasKey("ForgeCaps", Constants.NBT.TAG_COMPOUND)) {
-				NBTTagCompound caps = compound.getCompoundTag("ForgeCaps");
+				final NBTTagCompound caps = compound.getCompoundTag("ForgeCaps");
 				if (caps.hasKey("baubles:container", Constants.NBT.TAG_COMPOUND)) {
 					DataFixesManager.processInventory(fixer, caps.getCompoundTag("baubles:container"), version, "Items");
 				}
 			}
 			return compound;
 		});
-		ModFixs fixer = FMLCommonHandler.instance().getDataFixer().init(WingsMod.ID, DATA_VERSION);
+		final ModFixs fixer = FMLCommonHandler.instance().getDataFixer().init(WingsMod.ID, DATA_VERSION);
 		fixer.registerFix(FixTypes.ITEM_INSTANCE, new IFixableData() {
 			private final String[] lookup = {
 				"wings:angel_wings",
@@ -61,10 +61,10 @@ public final class WingsFixes {
 			}
 
 			@Override
-			public NBTTagCompound fixTagCompound(NBTTagCompound compound) {
+			public NBTTagCompound fixTagCompound(final NBTTagCompound compound) {
 				if (compound.hasKey("id", Constants.NBT.TAG_STRING) && WINGS.equals(compound.getString("id"))) {
-					int damage = compound.getShort("Damage");
-					compound.setString("id", lookup[damage >= 0 && damage < lookup.length ? damage : 0]);
+					final int damage = compound.getShort("Damage");
+					compound.setString("id", this.lookup[damage >= 0 && damage < this.lookup.length ? damage : 0]);
 					compound.setShort("Damage", (short) 0);
 				}
 				return compound;

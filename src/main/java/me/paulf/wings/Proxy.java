@@ -39,20 +39,20 @@ public abstract class Proxy {
 		WingsFixes.register();
 		MinecraftForge.EVENT_BUS.register(new Object() {
 			@SubscribeEvent
-			public void onClientConnectedEvent(FMLNetworkEvent.ServerConnectionFromClientEvent event) {
-				((NetHandlerPlayServer) event.getHandler()).sendPacket(network.createPacket(new MessageSetWingSettings(WingsItemsConfig.createWingAttributes())));
+			public void onClientConnectedEvent(final FMLNetworkEvent.ServerConnectionFromClientEvent event) {
+				((NetHandlerPlayServer) event.getHandler()).sendPacket(Proxy.this.network.createPacket(new MessageSetWingSettings(WingsItemsConfig.createWingAttributes())));
 			}
 		});
 		MinecraftForge.EVENT_BUS.register(ModConfigSaver.create(WingsMod.ID));
 	}
 
 	protected void init() {
-		ConstructWingsAccessorEvent event = new ConstructWingsAccessorEvent();
+		final ConstructWingsAccessorEvent event = new ConstructWingsAccessorEvent();
 		MinecraftForge.EVENT_BUS.post(event);
-		wingsAccessor = event.build();
+		this.wingsAccessor = event.build();
 	}
 
-	public void addFlightListeners(EntityPlayer player, Flight instance) {
+	public void addFlightListeners(final EntityPlayer player, final Flight instance) {
 		if (player instanceof EntityPlayerMP) {
 			instance.registerFlyingListener(isFlying -> player.capabilities.allowFlying = isFlying);
 			instance.registerFlyingListener(isFlying -> {
@@ -60,17 +60,17 @@ public abstract class Proxy {
 					player.dismountRidingEntity();
 				}
 			});
-			Flight.Notifier notifier = Flight.Notifier.of(
-				() -> network.sendToPlayer(new MessageSyncFlight(player, instance), (EntityPlayerMP) player),
-				p -> network.sendToPlayer(new MessageSyncFlight(player, instance), p),
-				() -> network.sendToAllTracking(new MessageSyncFlight(player, instance), player)
+			final Flight.Notifier notifier = Flight.Notifier.of(
+				() -> this.network.sendToPlayer(new MessageSyncFlight(player, instance), (EntityPlayerMP) player),
+				p -> this.network.sendToPlayer(new MessageSyncFlight(player, instance), p),
+				() -> this.network.sendToAllTracking(new MessageSyncFlight(player, instance), player)
 			);
 			instance.registerSyncListener(players -> players.notify(notifier));
 		}
 	}
 
 	public final ItemAccessor<EntityPlayer> getWingsAccessor() {
-		return wingsAccessor;
+		return this.wingsAccessor;
 	}
 
 	public abstract Consumer<CapabilityProviders.CompositeBuilder> createAvianWings(String name);

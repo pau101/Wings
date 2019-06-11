@@ -19,7 +19,7 @@ public final class WingsModels {
 	private WingsModels() {}
 
 	@SubscribeEvent
-	public static void onRegister(ModelRegistryEvent event) {
+	public static void onRegister(final ModelRegistryEvent event) {
 		bindAll(WingsItems.ANGEL_WINGS);
 		bindAll(WingsItems.SLIME_WINGS);
 		bindAll(WingsItems.BLUE_BUTTERFLY_WINGS);
@@ -36,24 +36,24 @@ public final class WingsModels {
 		bindOne(WingsItems.BAT_BLOOD);
 	}
 
-	private static void bindOne(Block block) {
+	private static void bindOne(final Block block) {
 		bindOne(ForgeRegistries.ITEMS.getValue(Util.getName(block)));
 	}
 
-	private static void bindAll(Item item) {
-		ModelResourceLocation location = createInventoryLocation(item);
+	private static void bindAll(final Item item) {
+		final ModelResourceLocation location = createInventoryLocation(item);
 		ModelLoader.setCustomMeshDefinition(item, stack -> location);
 	}
 
-	private static void bindOne(Item item) {
+	private static void bindOne(final Item item) {
 		bind(item, 0, createInventoryLocation(item));
 	}
 
-	private static void bind(Item item, int meta, ModelResourceLocation location) {
+	private static void bind(final Item item, final int meta, final ModelResourceLocation location) {
 		ModelLoader.setCustomModelResourceLocation(item, meta, location);
 	}
 
-	private static ModelResourceLocation createInventoryLocation(Item item) {
+	private static ModelResourceLocation createInventoryLocation(final Item item) {
 		return new ModelResourceLocation(Util.getName(item), "inventory");
 	}
 }

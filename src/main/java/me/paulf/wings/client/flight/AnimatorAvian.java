@@ -24,60 +24,60 @@ public final class AnimatorAvian implements Animator {
 
 	private float flapCycle;
 
-	private void beginMovement(Movement movement, int transitionDuration) {
-		setMovement(new Transition(this.movement, movement, transitionDuration));
+	private void beginMovement(final Movement movement, final int transitionDuration) {
+		this.setMovement(new Transition(this.movement, movement, transitionDuration));
 	}
 
-	private void setMovement(Movement movement) {
+	private void setMovement(final Movement movement) {
 		this.movement.onEnd();
 		this.movement = movement;
 	}
 
-	private void flap(float amount) {
-		flapCycle += amount;
+	private void flap(final float amount) {
+		this.flapCycle += amount;
 	}
 
-	private float getFlapTime(float delta) {
-		return Mth.lerp(prevFlapCycle, flapCycle, delta);
+	private float getFlapTime(final float delta) {
+		return Mth.lerp(this.prevFlapCycle, this.flapCycle, delta);
 	}
 
 	@Override
 	public void beginLand() {
-		beginMovement(new LandMovement(), LAND_TRANSITION_DURATION);
+		this.beginMovement(new LandMovement(), LAND_TRANSITION_DURATION);
 	}
 
 	@Override
 	public void beginGlide() {
-		beginMovement(new GlideMovement(), GLIDE_TRANSITION_DURATION);
+		this.beginMovement(new GlideMovement(), GLIDE_TRANSITION_DURATION);
 	}
 
 	@Override
 	public void beginIdle() {
-		beginMovement(new IdleMovement(), IDLE_TRANSITION_DURATION);
+		this.beginMovement(new IdleMovement(), IDLE_TRANSITION_DURATION);
 	}
 
 	@Override
 	public void beginLift() {
-		beginMovement(new LiftMovement(), LIFT_TRANSITION_DURATION);
+		this.beginMovement(new LiftMovement(), LIFT_TRANSITION_DURATION);
 	}
 
 	@Override
 	public void beginFall() {
-		beginMovement(new FallMovement(), FALL_TRANSITION_DURATION);
+		this.beginMovement(new FallMovement(), FALL_TRANSITION_DURATION);
 	}
 
-	public Vec3d getWingRotation(int index, float delta) {
-		return movement.getWingRotation(index, delta);
+	public Vec3d getWingRotation(final int index, final float delta) {
+		return this.movement.getWingRotation(index, delta);
 	}
 
-	public Vec3d getFeatherRotation(int index, float delta) {
-		return movement.getFeatherRotation(index, delta);
+	public Vec3d getFeatherRotation(final int index, final float delta) {
+		return this.movement.getFeatherRotation(index, delta);
 	}
 
 	@Override
 	public void update() {
-		prevFlapCycle = flapCycle;
-		flap(movement.update());
+		this.prevFlapCycle = this.flapCycle;
+		this.flap(this.movement.update());
 	}
 
 	private interface Movement {
@@ -103,13 +103,13 @@ public final class AnimatorAvian implements Animator {
 			.build();
 
 		@Override
-		public Vec3d getWingRotation(int index, float delta) {
-			return wing.get(index);
+		public Vec3d getWingRotation(final int index, final float delta) {
+			return this.wing.get(index);
 		}
 
 		@Override
-		public Vec3d getFeatherRotation(int index, float delta) {
-			return feather.get(index);
+		public Vec3d getFeatherRotation(final int index, final float delta) {
+			return this.feather.get(index);
 		}
 
 		@Override
@@ -118,25 +118,25 @@ public final class AnimatorAvian implements Animator {
 		}
 	}
 
-	private float getWeight(int index) {
+	private float getWeight(final int index) {
 		return Math.min(Math.abs(index - 1), 2) / 2.0F;
 	}
 
 	private final class LandMovement implements Movement {
 		@Override
-		public Vec3d getWingRotation(int index, float delta) {
-			float pos = getWeight(index + 1);
-			float time = getFlapTime(delta);
-			float cycle = time - pos * 1.2F;
-			double x = (Math.sin(cycle + Mth.PI / 2.0D) - 1.0D) / 2.0D * 20.0D + (1.0D - pos) * 50.0D;
-			double y = (Math.sin(cycle) * 20.0D + (1.0D - pos) * 14.0D) *
+		public Vec3d getWingRotation(final int index, final float delta) {
+			final float pos = AnimatorAvian.this.getWeight(index + 1);
+			final float time = AnimatorAvian.this.getFlapTime(delta);
+			final float cycle = time - pos * 1.2F;
+			final double x = (Math.sin(cycle + Mth.PI / 2.0D) - 1.0D) / 2.0D * 20.0D + (1.0D - pos) * 50.0D;
+			final double y = (Math.sin(cycle) * 20.0D + (1.0D - pos) * 14.0D) *
 				(1.0D - pos * (Math.min(Math.sin(cycle + Mth.PI), 0.0D) / 2.0D + 1.0D) * Math.sin(time));
-			return restPosition.getWingRotation(index, delta).add(x, y, 4.0D);
+			return AnimatorAvian.this.restPosition.getWingRotation(index, delta).add(x, y, 4.0D);
 		}
 
 		@Override
-		public Vec3d getFeatherRotation(int index, float delta) {
-			return restPosition.getFeatherRotation(index, delta);
+		public Vec3d getFeatherRotation(final int index, final float delta) {
+			return AnimatorAvian.this.restPosition.getFeatherRotation(index, delta);
 		}
 
 		@Override
@@ -151,22 +151,22 @@ public final class AnimatorAvian implements Animator {
 		private int time;
 
 		@Override
-		public Vec3d getWingRotation(int index, float delta) {
-			float pos = getWeight(index);
-			float time = getFlapTime(delta);
-			double y = (Math.sin(time) * 5.0D - 14.0D) * pos;
-			return restPosition.getWingRotation(index, delta).add(0.0D, y, 0.0D);
+		public Vec3d getWingRotation(final int index, final float delta) {
+			final float pos = AnimatorAvian.this.getWeight(index);
+			final float time = AnimatorAvian.this.getFlapTime(delta);
+			final double y = (Math.sin(time) * 5.0D - 14.0D) * pos;
+			return AnimatorAvian.this.restPosition.getWingRotation(index, delta).add(0.0D, y, 0.0D);
 		}
 
 		@Override
-		public Vec3d getFeatherRotation(int index, float delta) {
-			double x = noise.getValue((time + delta) * 0.17D, index * 0.13D) * 1.25D;
-			return restPosition.getFeatherRotation(index, delta).add(x, 0.0D, 0.0D);
+		public Vec3d getFeatherRotation(final int index, final float delta) {
+			final double x = this.noise.getValue((this.time + delta) * 0.17D, index * 0.13D) * 1.25D;
+			return AnimatorAvian.this.restPosition.getFeatherRotation(index, delta).add(x, 0.0D, 0.0D);
 		}
 
 		@Override
 		public float update() {
-			time++;
+			this.time++;
 			return 0.045F;
 		}
 	}
@@ -187,17 +187,17 @@ public final class AnimatorAvian implements Animator {
 			.build();
 
 		@Override
-		public Vec3d getWingRotation(int index, float delta) {
-			float pos = getWeight(index);
-			float time = getFlapTime(delta);
-			return wing.get(index).add(0.0D, Math.sin(time) * 3.0D * pos, 0.0D);
+		public Vec3d getWingRotation(final int index, final float delta) {
+			final float pos = AnimatorAvian.this.getWeight(index);
+			final float time = AnimatorAvian.this.getFlapTime(delta);
+			return this.wing.get(index).add(0.0D, Math.sin(time) * 3.0D * pos, 0.0D);
 		}
 
 		@Override
-		public Vec3d getFeatherRotation(int index, float delta) {
-			float pos = getWeight(index);
-			float time = getFlapTime(delta);
-			return feather.get(index).add(0, -Math.sin(time) * 5.0D * pos, 0.0D);
+		public Vec3d getFeatherRotation(final int index, final float delta) {
+			final float pos = AnimatorAvian.this.getWeight(index);
+			final float time = AnimatorAvian.this.getFlapTime(delta);
+			return this.feather.get(index).add(0, -Math.sin(time) * 5.0D * pos, 0.0D);
 		}
 
 		@Override
@@ -212,26 +212,26 @@ public final class AnimatorAvian implements Animator {
 		private int beginTime;
 
 		@Override
-		public Vec3d getWingRotation(int index, float delta) {
-			float pos = getWeight(index);
-			float time = getFlapTime(delta);
-			float cycle = time - pos * 1.2F;
-			double x = (Math.sin(cycle + Mth.PI / 2.0D) - 1.0D) / 2.0D * 16.0D + 8.0D;
-			double y = (Math.sin(cycle) * 26.0D + 12.0D) *
+		public Vec3d getWingRotation(final int index, final float delta) {
+			final float pos = AnimatorAvian.this.getWeight(index);
+			final float time = AnimatorAvian.this.getFlapTime(delta);
+			final float cycle = time - pos * 1.2F;
+			final double x = (Math.sin(cycle + Mth.PI / 2.0D) - 1.0D) / 2.0D * 16.0D + 8.0D;
+			final double y = (Math.sin(cycle) * 26.0D + 12.0D) *
 				(1.0D - pos * (Math.min(Math.sin(cycle + Mth.PI), 0.0D) / 2.0D + 1.0D) * Math.sin(time));
-			return restPosition.getWingRotation(index, delta).add(x, y, 0.0D);
+			return AnimatorAvian.this.restPosition.getWingRotation(index, delta).add(x, y, 0.0D);
 		}
 
 		@Override
-		public Vec3d getFeatherRotation(int index, float delta) {
-			return restPosition.getFeatherRotation(index, delta);
+		public Vec3d getFeatherRotation(final int index, final float delta) {
+			return AnimatorAvian.this.restPosition.getFeatherRotation(index, delta);
 		}
 
 		@Override
 		public float update() {
-			float flap = Mth.lerp(0.375F, 0.225F, (float) beginTime / beginDuration);
-			if (beginTime < beginDuration) {
-				beginTime++;
+			final float flap = Mth.lerp(0.375F, 0.225F, (float) this.beginTime / this.beginDuration);
+			if (this.beginTime < this.beginDuration) {
+				this.beginTime++;
 			}
 			return flap;
 		}
@@ -250,20 +250,20 @@ public final class AnimatorAvian implements Animator {
 		private int time;
 
 		@Override
-		public Vec3d getWingRotation(int index, float delta) {
-			double n = noise.getValue((time + delta) * 0.18D, index * 0.13D) * 0.92D * (index + 1);
-			return wing.get(index).add(n, 0.0D, n);
+		public Vec3d getWingRotation(final int index, final float delta) {
+			final double n = this.noise.getValue((this.time + delta) * 0.18D, index * 0.13D) * 0.92D * (index + 1);
+			return this.wing.get(index).add(n, 0.0D, n);
 		}
 
 		@Override
-		public Vec3d getFeatherRotation(int index, float delta) {
-			double n = noise.getValue((time + delta) * 0.2D, index * 0.13D) * 1.75D;
+		public Vec3d getFeatherRotation(final int index, final float delta) {
+			final double n = this.noise.getValue((this.time + delta) * 0.2D, index * 0.13D) * 1.75D;
 			return new Vec3d(-n, n * 4.0D, 0.0D);
 		}
 
 		@Override
 		public float update() {
-			time++;
+			this.time++;
 			return 0.0F;
 		}
 	}
@@ -279,26 +279,26 @@ public final class AnimatorAvian implements Animator {
 
 		private boolean isActive = true;
 
-		private Transition(Movement start, Movement end, int duration) {
+		private Transition(final Movement start, final Movement end, final int duration) {
 			this.start = start;
 			this.end = end;
 			this.duration = duration;
 		}
 
 		@Override
-		public Vec3d getWingRotation(int index, float delta) {
-			return lerpRotation(index, delta, Movement::getWingRotation);
+		public Vec3d getWingRotation(final int index, final float delta) {
+			return this.lerpRotation(index, delta, Movement::getWingRotation);
 		}
 
 		@Override
-		public Vec3d getFeatherRotation(int index, float delta) {
-			return lerpRotation(index, delta, Movement::getFeatherRotation);
+		public Vec3d getFeatherRotation(final int index, final float delta) {
+			return this.lerpRotation(index, delta, Movement::getFeatherRotation);
 		}
 
-		private Vec3d lerpRotation(int index, float delta, RotationGetter getter) {
-			Vec3d startRot = getter.get(start, index, delta);
-			Vec3d endRot = getter.get(end, index, delta);
-			float t = Mth.easeInOut(Mth.lerp(lastTime, time, delta) / duration);
+		private Vec3d lerpRotation(final int index, final float delta, final RotationGetter getter) {
+			final Vec3d startRot = getter.get(this.start, index, delta);
+			final Vec3d endRot = getter.get(this.end, index, delta);
+			final float t = Mth.easeInOut(Mth.lerp(this.lastTime, this.time, delta) / this.duration);
 			return new Vec3d(
 				Mth.lerpDegrees(startRot.x, endRot.x, t),
 				Mth.lerpDegrees(startRot.y, endRot.y, t),
@@ -308,21 +308,21 @@ public final class AnimatorAvian implements Animator {
 
 		@Override
 		public float update() {
-			lastTime = time;
-			float flapStart = start.update();
-			float flapEnd = end.update();
-			float flap = Mth.lerp(flapStart, flapEnd, (float) time / duration);
-			if (time < duration) {
-				time++;
-			} else if (isActive) {
-				setMovement(end);
+			this.lastTime = this.time;
+			final float flapStart = this.start.update();
+			final float flapEnd = this.end.update();
+			final float flap = Mth.lerp(flapStart, flapEnd, (float) this.time / this.duration);
+			if (this.time < this.duration) {
+				this.time++;
+			} else if (this.isActive) {
+				AnimatorAvian.this.setMovement(this.end);
 			}
 			return flap;
 		}
 
 		@Override
 		public void onEnd() {
-			isActive = false;
+			this.isActive = false;
 		}
 	}
 
@@ -334,12 +334,12 @@ public final class AnimatorAvian implements Animator {
 	private static final class WingPose {
 		private final ImmutableMap<Integer, Vec3d> rotations;
 
-		private WingPose(ImmutableMap<Integer, Vec3d> rotations) {
+		private WingPose(final ImmutableMap<Integer, Vec3d> rotations) {
 			this.rotations = rotations;
 		}
 
-		public Vec3d get(int index) {
-			return rotations.getOrDefault(index, Vec3d.ZERO);
+		public Vec3d get(final int index) {
+			return this.rotations.getOrDefault(index, Vec3d.ZERO);
 		}
 
 		private static Builder builder() {
@@ -351,13 +351,13 @@ public final class AnimatorAvian implements Animator {
 
 			private Builder() {}
 
-			private Builder with(int index, double x, double y, double z) {
-				rotations.put(index, new Vec3d(x, y, z));
+			private Builder with(final int index, final double x, final double y, final double z) {
+				this.rotations.put(index, new Vec3d(x, y, z));
 				return this;
 			}
 
 			private WingPose build() {
-				return new WingPose(rotations.build());
+				return new WingPose(this.rotations.build());
 			}
 		}
 	}

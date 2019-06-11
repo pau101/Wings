@@ -20,23 +20,23 @@ public final class FlightViews {
 
 	private static final CapabilityHolder<AbstractClientPlayer, FlightView, CapabilityHolder.State<AbstractClientPlayer, FlightView>> HOLDER = CapabilityHolder.create();
 
-	public static boolean has(AbstractClientPlayer player) {
+	public static boolean has(final AbstractClientPlayer player) {
 		return HOLDER.state().has(player, null);
 	}
 
 	@Nullable
-	public static FlightView get(AbstractClientPlayer player) {
+	public static FlightView get(final AbstractClientPlayer player) {
 		return HOLDER.state().get(player, null);
 	}
 
 	@CapabilityInject(FlightView.class)
-	static void inject(Capability<FlightView> capability) {
+	static void inject(final Capability<FlightView> capability) {
 		HOLDER.inject(capability);
 	}
 
 	@SubscribeEvent
-	public static void onAttachCapabilities(AttachFlightCapabilityEvent event) {
-		Entity entity = event.getObject();
+	public static void onAttachCapabilities(final AttachFlightCapabilityEvent event) {
+		final Entity entity = event.getObject();
 		if (entity instanceof AbstractClientPlayer) {
 			event.addCapability(
 				new ResourceLocation(WingsMod.ID, "flight_view"),

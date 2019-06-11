@@ -7,7 +7,7 @@ public final class StateLift extends State {
 		this(STATE_DELAY);
 	}
 
-	public StateLift(int stateDelay) {
+	public StateLift(final int stateDelay) {
 		super(stateDelay, Animator::beginLift);
 	}
 
@@ -17,7 +17,7 @@ public final class StateLift extends State {
 	}
 
 	@Override
-	protected State getDefault(double y) {
-		return y >= 0 ? createGlide() : super.getDefault(y);
+	protected State getDefault(final double y) {
+		return y >= 0 ? this.createGlide() : super.getDefault(y);
 	}
 }

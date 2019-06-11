@@ -8,15 +8,15 @@ import net.minecraftforge.items.IItemHandler;
 public final class ItemAccessor<T extends ICapabilityProvider> {
 	private final ImmutableList<ItemPlacing<T>> placings;
 
-	private ItemAccessor(ImmutableList<ItemPlacing<T>> placings) {
+	private ItemAccessor(final ImmutableList<ItemPlacing<T>> placings) {
 		this.placings = placings;
 	}
 
-	public Iterable<HandlerSlot> enumerate(T provider) {
-		ImmutableList.Builder<HandlerSlot> slots = ImmutableList.builder();
-		for (ItemPlacing<T> placing : placings) {
-			IItemHandler handler = placing.getStorage(provider);
-			for (IntIterator it = placing.getSlots().iterator(); it.hasNext(); ) {
+	public Iterable<HandlerSlot> enumerate(final T provider) {
+		final ImmutableList.Builder<HandlerSlot> slots = ImmutableList.builder();
+		for (final ItemPlacing<T> placing : this.placings) {
+			final IItemHandler handler = placing.getStorage(provider);
+			for (final IntIterator it = placing.getSlots().iterator(); it.hasNext(); ) {
 				slots.add(HandlerSlot.create(handler, it.nextInt()));
 			}
 		}
@@ -38,17 +38,17 @@ public final class ItemAccessor<T extends ICapabilityProvider> {
 			this(ImmutableList.builder());
 		}
 
-		private Builder(ImmutableList.Builder<ItemPlacing<T>> placings) {
+		private Builder(final ImmutableList.Builder<ItemPlacing<T>> placings) {
 			this.placings = placings;
 		}
 
-		public Builder addPlacing(ItemPlacing<T> placing) {
-			placings.add(placing);
+		public Builder addPlacing(final ItemPlacing<T> placing) {
+			this.placings.add(placing);
 			return this;
 		}
 
 		public ItemAccessor<T> build() {
-			return new ItemAccessor<>(placings.build());
+			return new ItemAccessor<>(this.placings.build());
 		}
 	}
 }

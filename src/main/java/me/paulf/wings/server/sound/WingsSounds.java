@@ -22,14 +22,14 @@ public final class WingsSounds {
 	public static final SoundEvent ITEM_WINGS_FLYING = NIL;
 
 	@SubscribeEvent
-	public static void register(RegistryEvent.Register<SoundEvent> event) {
+	public static void register(final RegistryEvent.Register<SoundEvent> event) {
 		event.getRegistry().registerAll(
 			create("item.armor.equip_wings"),
 			create("item.wings.flying")
 		);
 	}
 
-	private static SoundEvent create(String name) {
+	private static SoundEvent create(final String name) {
 		return new SoundEvent(new ResourceLocation(WingsMod.ID, name)).setRegistryName(name);
 	}
 }

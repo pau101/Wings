@@ -10,11 +10,11 @@ public enum HarvestLevel {
 
 	private final int value;
 
-	HarvestLevel(int value) {
+	HarvestLevel(final int value) {
 		this.value = value;
 	}
 
 	public final int getValue() {
-		return value;
+		return this.value;
 	}
 }

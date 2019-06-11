@@ -37,12 +37,12 @@ public final class WingsMoBendsIntegration {
 	private static Proxy proxy = new Proxy();
 
 	@Mod.EventHandler
-	public void init(FMLPreInitializationEvent event) {
+	public void init(final FMLPreInitializationEvent event) {
 		proxy.preinit();
 	}
 
 	@Mod.EventHandler
-	public void init(FMLInitializationEvent event) {
+	public void init(final FMLInitializationEvent event) {
 		proxy.init();
 	}
 
@@ -59,8 +59,8 @@ public final class WingsMoBendsIntegration {
 		void preinit() {
 			MinecraftForge.EVENT_BUS.register(new Object() {
 				@SubscribeEvent
-				public void onGetMoBendsPlayerAnimation(GetMoBendsPlayerAnimationEvent event) {
-					Flight flight = Flights.get(event.getPlayer());
+				public void onGetMoBendsPlayerAnimation(final GetMoBendsPlayerAnimationEvent event) {
+					final Flight flight = Flights.get(event.getPlayer());
 					if (flight != null && flight.getFlyingAmount(1.0F) > 0.0F) {
 						event.set("wings");
 					}
@@ -70,14 +70,14 @@ public final class WingsMoBendsIntegration {
 
 		@Override
 		void init() {
-			for (Object obj : AnimatedEntity.skinMap.values()) {
-				RenderBendsPlayer renderer = (RenderBendsPlayer) obj;
+			for (final Object obj : AnimatedEntity.skinMap.values()) {
+				final RenderBendsPlayer renderer = (RenderBendsPlayer) obj;
 				renderer.addLayer(new LayerWings(renderer, (player, scale, bodyTransform) -> {
 					bodyTransform.accept(scale);
 					GlStateManager.translate(0.0F, -12.0F * scale, 0.0F);
 				}));
 			}
-			AnimatedEntity ae = AnimatedEntity.get("player");
+			final AnimatedEntity ae = AnimatedEntity.get("player");
 			ae.add(new AnimationWings());
 		}
 	}
@@ -89,15 +89,15 @@ public final class WingsMoBendsIntegration {
 		}
 
 		@Override
-		public void animate(EntityLivingBase entity, ModelBase model, EntityData data) {
-			EntityPlayer player = (EntityPlayer) entity;
-			Flight flight = Flights.get(player);
+		public void animate(final EntityLivingBase entity, final ModelBase model, final EntityData data) {
+			final EntityPlayer player = (EntityPlayer) entity;
+			final Flight flight = Flights.get(player);
 			if (flight != null) {
 				animate((ModelBendsPlayer) model, flight);
 			}
 		}
 
-		private static void animate(ModelBendsPlayer model, Flight flight) {
+		private static void animate(final ModelBendsPlayer model, final Flight flight) {
 			bends(model.bipedBody).pre_rotation.setSmooth(new Vector3f(0.0F, 0.0F, 0.0F), 0.5F);
 			bends(model.bipedBody).rotation.setSmooth(new Vector3f(0.0F, 0.0F, 0.0F), 0.5F);
 			bends(model.bipedRightArm).pre_rotation.setSmooth(new Vector3f(0.0F, 0.0F, 0.0F));
@@ -109,14 +109,14 @@ public final class WingsMoBendsIntegration {
 			bends(model.bipedHead).pre_rotation.setSmooth(new Vector3f(0.0F, 0.0F, 0.0F));
 			bends(model.bipedLeftLeg).rotation.setSmooth(new Vector3f(0.0F, 0.0F, 0.0F), 0.5F);
 			bends(model.bipedRightLeg).rotation.setSmooth(new Vector3f(0.0F, 0.0F, 0.0F), 0.5F);
-			float amt = flight.getFlyingAmount(EventHandlerRenderPlayer.partialTicks);
+			final float amt = flight.getFlyingAmount(EventHandlerRenderPlayer.partialTicks);
 			bends(model.bipedHead).rotation.set(Mth.lerp(model.headRotationX, model.headRotationX / 4.0F - 90.0F, amt), model.headRotationY, 0.0F);
 			bends(model.bipedLeftArm).rotation.setSmooth(new Vector3f(Mth.toDegrees(-3.2F) * amt, 0.0F, 0.0F), 1.0F);
 			bends(model.bipedRightArm).rotation.setSmooth(new Vector3f(Mth.toDegrees(-3.2F) * amt, 0.0F, 0.0F), 1.0F);
 			if (!flight.isFlying()) {
-				float swing = model.armSwing * 0.6662F;
-				float swingAmount = Math.min(1.4F * model.armSwingAmount, 0.15F);
-				float var = (swing / Mth.PI) % 2.0F;
+				final float swing = model.armSwing * 0.6662F;
+				final float swingAmount = Math.min(1.4F * model.armSwingAmount, 0.15F);
+				final float var = (swing / Mth.PI) % 2.0F;
 				bends(model.bipedRightLeg).rotation.setSmoothX(-8.0F + 1.1F * Mth.toDegrees(MathHelper.cos(swing) * swingAmount),0.2F);
 				bends(model.bipedLeftLeg).rotation.setSmoothX(-8.0F + 1.1F * Mth.toDegrees(MathHelper.cos(swing + Mth.PI) * 1.4F * swingAmount),0.2F);
 				bends(model.bipedRightLeg).rotation.setSmoothZ(12.0F, 0.2F);
@@ -126,7 +126,7 @@ public final class WingsMoBendsIntegration {
 			}
 		}
 
-		private static ModelRendererBends bends(ModelRenderer renderer) {
+		private static ModelRendererBends bends(final ModelRenderer renderer) {
 			return (ModelRendererBends) renderer;
 		}
 	}

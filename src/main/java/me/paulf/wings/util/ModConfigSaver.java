@@ -8,18 +8,18 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 public final class ModConfigSaver {
 	private final String id;
 
-	private ModConfigSaver(String id) {
+	private ModConfigSaver(final String id) {
 		this.id = id;
 	}
 
 	@SubscribeEvent
-	public void onConfigChanged(ConfigChangedEvent.OnConfigChangedEvent event) {
+	public void onConfigChanged(final ConfigChangedEvent.OnConfigChangedEvent event) {
 		if (this.id.equals(event.getModID())) {
 			ConfigManager.sync(this.id, Config.Type.INSTANCE);
 		}
 	}
 
-	public static ModConfigSaver create(String id) {
+	public static ModConfigSaver create(final String id) {
 		return new ModConfigSaver(id);
 	}
 }

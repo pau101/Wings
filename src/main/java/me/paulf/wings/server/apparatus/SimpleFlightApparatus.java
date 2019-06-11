@@ -19,7 +19,7 @@ public final class SimpleFlightApparatus implements FlightApparatus {
 
 	private final Function<Flight, FlightState> vitality;
 
-	private SimpleFlightApparatus(TravelListener flight, TravelListener landing, BiPredicate<EntityPlayer, ItemStack> usability, BiPredicate<EntityPlayer, ItemStack> landability, Function<Flight, FlightState> vitality) {
+	private SimpleFlightApparatus(final TravelListener flight, final TravelListener landing, final BiPredicate<EntityPlayer, ItemStack> usability, final BiPredicate<EntityPlayer, ItemStack> landability, final Function<Flight, FlightState> vitality) {
 		this.flight = flight;
 		this.landing = landing;
 		this.usability = usability;
@@ -28,28 +28,28 @@ public final class SimpleFlightApparatus implements FlightApparatus {
 	}
 
 	@Override
-	public void onFlight(EntityPlayer player, ItemStack stack, Vec3d direction) {
-		flight.onTravel(player, stack, direction);
+	public void onFlight(final EntityPlayer player, final ItemStack stack, final Vec3d direction) {
+		this.flight.onTravel(player, stack, direction);
 	}
 
 	@Override
-	public void onLanding(EntityPlayer player, ItemStack stack, Vec3d direction) {
-		landing.onTravel(player, stack, direction);
+	public void onLanding(final EntityPlayer player, final ItemStack stack, final Vec3d direction) {
+		this.landing.onTravel(player, stack, direction);
 	}
 
 	@Override
-	public boolean isUsable(EntityPlayer player, ItemStack stack) {
-		return usability.test(player, stack);
+	public boolean isUsable(final EntityPlayer player, final ItemStack stack) {
+		return this.usability.test(player, stack);
 	}
 
 	@Override
-	public boolean isLandable(EntityPlayer player, ItemStack stack) {
-		return landability.test(player, stack);
+	public boolean isLandable(final EntityPlayer player, final ItemStack stack) {
+		return this.landability.test(player, stack);
 	}
 
 	@Override
-	public FlightState createState(Flight flight) {
-		return vitality.apply(flight);
+	public FlightState createState(final Flight flight) {
+		return this.vitality.apply(flight);
 	}
 
 	public static Builder builder() {
@@ -74,33 +74,33 @@ public final class SimpleFlightApparatus implements FlightApparatus {
 
 		private Builder() {}
 
-		public Builder withFlight(TravelListener flight) {
+		public Builder withFlight(final TravelListener flight) {
 			this.flight = flight;
 			return this;
 		}
 
-		public Builder withLanding(TravelListener landing) {
+		public Builder withLanding(final TravelListener landing) {
 			this.landing = landing;
 			return this;
 		}
 
-		public Builder withUsability(BiPredicate<EntityPlayer, ItemStack> usability) {
+		public Builder withUsability(final BiPredicate<EntityPlayer, ItemStack> usability) {
 			this.usability = usability;
 			return this;
 		}
 
-		public Builder withLandability(BiPredicate<EntityPlayer, ItemStack> landability) {
+		public Builder withLandability(final BiPredicate<EntityPlayer, ItemStack> landability) {
 			this.landability = landability;
 			return this;
 		}
 
-		public Builder withVitality(Function<Flight, FlightState> vitality) {
+		public Builder withVitality(final Function<Flight, FlightState> vitality) {
 			this.vitality = vitality;
 			return this;
 		}
 
 		public SimpleFlightApparatus build() {
-			return new SimpleFlightApparatus(flight, landing, usability, landability, vitality);
+			return new SimpleFlightApparatus(this.flight, this.landing, this.usability, this.landability, this.vitality);
 		}
 	}
 }

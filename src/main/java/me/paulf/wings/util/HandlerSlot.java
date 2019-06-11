@@ -8,28 +8,28 @@ public final class HandlerSlot {
 
 	private final int slot;
 
-	private HandlerSlot(IItemHandler handler, int slot) {
+	private HandlerSlot(final IItemHandler handler, final int slot) {
 		this.handler = handler;
 		this.slot = slot;
 	}
 
 	public ItemStack get() {
-		return handler.getStackInSlot(slot);
+		return this.handler.getStackInSlot(this.slot);
 	}
 
-	public ItemStack insert(ItemStack stack) {
-		return handler.insertItem(slot, stack, false);
+	public ItemStack insert(final ItemStack stack) {
+		return this.handler.insertItem(this.slot, stack, false);
 	}
 
-	public ItemStack extract(int amount) {
-		return handler.extractItem(slot, amount, false);
+	public ItemStack extract(final int amount) {
+		return this.handler.extractItem(this.slot, amount, false);
 	}
 
 	public int getLimit() {
-		return handler.getSlotLimit(slot);
+		return this.handler.getSlotLimit(this.slot);
 	}
 
-	public static HandlerSlot create(IItemHandler handler, int slot) {
+	public static HandlerSlot create(final IItemHandler handler, final int slot) {
 		return new HandlerSlot(handler, slot);
 	}
 }

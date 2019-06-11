@@ -12,30 +12,30 @@ public final class MessageControlFlying extends Message {
 
 	public MessageControlFlying() {}
 
-	public MessageControlFlying(boolean isFlying) {
+	public MessageControlFlying(final boolean isFlying) {
 		this.isFlying = isFlying;
 	}
 
 	protected boolean isFlying() {
-		return isFlying;
+		return this.isFlying;
 	}
 
 	@Override
-	protected void serialize(PacketBuffer buf) {
-		buf.writeBoolean(isFlying);
+	protected void serialize(final PacketBuffer buf) {
+		buf.writeBoolean(this.isFlying);
 	}
 
 	@Override
-	protected void deserialize(PacketBuffer buf) {
-		isFlying = buf.readBoolean();
+	protected void deserialize(final PacketBuffer buf) {
+		this.isFlying = buf.readBoolean();
 	}
 
 	@Override
-	protected void process(MessageContext ctx) {
-		EntityPlayer player = ctx.getServerHandler().player;
-		Flight flight = Flights.get(player);
+	protected void process(final MessageContext ctx) {
+		final EntityPlayer player = ctx.getServerHandler().player;
+		final Flight flight = Flights.get(player);
 		if (flight != null && flight.canFly(player)) {
-			flight.setIsFlying(isFlying(), Flight.PlayerSet.ofOthers());
+			flight.setIsFlying(this.isFlying(), Flight.PlayerSet.ofOthers());
 		}
 	}
 }

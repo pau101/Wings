@@ -18,26 +18,26 @@ public final class LayerWings implements LayerRenderer<AbstractClientPlayer> {
 
 	private final TransformFunction transform;
 
-	public LayerWings(RenderPlayer renderer, TransformFunction transform) {
+	public LayerWings(final RenderPlayer renderer, final TransformFunction transform) {
 		this.renderer = renderer;
 		this.transform = transform;
 	}
 
 	@Override
-	public void doRenderLayer(AbstractClientPlayer player, float limbSwing, float limbSwingAmount, float delta, float age, float yawHead, float headPitch, float scale) {
-		ItemStack stack;
-		FlightView flight;
+	public void doRenderLayer(final AbstractClientPlayer player, final float limbSwing, final float limbSwingAmount, final float delta, final float age, final float yawHead, final float headPitch, final float scale) {
+		final ItemStack stack;
+		final FlightView flight;
 		if (!player.isInvisible() && !(stack = FlightApparatuses.find(player)).isEmpty() && (flight = FlightViews.get(player)) != null) {
 			flight.ifFormPresent(form -> {
-				renderer.bindTexture(form.getTexture());
+				this.renderer.bindTexture(form.getTexture());
 				GlStateManager.pushMatrix();
-				transform.apply(player, scale, renderer.getMainModel().bipedBody::postRender);
+				this.transform.apply(player, scale, this.renderer.getMainModel().bipedBody::postRender);
 				GlStateManager.enableCull();
 				form.render(delta, scale);
 				if (stack.hasEffect()) {
-					LayerArmorBase.renderEnchantedGlint(renderer, player, new ModelBase() {
+					LayerArmorBase.renderEnchantedGlint(this.renderer, player, new ModelBase() {
 						@Override
-						public void render(Entity entityIn, float limbSwing, float limbSwingAmount, float delta, float yawHead, float pitch, float scale) {
+						public void render(final Entity entityIn, final float limbSwing, final float limbSwingAmount, final float delta, final float yawHead, final float pitch, final float scale) {
 							form.render(delta, scale);
 						}
 					}, limbSwing, limbSwingAmount, delta, delta, yawHead, headPitch, scale);

@@ -9,56 +9,56 @@ import net.minecraft.util.math.Vec3d;
 import java.util.function.Consumer;
 
 public interface Flight {
-	default void setIsFlying(boolean isFlying) {
-		setIsFlying(isFlying, PlayerSet.empty());
+	default void setIsFlying(final boolean isFlying) {
+		this.setIsFlying(isFlying, PlayerSet.empty());
 	}
 
-	void setIsFlying(boolean isFlying, PlayerSet players);
+	void setIsFlying(final boolean isFlying, final PlayerSet players);
 
 	boolean isFlying();
 
-	default void toggleIsFlying(PlayerSet players) {
-		setIsFlying(!isFlying(), players);
+	default void toggleIsFlying(final PlayerSet players) {
+		this.setIsFlying(!this.isFlying(), players);
 	}
 
-	void setTimeFlying(int timeFlying);
+	void setTimeFlying(final int timeFlying);
 
 	int getTimeFlying();
 
-	float getFlyingAmount(float delta);
+	float getFlyingAmount(final float delta);
 
-	void registerFlyingListener(FlyingListener listener);
+	void registerFlyingListener(final FlyingListener listener);
 
-	void registerSyncListener(SyncListener listener);
+	void registerSyncListener(final SyncListener listener);
 
-	boolean canFly(EntityPlayer player);
+	boolean canFly(final EntityPlayer player);
 
-	boolean canLand(EntityPlayer player, ItemStack wings);
+	boolean canLand(final EntityPlayer player, final ItemStack wings);
 
-	void tick(EntityPlayer player, ItemStack wings);
+	void tick(final EntityPlayer player, final ItemStack wings);
 
-	void onFlown(EntityPlayer player, ItemStack wings, Vec3d direction);
+	void onFlown(final EntityPlayer player, final ItemStack wings, final Vec3d direction);
 
-	void clone(Flight other);
+	void clone(final Flight other);
 
-	void sync(PlayerSet players);
+	void sync(final PlayerSet players);
 
-	void serialize(PacketBuffer buf);
+	void serialize(final PacketBuffer buf);
 
-	void deserialize(PacketBuffer buf);
+	void deserialize(final PacketBuffer buf);
 
 	interface FlyingListener {
-		void onChange(boolean isFlying);
+		void onChange(final boolean isFlying);
 
-		static Consumer<FlyingListener> onChangeUsing(boolean isFlying) {
+		static Consumer<FlyingListener> onChangeUsing(final boolean isFlying) {
 			return l -> l.onChange(isFlying);
 		}
 	}
 
 	interface SyncListener {
-		void onSync(PlayerSet players);
+		void onSync(final PlayerSet players);
 
-		static Consumer<SyncListener> onSyncUsing(PlayerSet players) {
+		static Consumer<SyncListener> onSyncUsing(final PlayerSet players) {
 			return l -> l.onSync(players);
 		}
 	}
@@ -74,7 +74,7 @@ public interface Flight {
 			return Notifier::notifySelf;
 		}
 
-		static PlayerSet ofPlayer(EntityPlayerMP player) {
+		static PlayerSet ofPlayer(final EntityPlayerMP player) {
 			return n -> n.notifyPlayer(player);
 		}
 
@@ -97,7 +97,7 @@ public interface Flight {
 
 		void notifyOthers();
 
-		static Notifier of(Runnable notifySelf, Consumer<EntityPlayerMP> notifyPlayer, Runnable notifyOthers) {
+		static Notifier of(final Runnable notifySelf, final Consumer<EntityPlayerMP> notifyPlayer, final Runnable notifyOthers) {
 			return new Notifier() {
 				@Override
 				public void notifySelf() {
@@ -105,7 +105,7 @@ public interface Flight {
 				}
 
 				@Override
-				public void notifyPlayer(EntityPlayerMP player) {
+				public void notifyPlayer(final EntityPlayerMP player) {
 					notifyPlayer.accept(player);
 				}
 

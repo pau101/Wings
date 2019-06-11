@@ -6,7 +6,7 @@ import net.minecraftforge.fml.common.eventhandler.Event;
 
 @Event.HasResult
 public class PlayerFlightCheckEvent extends PlayerEvent {
-	public PlayerFlightCheckEvent(EntityPlayer player) {
+	public PlayerFlightCheckEvent(final EntityPlayer player) {
 		super(player);
 	}
 }

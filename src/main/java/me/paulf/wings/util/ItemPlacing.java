@@ -10,14 +10,14 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 
 public interface ItemPlacing<T extends ICapabilityProvider> {
-	IItemHandler getStorage(T provider);
+	IItemHandler getStorage(final T provider);
 
 	IntList getSlots();
 
-	static <T extends EntityLivingBase> ItemPlacing<T> forArmor(EntityEquipmentSlot slot) {
+	static <T extends EntityLivingBase> ItemPlacing<T> forArmor(final EntityEquipmentSlot slot) {
 		return new ItemPlacing<T>() {
 			@Override
-			public IItemHandler getStorage(T provider) {
+			public IItemHandler getStorage(final T provider) {
 				return provider.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, EnumFacing.NORTH);
 			}
 

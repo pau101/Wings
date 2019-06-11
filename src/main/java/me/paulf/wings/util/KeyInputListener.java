@@ -11,12 +11,12 @@ import net.minecraftforge.fml.common.gameevent.InputEvent;
 public final class KeyInputListener {
 	private final ImmutableListMultimap<KeyBinding, Runnable> bindings;
 
-	private KeyInputListener(ImmutableListMultimap<KeyBinding, Runnable> bindings) {
+	private KeyInputListener(final ImmutableListMultimap<KeyBinding, Runnable> bindings) {
 		this.bindings = bindings;
 	}
 
 	@SubscribeEvent
-	public void onKey(InputEvent.KeyInputEvent event) {
+	public void onKey(final InputEvent.KeyInputEvent event) {
 		this.bindings.asMap().entrySet().stream()
 			.filter(e -> e.getKey().isPressed())
 			.flatMap(e -> e.getValue().stream())
@@ -44,12 +44,12 @@ public final class KeyInputListener {
 			this(ImmutableListMultimap.builder());
 		}
 
-		private BuilderRoot(ImmutableListMultimap.Builder<KeyBinding, Runnable> bindings) {
+		private BuilderRoot(final ImmutableListMultimap.Builder<KeyBinding, Runnable> bindings) {
 			this.bindings = bindings;
 		}
 
 		@Override
-		public CategoryBuilder category(String category) {
+		public CategoryBuilder category(final String category) {
 			return new CategoryBuilderRoot(this, category);
 		}
 
@@ -62,12 +62,12 @@ public final class KeyInputListener {
 	private static abstract class ChildBuilder<P extends Builder> implements Builder {
 		final P parent;
 
-		private ChildBuilder(P parent) {
+		private ChildBuilder(final P parent) {
 			this.parent = parent;
 		}
 
 		@Override
-		public final CategoryBuilder category(String category) {
+		public final CategoryBuilder category(final String category) {
 			return this.parent.category(category);
 		}
 
@@ -80,14 +80,14 @@ public final class KeyInputListener {
 	private static final class CategoryBuilderRoot extends ChildBuilder<BuilderRoot> implements CategoryBuilder {
 		private final String category;
 
-		private CategoryBuilderRoot(BuilderRoot delegate, String category) {
+		private CategoryBuilderRoot(final BuilderRoot delegate, final String category) {
 			super(delegate);
 			this.category = category;
 		}
 
 		@Override
-		public BindingBuilder key(String desc, IKeyConflictContext context, KeyModifier modifier, int keyCode) {
-			KeyBinding binding = new KeyBinding(desc, context, modifier, keyCode, this.category);
+		public BindingBuilder key(final String desc, final IKeyConflictContext context, final KeyModifier modifier, final int keyCode) {
+			final KeyBinding binding = new KeyBinding(desc, context, modifier, keyCode, this.category);
 			ClientRegistry.registerKeyBinding(binding);
 			return new BindingBuilder(this, binding);
 		}
@@ -96,18 +96,18 @@ public final class KeyInputListener {
 	public static final class BindingBuilder extends ChildBuilder<CategoryBuilderRoot> implements CategoryBuilder {
 		private final KeyBinding binding;
 
-		private BindingBuilder(CategoryBuilderRoot delegate, KeyBinding binding) {
+		private BindingBuilder(final CategoryBuilderRoot delegate, final KeyBinding binding) {
 			super(delegate);
 			this.binding = binding;
 		}
 
-		public BindingBuilder onPress(Runnable runnable) {
+		public BindingBuilder onPress(final Runnable runnable) {
 			this.parent.parent.bindings.put(this.binding, runnable);
 			return this;
 		}
 
 		@Override
-		public BindingBuilder key(String desc, IKeyConflictContext context, KeyModifier modifier, int keyCode) {
+		public BindingBuilder key(final String desc, final IKeyConflictContext context, final KeyModifier modifier, final int keyCode) {
 			return this.parent.key(desc, context, modifier, keyCode);
 		}
 	}

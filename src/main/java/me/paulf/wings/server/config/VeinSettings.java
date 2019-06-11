@@ -22,7 +22,7 @@ public final class VeinSettings {
 	@Config.LangKey("config.wings.ores.settings.maxHeight")
 	public int maxHeight;
 
-	VeinSettings(int size, int count, int minHeight, int maxHeight) {
+	VeinSettings(final int size, final int count, final int minHeight, final int maxHeight) {
 		this.size = size;
 		this.count = count;
 		this.minHeight = minHeight;
@@ -30,18 +30,18 @@ public final class VeinSettings {
 	}
 
 	public int getSize() {
-		return size;
+		return this.size;
 	}
 
 	public int getCount() {
-		return count;
+		return this.count;
 	}
 
 	public int getMinHeight() {
-		return minHeight;
+		return this.minHeight;
 	}
 
 	public int getMaxHeight() {
-		return maxHeight;
+		return this.maxHeight;
 	}
 }

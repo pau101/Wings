@@ -19,16 +19,16 @@ public final class InSomniable {
 		this(new SearchState());
 	}
 
-	private InSomniable(State state) {
+	private InSomniable(final State state) {
 		this.state = state;
 	}
 
-	public void onPlay(World world, EntityPlayer player, BlockPos pos, int note) {
-		state = state.onPlay(world, player, pos, note);
+	public void onPlay(final World world, final EntityPlayer player, final BlockPos pos, final int note) {
+		this.state = this.state.onPlay(world, player, pos, note);
 	}
 
-	public void clone(InSomniable other) {
-		state = other.state.copy();
+	public void clone(final InSomniable other) {
+		this.state = other.state.copy();
 	}
 
 	private interface State {
@@ -68,16 +68,16 @@ public final class InSomniable {
 			this(0x1FFFE);
 		}
 
-		private SearchState(int state) {
+		private SearchState(final int state) {
 			this.state = state;
 		}
 
 		@Override
-		public State onPlay(World world, EntityPlayer player, BlockPos pos, int note) {
-			if (note >= 6 && note <= 14 && ((state = (state | mask[note - 6]) << 1) & 0x20000) == 0) {
-				ItemStack stack = new ItemStack(WingsItems.BLUE_BUTTERFLY_WINGS);
-				stack.setTranslatableName(members[world.rand.nextInt(members.length)]);
-				EntityItem entity = new EntityItem(world, pos.getX() + 0.5D, pos.getY() + 1.25D, pos.getZ() + 0.5D, stack);
+		public State onPlay(final World world, final EntityPlayer player, final BlockPos pos, final int note) {
+			if (note >= 6 && note <= 14 && ((this.state = (this.state | this.mask[note - 6]) << 1) & 0x20000) == 0) {
+				final ItemStack stack = new ItemStack(WingsItems.BLUE_BUTTERFLY_WINGS);
+				stack.setTranslatableName(this.members[world.rand.nextInt(this.members.length)]);
+				final EntityItem entity = new EntityItem(world, pos.getX() + 0.5D, pos.getY() + 1.25D, pos.getZ() + 0.5D, stack);
 				entity.setDefaultPickupDelay();
 				world.spawnEntity(entity);
 				return InSomniacState.INSTANCE;
@@ -87,12 +87,12 @@ public final class InSomniable {
 
 		@Override
 		public State copy() {
-			return new SearchState(state);
+			return new SearchState(this.state);
 		}
 
 		@Override
-		public void ifSearching(IntConsumer consumer) {
-			consumer.accept(state);
+		public void ifSearching(final IntConsumer consumer) {
+			consumer.accept(this.state);
 		}
 	}
 
@@ -100,7 +100,7 @@ public final class InSomniable {
 		private static final State INSTANCE = new InSomniacState();
 
 		@Override
-		public State onPlay(World world, EntityPlayer player, BlockPos pos, int note) {
+		public State onPlay(final World world, final EntityPlayer player, final BlockPos pos, final int note) {
 			return this;
 		}
 
@@ -110,22 +110,22 @@ public final class InSomniable {
 		}
 
 		@Override
-		public void ifSearching(IntConsumer consumer) {}
+		public void ifSearching(final IntConsumer consumer) {}
 	}
 
 	public static final class Serializer implements NBTSerializer<InSomniable, NBTTagCompound> {
 		private static final String SEARCH_STATE = "SearchState";
 
 		@Override
-		public NBTTagCompound serialize(InSomniable instance) {
-			NBTTagCompound compound = new NBTTagCompound();
+		public NBTTagCompound serialize(final InSomniable instance) {
+			final NBTTagCompound compound = new NBTTagCompound();
 			instance.state.ifSearching(state -> compound.setInteger(SEARCH_STATE, state));
 			return compound;
 		}
 
 		@Override
-		public InSomniable deserialize(NBTTagCompound compound) {
-			State state;
+		public InSomniable deserialize(final NBTTagCompound compound) {
+			final State state;
 			if (compound.hasKey(SEARCH_STATE, Constants.NBT.TAG_INT)) {
 				state = new SearchState(compound.getInteger(SEARCH_STATE));
 			} else {

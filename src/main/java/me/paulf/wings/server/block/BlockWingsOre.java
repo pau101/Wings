@@ -22,7 +22,7 @@ public final class BlockWingsOre extends Block {
 
 	private final int maxExp;
 
-	private BlockWingsOre(Supplier<Item> drop, int minExp, int maxExp) {
+	private BlockWingsOre(final Supplier<Item> drop, final int minExp, final int maxExp) {
 		super(Material.ROCK);
 		this.drop = drop;
 		this.minExp = minExp;
@@ -30,22 +30,22 @@ public final class BlockWingsOre extends Block {
 	}
 
 	@Override
-	public int quantityDroppedWithBonus(int fortune, Random rng) {
-		return fortune > 0 ? quantityDropped(rng) * Math.max(rng.nextInt(fortune + 2), 1) : quantityDropped(rng);
+	public int quantityDroppedWithBonus(final int fortune, final Random rng) {
+		return fortune > 0 ? this.quantityDropped(rng) * Math.max(rng.nextInt(fortune + 2), 1) : this.quantityDropped(rng);
 	}
 
 	@Override
-	public Item getItemDropped(IBlockState state, Random rng, int fortune) {
-		return drop.get();
+	public Item getItemDropped(final IBlockState state, final Random rng, final int fortune) {
+		return this.drop.get();
 	}
 
 	@Override
-	public int getExpDrop(IBlockState state, IBlockAccess world, BlockPos pos, int fortune) {
-		return MathHelper.getInt(world instanceof World ? ((World) world).rand : new Random(), minExp, maxExp);
+	public int getExpDrop(final IBlockState state, final IBlockAccess world, final BlockPos pos, final int fortune) {
+		return MathHelper.getInt(world instanceof World ? ((World) world).rand : new Random(), this.minExp, this.maxExp);
 	}
 
-	public static BlockWingsOre create(Supplier<Item> drop, int minExp, int maxExp, HarvestLevel harvestLevel) {
-		BlockWingsOre block = new BlockWingsOre(drop, minExp, maxExp);
+	public static BlockWingsOre create(final Supplier<Item> drop, final int minExp, final int maxExp, final HarvestLevel harvestLevel) {
+		final BlockWingsOre block = new BlockWingsOre(drop, minExp, maxExp);
 		block.setHardness(3.0F);
 		block.setResistance(5.0F);
 		Util.setHarvestLevel(block, HarvestClass.PICKAXE, harvestLevel);

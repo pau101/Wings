@@ -17,11 +17,11 @@ public final class StateIdle extends State {
 	}
 
 	@Override
-	protected State getDescent(Flight flight, EntityPlayer player, ItemStack wings) {
-		BlockPos below = new BlockPos(player.posX, player.posY - 0.25D, player.posZ);
+	protected State getDescent(final Flight flight, final EntityPlayer player, final ItemStack wings) {
+		final BlockPos below = new BlockPos(player.posX, player.posY - 0.25D, player.posZ);
 		if (player.world.isAirBlock(below) && player.world.isAirBlock(below.down())) {
 			return super.getDescent(flight, player, wings);
 		}
-		return createIdle();
+		return this.createIdle();
 	}
 }

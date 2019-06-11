@@ -21,13 +21,13 @@ public final class WingsDict {
 	public static final String AMETHYST_GEM = "gemAmethyst";
 
 	@SubscribeEvent
-	public static void onRegister(RegistryEvent.Register<IRecipe> event) {
+	public static void onRegister(final RegistryEvent.Register<IRecipe> event) {
 		OreDictionary.registerOre(AMETHYST_ORE, WingsBlocks.AMETHYST_ORE);
 		OreDictionary.registerOre(FAIRY_DUST, WingsItems.FAIRY_DUST);
 		OreDictionary.registerOre(AMETHYST_GEM, WingsItems.AMETHYST);
 	}
 
-	public static boolean test(ItemStack stack, String name) {
+	public static boolean test(final ItemStack stack, final String name) {
 		return !stack.isEmpty() && ArrayUtils.contains(OreDictionary.getOreIDs(stack), OreDictionary.getOreID(name));
 	}
 }

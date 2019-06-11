@@ -66,10 +66,10 @@ public final class ClientProxy extends Proxy {
 	@Override
 	protected void init() {
 		super.init();
-		Minecraft mc = Minecraft.getMinecraft();
-		ItemColors colors = mc.getItemColors();
+		final Minecraft mc = Minecraft.getMinecraft();
+		final ItemColors colors = mc.getItemColors();
 		colors.registerItemColorHandler((stack, pass) -> pass == 0 ? 0x9B172D : 0xFFFFFF, WingsItems.BAT_BLOOD);
-		for (RenderPlayer renderer : mc.getRenderManager().getSkinMap().values()) {
+		for (final RenderPlayer renderer : mc.getRenderManager().getSkinMap().values()) {
 			renderer.addLayer(new LayerWings(renderer, (player, scale, bodyTransform) -> {
 				if (player.isSneaking()) {
 					GlStateManager.translate(0.0F, 0.2F, 0.0F);
@@ -80,30 +80,30 @@ public final class ClientProxy extends Proxy {
 	}
 
 	@Override
-	public void addFlightListeners(EntityPlayer player, Flight flight) {
+	public void addFlightListeners(final EntityPlayer player, final Flight flight) {
 		super.addFlightListeners(player, flight);
 		if (player.isUser()) {
-			Flight.Notifier notifier = Flight.Notifier.of(
+			final Flight.Notifier notifier = Flight.Notifier.of(
 				() -> {},
 				p -> {},
-				() -> network.sendToServer(new MessageControlFlying(flight.isFlying()))
+				() -> this.network.sendToServer(new MessageControlFlying(flight.isFlying()))
 			);
 			flight.registerSyncListener(players -> players.notify(notifier));
 		}
 	}
 
 	@Override
-	public Consumer<CapabilityProviders.CompositeBuilder> createAvianWings(String name) {
-		return createWings(name, AnimatorAvian::new, avianWings);
+	public Consumer<CapabilityProviders.CompositeBuilder> createAvianWings(final String name) {
+		return this.createWings(name, AnimatorAvian::new, this.avianWings);
 	}
 
 	@Override
-	public Consumer<CapabilityProviders.CompositeBuilder> createInsectoidWings(String name) {
-		return createWings(name, AnimatorInsectoid::new, insectoidWings);
+	public Consumer<CapabilityProviders.CompositeBuilder> createInsectoidWings(final String name) {
+		return this.createWings(name, AnimatorInsectoid::new, this.insectoidWings);
 	}
 
-	private <A extends Animator> Consumer<CapabilityProviders.CompositeBuilder> createWings(String name, Supplier<A> animator, ModelWings<A> model) {
-		WingForm<A> form = WingForm.of(
+	private <A extends Animator> Consumer<CapabilityProviders.CompositeBuilder> createWings(final String name, final Supplier<A> animator, final ModelWings<A> model) {
+		final WingForm<A> form = WingForm.of(
 			animator,
 			model,
 			new ResourceLocation(WingsMod.ID, String.format("textures/entity/wings/%s.png", name))

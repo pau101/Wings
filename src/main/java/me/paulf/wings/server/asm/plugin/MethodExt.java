@@ -13,14 +13,14 @@ public final class MethodExt extends InsnPredicate.Method {
 	private final String desc;
 	private final String name;
 
-	public MethodExt(Object owner, String name, Object... desc) {
+	public MethodExt(final Object owner, final String name, final Object... desc) {
 		super("", "", "");
 		this.owner = MappingHandler.INSTANCE.getClassMapping(owner);
 		this.desc = MappingHandler.INSTANCE.getClassMapping(Descriptors.method(desc));
 		this.name = MappingHandler.INSTANCE.getMethodMapping(owner, name, this.desc);
 	}
 
-	private MethodExt(String owner, String desc, String name) {
+	private MethodExt(final String owner, final String desc, final String name) {
 		super("", "", "");
 		this.owner = owner;
 		this.desc = desc;
@@ -28,13 +28,13 @@ public final class MethodExt extends InsnPredicate.Method {
 	}
 
 	@Override
-	public boolean test(MethodPatcher.PredicateData predicateData) {
-		return test(predicateData.node);
+	public boolean test(final MethodPatcher.PredicateData predicateData) {
+		return this.test(predicateData.node);
 	}
 
-	public boolean test(AbstractInsnNode node) {
+	public boolean test(final AbstractInsnNode node) {
 		if (node instanceof MethodInsnNode) {
-			MethodInsnNode mNode = (MethodInsnNode) node;
+			final MethodInsnNode mNode = (MethodInsnNode) node;
 			return this.opcodePredicate.test(mNode.getOpcode()) &&
 				this.owner.equals(mNode.owner) &&
 				this.desc.equals(mNode.desc) &&
@@ -44,7 +44,7 @@ public final class MethodExt extends InsnPredicate.Method {
 		}
 	}
 
-	public MethodExt on(Object target) {
-		return new MethodExt(MappingHandler.INSTANCE.getClassMapping(target), desc, name);
+	public MethodExt on(final Object target) {
+		return new MethodExt(MappingHandler.INSTANCE.getClassMapping(target), this.desc, this.name);
 	}
 }

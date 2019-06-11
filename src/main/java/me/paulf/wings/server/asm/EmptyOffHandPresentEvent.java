@@ -7,11 +7,11 @@ import net.minecraftforge.fml.common.eventhandler.Event;
 public final class EmptyOffHandPresentEvent extends Event {
 	private final EntityPlayerSP player;
 
-	public EmptyOffHandPresentEvent(EntityPlayerSP player) {
+	public EmptyOffHandPresentEvent(final EntityPlayerSP player) {
 		this.player = player;
 	}
 
 	public EntityPlayerSP getPlayer() {
-		return player;
+		return this.player;
 	}
 }

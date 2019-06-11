@@ -8,44 +8,44 @@ public final class GetLivingHeadLimitEvent extends LivingEvent {
 
 	private float softLimit;
 
-	private GetLivingHeadLimitEvent(EntityLivingBase living) {
+	private GetLivingHeadLimitEvent(final EntityLivingBase living) {
 		super(living);
 	}
 
-	public void setHardLimit(float hardLimit) {
+	public void setHardLimit(final float hardLimit) {
 		this.hardLimit = hardLimit;
 	}
 
 	public float getHardLimit() {
-		return hardLimit;
+		return this.hardLimit;
 	}
 
-	public void setSoftLimit(float softLimit) {
+	public void setSoftLimit(final float softLimit) {
 		this.softLimit = softLimit;
 	}
 
 	public float getSoftLimit() {
-		return softLimit;
+		return this.softLimit;
 	}
 
 	public void disableHardLimit() {
-		setHardLimit(Float.POSITIVE_INFINITY);
+		this.setHardLimit(Float.POSITIVE_INFINITY);
 	}
 
 	public void disableSoftLimit() {
-		setSoftLimit(Float.POSITIVE_INFINITY);
+		this.setSoftLimit(Float.POSITIVE_INFINITY);
 	}
 
 	public boolean hasHardLimit() {
-		return getHardLimit() < Float.POSITIVE_INFINITY;
+		return this.getHardLimit() < Float.POSITIVE_INFINITY;
 	}
 
 	public boolean hasSoftLimit() {
-		return getSoftLimit() < Float.POSITIVE_INFINITY;
+		return this.getSoftLimit() < Float.POSITIVE_INFINITY;
 	}
 
-	public static GetLivingHeadLimitEvent create(EntityLivingBase living) {
-		GetLivingHeadLimitEvent ev = new GetLivingHeadLimitEvent(living);
+	public static GetLivingHeadLimitEvent create(final EntityLivingBase living) {
+		final GetLivingHeadLimitEvent ev = new GetLivingHeadLimitEvent(living);
 		ev.setHardLimit(75.0F);
 		ev.setSoftLimit(50.0F);
 		return ev;

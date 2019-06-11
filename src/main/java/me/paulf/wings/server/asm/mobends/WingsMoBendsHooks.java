@@ -8,11 +8,11 @@ public final class WingsMoBendsHooks {
 
 	private static String name = "";
 
-	public static boolean onTestPlayerAnimation(EntityPlayer player, boolean isElytraFlying) {
+	public static boolean onTestPlayerAnimation(final EntityPlayer player, final boolean isElytraFlying) {
 		if (isElytraFlying) {
 			return true;
 		}
-		GetMoBendsPlayerAnimationEvent ev = GetMoBendsPlayerAnimationEvent.create(player);
+		final GetMoBendsPlayerAnimationEvent ev = GetMoBendsPlayerAnimationEvent.create(player);
 		MinecraftForge.EVENT_BUS.post(ev);
 		return !(name = ev.get()).isEmpty();
 	}

@@ -12,15 +12,15 @@ public final class ConstructWingsAccessorEvent extends Event {
 		this(ItemAccessor.builder());
 	}
 
-	private ConstructWingsAccessorEvent(ItemAccessor.Builder<EntityPlayer> builder) {
+	private ConstructWingsAccessorEvent(final ItemAccessor.Builder<EntityPlayer> builder) {
 		this.builder = builder;
 	}
 
-	public void addPlacing(ItemPlacing<EntityPlayer> placing) {
-		builder.addPlacing(placing);
+	public void addPlacing(final ItemPlacing<EntityPlayer> placing) {
+		this.builder.addPlacing(placing);
 	}
 
 	public ItemAccessor<EntityPlayer> build() {
-		return builder.build();
+		return this.builder.build();
 	}
 }

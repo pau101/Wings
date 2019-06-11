@@ -31,19 +31,19 @@ public final class ItemWings extends Item {
 
 	private WingSettings settings;
 
-	private ItemWings(ImmutableSet<EnumEnchantmentType> allowedEnchantmentTypes, Consumer<CapabilityProviders.CompositeBuilder> capabilities, WingSettings settings) {
+	private ItemWings(final ImmutableSet<EnumEnchantmentType> allowedEnchantmentTypes, final Consumer<CapabilityProviders.CompositeBuilder> capabilities, final WingSettings settings) {
 		this.allowedEnchantmentTypes = allowedEnchantmentTypes;
 		this.capabilities = capabilities;
 		this.settings = settings;
 	}
 
-	public void setSettings(WingSettings settings) {
+	public void setSettings(final WingSettings settings) {
 		this.settings = settings;
-		setMaxDamage(settings.getItemDurability());
+		this.setMaxDamage(settings.getItemDurability());
 	}
 
 	@Override
-	public EntityEquipmentSlot getEquipmentSlot(ItemStack stack) {
+	public EntityEquipmentSlot getEquipmentSlot(final ItemStack stack) {
 		return EntityEquipmentSlot.CHEST;
 	}
 
@@ -53,21 +53,21 @@ public final class ItemWings extends Item {
 	}
 
 	@Override
-	public boolean canApplyAtEnchantingTable(ItemStack stack, Enchantment enchantment) {
-		return allowedEnchantmentTypes.contains(enchantment.type);
+	public boolean canApplyAtEnchantingTable(final ItemStack stack, final Enchantment enchantment) {
+		return this.allowedEnchantmentTypes.contains(enchantment.type);
 	}
 
 	@Override
-	public boolean getIsRepairable(ItemStack stack, ItemStack ingredient) {
+	public boolean getIsRepairable(final ItemStack stack, final ItemStack ingredient) {
 		return WingsDict.test(ingredient, WingsDict.FAIRY_DUST);
 	}
 
 	@Override
-	public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, EnumHand hand) {
-		ItemStack stack = player.getHeldItem(hand);
-		for (HandlerSlot slot : WingsMod.instance().getWingsAccessor().enumerate(player)) {
-			ItemStack split = stack.splitStack(1);
-			ItemStack remaining = slot.insert(split);
+	public ActionResult<ItemStack> onItemRightClick(final World world, final EntityPlayer player, final EnumHand hand) {
+		final ItemStack stack = player.getHeldItem(hand);
+		for (final HandlerSlot slot : WingsMod.instance().getWingsAccessor().enumerate(player)) {
+			final ItemStack split = stack.splitStack(1);
+			final ItemStack remaining = slot.insert(split);
 			stack.grow(remaining.getCount());
 			if (remaining.getCount() < split.getCount()) {
 				player.playSound(WingsSounds.ITEM_ARMOR_EQUIP_WINGS, 1.0F, 1.0F);
@@ -77,8 +77,8 @@ public final class ItemWings extends Item {
 		return new ActionResult<>(EnumActionResult.FAIL, stack);
 	}
 
-	public static ItemWings create(Consumer<CapabilityProviders.CompositeBuilder> capabilities, WingSettings attributes) {
-		ItemWings wings = new ItemWings(
+	public static ItemWings create(final Consumer<CapabilityProviders.CompositeBuilder> capabilities, final WingSettings attributes) {
+		final ItemWings wings = new ItemWings(
 			ImmutableSet.of(
 				EnumEnchantmentType.ALL,
 				EnumEnchantmentType.BREAKABLE,
@@ -93,38 +93,38 @@ public final class ItemWings extends Item {
 	}
 
 	@Override
-	public ICapabilityProvider initCapabilities(ItemStack stack, @Nullable NBTTagCompound tag) {
-		CapabilityProviders.CompositeBuilder builder = CapabilityProviders.builder()
+	public ICapabilityProvider initCapabilities(final ItemStack stack, @Nullable final NBTTagCompound tag) {
+		final CapabilityProviders.CompositeBuilder builder = CapabilityProviders.builder()
 			.add(FlightApparatuses.providerBuilder(SimpleFlightApparatus.builder()
 				.withFlight(((player, wings, direction) -> {
 					int distance = Math.round((float) direction.length() * 100.0F);
 					if (distance > 0) {
-						player.addExhaustion(distance * settings.getFlyingExertion());
+						player.addExhaustion(distance * this.settings.getFlyingExertion());
 					}
 				}))
-				.withLanding(((player, wings, direction) -> player.addExhaustion(settings.getLandingExertion())))
-				.withUsability((player, wings) -> (!wings.isItemStackDamageable() || wings.getItemDamage() < wings.getMaxDamage() - 1) && player.getFoodStats().getFoodLevel() >= settings.getRequiredFlightSatiation())
-				.withLandability((player, wings) -> player.getFoodStats().getFoodLevel() >= settings.getRequiredLandSatiation())
+				.withLanding(((player, wings, direction) -> player.addExhaustion(this.settings.getLandingExertion())))
+				.withUsability((player, wings) -> (!wings.isItemStackDamageable() || wings.getItemDamage() < wings.getMaxDamage() - 1) && player.getFoodStats().getFoodLevel() >= this.settings.getRequiredFlightSatiation())
+				.withLandability((player, wings) -> player.getFoodStats().getFoodLevel() >= this.settings.getRequiredLandSatiation())
 				.withVitality(flight -> new FlightApparatus.FlightState() {
 					private static final int DAMAGE_RATE = 20;
 
 					private int flightTime;
 
 					@Override
-					public void onUpdate(EntityPlayer player, ItemStack stack) {
+					public void onUpdate(final EntityPlayer player, final ItemStack stack) {
 						if (flight.isFlying()) {
-							if (flightTime++ % DAMAGE_RATE == (DAMAGE_RATE - 1)) {
+							if (this.flightTime++ % DAMAGE_RATE == (DAMAGE_RATE - 1)) {
 								stack.damageItem(1, player);
 							}
 						} else {
-							flightTime = 0;
+							this.flightTime = 0;
 						}
 					}
 				})
 				.build()
 			)
 			.build());
-		capabilities.accept(builder);
+		this.capabilities.accept(builder);
 		return builder.build();
 	}
 }

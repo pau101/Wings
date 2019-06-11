@@ -47,88 +47,88 @@ public final class FlightDefault implements Flight {
 
 	private boolean isFlying;
 
-	private WingState state = voidState;
+	private WingState state = this.voidState;
 
 	@Override
-	public void setIsFlying(boolean isFlying, PlayerSet players) {
+	public void setIsFlying(final boolean isFlying, final PlayerSet players) {
 		if (this.isFlying != isFlying) {
 			this.isFlying = isFlying;
-			flyingListeners.forEach(FlyingListener.onChangeUsing(isFlying));
-			sync(players);
+			this.flyingListeners.forEach(FlyingListener.onChangeUsing(isFlying));
+			this.sync(players);
 		}
 	}
 
 	@Override
 	public boolean isFlying() {
-		return isFlying;
+		return this.isFlying;
 	}
 
 	@Override
-	public void setTimeFlying(int timeFlying) {
+	public void setTimeFlying(final int timeFlying) {
 		this.timeFlying = timeFlying;
 	}
 
 	@Override
 	public int getTimeFlying() {
-		return timeFlying;
+		return this.timeFlying;
 	}
 
 	@Override
-	public float getFlyingAmount(float delta) {
-		return FLY_AMOUNT_CURVE.eval(Mth.lerp(getPrevTimeFlying(), getTimeFlying(), delta) / MAX_TIME_FLYING);
+	public float getFlyingAmount(final float delta) {
+		return FLY_AMOUNT_CURVE.eval(Mth.lerp(this.getPrevTimeFlying(), this.getTimeFlying(), delta) / MAX_TIME_FLYING);
 	}
 
-	private void setPrevTimeFlying(int prevTimeFlying) {
+	private void setPrevTimeFlying(final int prevTimeFlying) {
 		this.prevTimeFlying = prevTimeFlying;
 	}
 
 	private int getPrevTimeFlying() {
-		return prevTimeFlying;
+		return this.prevTimeFlying;
 	}
 
 	@Override
-	public void registerFlyingListener(FlyingListener listener) {
-		flyingListeners.add(listener);
+	public void registerFlyingListener(final FlyingListener listener) {
+		this.flyingListeners.add(listener);
 	}
 
 	@Override
-	public void registerSyncListener(SyncListener listener) {
-		syncListeners.add(listener);
+	public void registerSyncListener(final SyncListener listener) {
+		this.syncListeners.add(listener);
 	}
 
 	@Override
-	public boolean canFly(EntityPlayer player) {
-		ItemStack stack = FlightApparatuses.find(player);
-		FlightApparatus apparatus = FlightApparatuses.get(stack);
+	public boolean canFly(final EntityPlayer player) {
+		final ItemStack stack = FlightApparatuses.find(player);
+		final FlightApparatus apparatus = FlightApparatuses.get(stack);
 		return apparatus != null && apparatus.isUsable(player, stack);
 	}
 
 	@Override
-	public boolean canLand(EntityPlayer player, ItemStack wings) {
-		FlightApparatus apparatus = FlightApparatuses.get(wings);
+	public boolean canLand(final EntityPlayer player, final ItemStack wings) {
+		final FlightApparatus apparatus = FlightApparatuses.get(wings);
 		return apparatus != null && apparatus.isLandable(player, wings);
 	}
 
-	private void onWornUpdate(EntityPlayer player, ItemStack wings) {
+	private void onWornUpdate(final EntityPlayer player, final ItemStack wings) {
 		if (player.isServerWorld()) {
-			if (isFlying()) {
-				float speed = (float) MathHelper.clampedLerp(MIN_SPEED, MAX_SPEED, player.moveForward);
-				float elevationBoost = Mth.transform(
+			if (this.isFlying()) {
+				final float speed = (float) MathHelper.clampedLerp(MIN_SPEED, MAX_SPEED, player.moveForward);
+				final float elevationBoost = Mth.transform(
 					Math.abs(player.rotationPitch),
 					45.0F, 90.0F,
 					1.0F, 0.0F
 				);
-				float pitch = -Mth.toRadians(player.rotationPitch - PITCH_OFFSET * elevationBoost);
-				float yaw = -Mth.toRadians(player.rotationYaw) - Mth.PI;
-				float vxz = -MathHelper.cos(pitch);
-				float vy = MathHelper.sin(pitch);
-				float vz = MathHelper.cos(yaw);
-				float vx = MathHelper.sin(yaw);
+				final float pitch = -Mth.toRadians(player.rotationPitch - PITCH_OFFSET * elevationBoost);
+				final float yaw = -Mth.toRadians(player.rotationYaw) - Mth.PI;
+				final float vxz = -MathHelper.cos(pitch);
+				final float vy = MathHelper.sin(pitch);
+				final float vz = MathHelper.cos(yaw);
+				final float vx = MathHelper.sin(yaw);
 				player.motionX += vx * vxz * speed;
 				player.motionY += vy * speed + Y_BOOST * (player.rotationPitch > 0.0F ? elevationBoost : 1.0D);
 				player.motionZ += vz * vxz * speed;
 			}
-			if (canLand(player, wings)) {
+			if (this.canLand(player, wings)) {
 				if (player.motionY < 0.0D) {
 					player.motionY *= FALL_REDUCTION;
 				}
@@ -136,44 +136,44 @@ public final class FlightDefault implements Flight {
 			}
 		}
 		if (!player.world.isRemote) {
-			FlightApparatus apparatus = FlightApparatuses.get(wings);
+			final FlightApparatus apparatus = FlightApparatuses.get(wings);
 			if (apparatus == null) {
-				state = state.next();
+				this.state = this.state.next();
 			} else if (apparatus.isUsable(player, wings)) {
-				(state = state.next(wings, apparatus)).onUpdate(player, wings);
-			} else if (isFlying()) {
-				setIsFlying(false, PlayerSet.ofAll());
-				state = state.next();
+				(this.state = this.state.next(wings, apparatus)).onUpdate(player, wings);
+			} else if (this.isFlying()) {
+				this.setIsFlying(false, PlayerSet.ofAll());
+				this.state = this.state.next();
 			}
 		}
 	}
 
 	@Override
-	public void tick(EntityPlayer player, ItemStack wings) {
+	public void tick(final EntityPlayer player, final ItemStack wings) {
 		if (!wings.isEmpty()) {
-			onWornUpdate(player, wings);
-		} else if (!player.world.isRemote && isFlying()) {
-			setIsFlying(false, Flight.PlayerSet.ofAll());
+			this.onWornUpdate(player, wings);
+		} else if (!player.world.isRemote && this.isFlying()) {
+			this.setIsFlying(false, Flight.PlayerSet.ofAll());
 		}
-		setPrevTimeFlying(getTimeFlying());
-		if (isFlying()) {
-			if (getTimeFlying() < MAX_TIME_FLYING) {
-				setTimeFlying(getTimeFlying() + 1);
+		this.setPrevTimeFlying(this.getTimeFlying());
+		if (this.isFlying()) {
+			if (this.getTimeFlying() < MAX_TIME_FLYING) {
+				this.setTimeFlying(this.getTimeFlying() + 1);
 			} else if (player.isUser() && player.onGround) {
-				setIsFlying(false, PlayerSet.ofOthers());
+				this.setIsFlying(false, PlayerSet.ofOthers());
 			}
 		} else {
-			if (getTimeFlying() > INITIAL_TIME_FLYING) {
-				setTimeFlying(getTimeFlying() - 1);
+			if (this.getTimeFlying() > INITIAL_TIME_FLYING) {
+				this.setTimeFlying(this.getTimeFlying() - 1);
 			}
 		}
 	}
 
 	@Override
-	public void onFlown(EntityPlayer player, ItemStack wings, Vec3d direction) {
-		FlightApparatus apparatus;
+	public void onFlown(final EntityPlayer player, final ItemStack wings, final Vec3d direction) {
+		final FlightApparatus apparatus;
 		if (!wings.isEmpty() && (apparatus = FlightApparatuses.get(wings)) != null) {
-			if (isFlying()) {
+			if (this.isFlying()) {
 				apparatus.onFlight(player, wings, direction);
 			} else if (player.motionY < -0.5D) {
 				apparatus.onLanding(player, wings, direction);
@@ -182,26 +182,26 @@ public final class FlightDefault implements Flight {
 	}
 
 	@Override
-	public void clone(Flight other) {
-		setIsFlying(other.isFlying());
-		setTimeFlying(other.getTimeFlying());
+	public void clone(final Flight other) {
+		this.setIsFlying(other.isFlying());
+		this.setTimeFlying(other.getTimeFlying());
 	}
 
 	@Override
-	public void sync(PlayerSet players) {
-		syncListeners.forEach(SyncListener.onSyncUsing(players));
+	public void sync(final PlayerSet players) {
+		this.syncListeners.forEach(SyncListener.onSyncUsing(players));
 	}
 
 	@Override
-	public void serialize(PacketBuffer buf) {
-		buf.writeBoolean(isFlying());
-		buf.writeVarInt(getTimeFlying());
+	public void serialize(final PacketBuffer buf) {
+		buf.writeBoolean(this.isFlying());
+		buf.writeVarInt(this.getTimeFlying());
 	}
 
 	@Override
-	public void deserialize(PacketBuffer buf) {
-		setIsFlying(buf.readBoolean());
-		setTimeFlying(buf.readVarInt());
+	public void deserialize(final PacketBuffer buf) {
+		this.setIsFlying(buf.readBoolean());
+		this.setTimeFlying(buf.readVarInt());
 	}
 
 	public static final class Serializer implements NBTSerializer<FlightDefault, NBTTagCompound> {
@@ -211,21 +211,21 @@ public final class FlightDefault implements Flight {
 
 		private final Supplier<FlightDefault> factory;
 
-		public Serializer(Supplier<FlightDefault> factory) {
+		public Serializer(final Supplier<FlightDefault> factory) {
 			this.factory = factory;
 		}
 
 		@Override
-		public NBTTagCompound serialize(FlightDefault instance) {
-			NBTTagCompound compound = new NBTTagCompound();
+		public NBTTagCompound serialize(final FlightDefault instance) {
+			final NBTTagCompound compound = new NBTTagCompound();
 			compound.setBoolean(IS_FLYING, instance.isFlying());
 			compound.setInteger(TIME_FLYING, instance.getTimeFlying());
 			return compound;
 		}
 
 		@Override
-		public FlightDefault deserialize(NBTTagCompound compound) {
-			FlightDefault f = factory.get();
+		public FlightDefault deserialize(final NBTTagCompound compound) {
+			final FlightDefault f = this.factory.get();
 			f.setIsFlying(compound.getBoolean(IS_FLYING));
 			f.setTimeFlying(compound.getInteger(TIME_FLYING));
 			return f;
@@ -237,25 +237,25 @@ public final class FlightDefault implements Flight {
 
 		private final FlightApparatus.FlightState activity;
 
-		private WingState(Item item, FlightApparatus.FlightState activity) {
+		private WingState(final Item item, final FlightApparatus.FlightState activity) {
 			this.item = item;
 			this.activity = activity;
 		}
 
 		private WingState next() {
-			return voidState;
+			return FlightDefault.this.voidState;
 		}
 
-		private WingState next(ItemStack stack, FlightApparatus wf) {
-			Item item = stack.getItem();
+		private WingState next(final ItemStack stack, final FlightApparatus wf) {
+			final Item item = stack.getItem();
 			if (this.item.equals(item)) {
 				return this;
 			}
 			return new WingState(item, wf.createState(FlightDefault.this));
 		}
 
-		private void onUpdate(EntityPlayer player, ItemStack stack) {
-			activity.onUpdate(player, stack);
+		private void onUpdate(final EntityPlayer player, final ItemStack stack) {
+			this.activity.onUpdate(player, stack);
 		}
 	}
 }

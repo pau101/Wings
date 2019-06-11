@@ -13,25 +13,25 @@ public final class FlightApparatusViews {
 
 	private static final CapabilityHolder<ItemStack, FlightApparatusView, CapabilityHolder.State<ItemStack, FlightApparatusView>> HOLDER = CapabilityHolder.create();
 
-	public static FlightApparatusView create(WingForm<?> form) {
+	public static FlightApparatusView create(final WingForm<?> form) {
 		return () -> form;
 	}
 
-	public static boolean has(ItemStack stack) {
+	public static boolean has(final ItemStack stack) {
 		return HOLDER.state().has(stack, null);
 	}
 
 	@Nullable
-	public static FlightApparatusView get(ItemStack stack) {
+	public static FlightApparatusView get(final ItemStack stack) {
 		return HOLDER.state().get(stack, null);
 	}
 
-	public static <T extends FlightApparatusView> CapabilityProviders.NonSerializingSingleBuilder<T> providerBuilder(T instance) {
+	public static <T extends FlightApparatusView> CapabilityProviders.NonSerializingSingleBuilder<T> providerBuilder(final T instance) {
 		return HOLDER.state().providerBuilder(instance);
 	}
 
 	@CapabilityInject(FlightApparatusView.class)
-	static void inject(Capability<FlightApparatusView> capability) {
+	static void inject(final Capability<FlightApparatusView> capability) {
 		HOLDER.inject(capability);
 	}
 }

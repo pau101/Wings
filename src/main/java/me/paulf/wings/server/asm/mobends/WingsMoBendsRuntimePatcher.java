@@ -12,7 +12,7 @@ import net.minecraft.entity.player.EntityPlayer;
 public final class WingsMoBendsRuntimePatcher extends RuntimePatcher {
 	@Override
 	public void onInit() {
-		ClassPatchers.patchMethod(patchClass(ModelBendsPlayer.class), ModelPlayer.class, "setRotationAngles", 6, float.class, Entity.class, void.class)
+		ClassPatchers.patchMethod(this.patchClass(ModelBendsPlayer.class), ModelPlayer.class, "setRotationAngles", 6, float.class, Entity.class, void.class)
 			.apply(Patch.AFTER, new InsnPredicate.Method(EntityLivingBase.class, "isElytraFlying", boolean.class), m -> m
 				.var(ALOAD, 7)
 				.cast(EntityPlayer.class)

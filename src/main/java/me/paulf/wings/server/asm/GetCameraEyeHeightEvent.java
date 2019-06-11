@@ -10,29 +10,29 @@ public final class GetCameraEyeHeightEvent extends Event {
 
 	private float value;
 
-	private GetCameraEyeHeightEvent(Entity entity, float delta) {
+	private GetCameraEyeHeightEvent(final Entity entity, final float delta) {
 		this.entity = entity;
 		this.delta = delta;
 	}
 
 	public Entity getEntity() {
-		return entity;
+		return this.entity;
 	}
 
 	public float getDelta() {
-		return delta;
+		return this.delta;
 	}
 
-	public void setValue(float value) {
+	public void setValue(final float value) {
 		this.value = value;
 	}
 
 	public float getValue() {
-		return value;
+		return this.value;
 	}
 
-	public static GetCameraEyeHeightEvent create(Entity entity, float delta) {
-		GetCameraEyeHeightEvent ev = new GetCameraEyeHeightEvent(entity, delta);
+	public static GetCameraEyeHeightEvent create(final Entity entity, final float delta) {
+		final GetCameraEyeHeightEvent ev = new GetCameraEyeHeightEvent(entity, delta);
 		ev.setValue(entity.getEyeHeight());
 		return ev;
 	}

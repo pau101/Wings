@@ -18,30 +18,30 @@ public final class MessageSyncFlight extends Message {
 		this(0, new FlightDefault());
 	}
 
-	public MessageSyncFlight(EntityPlayer player, Flight flight) {
+	public MessageSyncFlight(final EntityPlayer player, final Flight flight) {
 		this(player.getEntityId(), flight);
 	}
 
-	private MessageSyncFlight(int playerId, Flight flight) {
+	private MessageSyncFlight(final int playerId, final Flight flight) {
 		this.playerId = playerId;
 		this.flight = flight;
 	}
 
 	@Override
-	protected void serialize(PacketBuffer buf) {
-		buf.writeVarInt(playerId);
-		flight.serialize(buf);
+	protected void serialize(final PacketBuffer buf) {
+		buf.writeVarInt(this.playerId);
+		this.flight.serialize(buf);
 	}
 
 	@Override
-	protected void deserialize(PacketBuffer buf) {
-		playerId = buf.readVarInt();
-		flight.deserialize(buf);
+	protected void deserialize(final PacketBuffer buf) {
+		this.playerId = buf.readVarInt();
+		this.flight.deserialize(buf);
 	}
 
 	@Override
-	protected void process(MessageContext ctx) {
-		Flights.ifPlayer(FMLClientHandler.instance().getWorldClient().getEntityByID(playerId),
+	protected void process(final MessageContext ctx) {
+		Flights.ifPlayer(FMLClientHandler.instance().getWorldClient().getEntityByID(this.playerId),
 			(player, flight) -> flight.clone(this.flight)
 		);
 	}

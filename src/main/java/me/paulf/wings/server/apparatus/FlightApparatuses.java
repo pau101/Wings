@@ -19,25 +19,25 @@ public final class FlightApparatuses {
 
 	private static final CapabilityHolder<ItemStack, FlightApparatus, WingedState> HOLDER = CapabilityHolder.create(WingedAbsentState::new, WingedPresentState::new);
 
-	public static boolean has(ItemStack stack) {
+	public static boolean has(final ItemStack stack) {
 		return HOLDER.state().has(stack, null);
 	}
 
 	@Nullable
-	public static FlightApparatus get(ItemStack stack) {
+	public static FlightApparatus get(final ItemStack stack) {
 		return HOLDER.state().get(stack, null);
 	}
 
-	public static <T extends FlightApparatus> CapabilityProviders.NonSerializingSingleBuilder<T> providerBuilder(T instance) {
+	public static <T extends FlightApparatus> CapabilityProviders.NonSerializingSingleBuilder<T> providerBuilder(final T instance) {
 		return HOLDER.state().providerBuilder(instance);
 	}
 
-	public static ItemStack find(EntityPlayer player) {
+	public static ItemStack find(final EntityPlayer player) {
 		return HOLDER.state().find(player);
 	}
 
 	@CapabilityInject(FlightApparatus.class)
-	static void inject(Capability<FlightApparatus> capability) {
+	static void inject(final Capability<FlightApparatus> capability) {
 		HOLDER.inject(capability);
 	}
 
@@ -47,21 +47,21 @@ public final class FlightApparatuses {
 
 	private static final class WingedAbsentState extends CapabilityHolder.AbsentState<ItemStack, FlightApparatus> implements WingedState {
 		@Override
-		public ItemStack find(EntityPlayer player) {
+		public ItemStack find(final EntityPlayer player) {
 			return ItemStack.EMPTY;
 		}
 	}
 
 	private static final class WingedPresentState extends CapabilityHolder.PresentState<ItemStack, FlightApparatus> implements WingedState {
-		private WingedPresentState(Capability<FlightApparatus> capability) {
+		private WingedPresentState(final Capability<FlightApparatus> capability) {
 			super(capability);
 		}
 
 		@Override
-		public ItemStack find(EntityPlayer player) {
-			for (HandlerSlot slot : WingsMod.instance().getWingsAccessor().enumerate(player)) {
-				ItemStack stack = slot.get();
-				if (has(stack, null)) {
+		public ItemStack find(final EntityPlayer player) {
+			for (final HandlerSlot slot : WingsMod.instance().getWingsAccessor().enumerate(player)) {
+				final ItemStack stack = slot.get();
+				if (this.has(stack, null)) {
 					return stack;
 				}
 				if (!stack.isEmpty() && Arrays.asList(WingsConfig.wearObstructions).contains(Util.getName(stack.getItem()).toString())) {

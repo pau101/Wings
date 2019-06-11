@@ -30,13 +30,13 @@ import net.minecraftforge.items.IItemHandler;
 )
 public final class WingsBaublesIntegration {
 	@Mod.EventHandler
-	public void init(FMLPreInitializationEvent event) {
+	public void init(final FMLPreInitializationEvent event) {
 		MinecraftForge.EVENT_BUS.register(new Object() {
 			@SubscribeEvent
-			public void onConstructWingsAccessor(ConstructWingsAccessorEvent event) {
+			public void onConstructWingsAccessor(final ConstructWingsAccessorEvent event) {
 				event.addPlacing(new ItemPlacing<EntityPlayer>() {
 					@Override
-					public IItemHandler getStorage(EntityPlayer player) {
+					public IItemHandler getStorage(final EntityPlayer player) {
 						return BaublesApi.getBaublesHandler(player);
 					}
 
@@ -48,7 +48,7 @@ public final class WingsBaublesIntegration {
 			}
 
 			@SubscribeEvent
-			public void onAttachCapabilities(AttachCapabilitiesEvent<ItemStack> event) {
+			public void onAttachCapabilities(final AttachCapabilitiesEvent<ItemStack> event) {
 				if (event.getObject().getItem() instanceof ItemWings) {
 					event.addCapability(
 						new ResourceLocation(WingsMod.ID, TIFFANY),

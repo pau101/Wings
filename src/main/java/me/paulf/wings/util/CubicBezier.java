@@ -23,11 +23,11 @@ public final class CubicBezier {
 
 	private final float[] sampleValues;
 
-	public CubicBezier(float x1, float y1, float x2, float y2) {
+	public CubicBezier(final float x1, final float y1, final float x2, final float y2) {
 		this(x1, y1, x2, y2, createSampleValues(x1, x2));
 	}
 
-	private CubicBezier(float x1, float y1, float x2, float y2, float[] sampleValues) {
+	private CubicBezier(final float x1, final float y1, final float x2, final float y2, final float[] sampleValues) {
 		this.x1 = x1;
 		this.y1 = y1;
 		this.x2 = x2;
@@ -35,8 +35,8 @@ public final class CubicBezier {
 		this.sampleValues = sampleValues;
 	}
 
-	public float eval(float x) {
-		if (x1 == y1 && x2 == y2) {
+	public float eval(final float x) {
+		if (this.x1 == this.y1 && this.x2 == this.y2) {
 			return x;
 		}
 		if (x == 0) {
@@ -45,33 +45,33 @@ public final class CubicBezier {
 		if (x == 1) {
 			return 1;
 		}
-		return calcBezier(getTForX(x), y1, y2);
+		return calcBezier(this.getTForX(x), this.y1, this.y2);
 	}
 
-	private float getTForX(float x) {
+	private float getTForX(final float x) {
 		float intervalStart = 0;
 		int currentSample = 1;
-		for (int lastSample = SPLINE_TABLE_SIZE - 1;
-			 currentSample != lastSample && sampleValues[currentSample] <= x;
+		for (final int lastSample = SPLINE_TABLE_SIZE - 1;
+			 currentSample != lastSample && this.sampleValues[currentSample] <= x;
 			 currentSample++
 		) {
 			intervalStart += SAMPLE_STEP_SIZE;
 		}
 		currentSample--;
-		float slope = (sampleValues[currentSample + 1] - sampleValues[currentSample]);
-		float dist = (x - sampleValues[currentSample]) / slope;
-		float guessForT = intervalStart + dist * SAMPLE_STEP_SIZE;
-		float initialSlope = getSlope(guessForT, x1, x2);
+		final float slope = (this.sampleValues[currentSample + 1] - this.sampleValues[currentSample]);
+		final float dist = (x - this.sampleValues[currentSample]) / slope;
+		final float guessForT = intervalStart + dist * SAMPLE_STEP_SIZE;
+		final float initialSlope = getSlope(guessForT, this.x1, this.x2);
 		if (initialSlope >= NEWTON_MIN_SLOPE) {
-			return newtonRaphsonIterate(x, guessForT, x1, x2);
+			return newtonRaphsonIterate(x, guessForT, this.x1, this.x2);
 		}
 		if (initialSlope == 0) {
 			return guessForT;
 		}
-		return binarySubdivide(x, intervalStart, intervalStart + SAMPLE_STEP_SIZE, x1, x2);
+		return binarySubdivide(x, intervalStart, intervalStart + SAMPLE_STEP_SIZE, this.x1, this.x2);
 	}
 
-	private static float binarySubdivide(float x, float a, float b, float x1, float x2) {
+	private static float binarySubdivide(final float x, float a, float b, final float x1, final float x2) {
 		float currentX, currentT;
 		int i = 0;
 		do {
@@ -86,40 +86,40 @@ public final class CubicBezier {
 		return currentT;
 	}
 
-	private static float newtonRaphsonIterate(float x, float guessT, float x1, float x2) {
+	private static float newtonRaphsonIterate(final float x, float guessT, final float x1, final float x2) {
 		for (int i = 0; i < NEWTON_ITERATIONS; i++) {
-			float currentSlope = getSlope(guessT, x1, x2);
+			final float currentSlope = getSlope(guessT, x1, x2);
 			if (currentSlope == 0) {
 				return guessT;
 			}
-			float currentX = calcBezier(guessT, x1, x2) - x;
+			final float currentX = calcBezier(guessT, x1, x2) - x;
 			guessT -= currentX / currentSlope;
 		}
 		return guessT;
 	}
 
-	private static float calcBezier(float t, float a1, float a2) {
+	private static float calcBezier(final float t, final float a1, final float a2) {
 		return ((getA(a1, a2) * t + getB(a1, a2)) * t + getC(a1)) * t;
 	}
 
-	private static float getSlope(float t, float a1, float a2) {
+	private static float getSlope(final float t, final float a1, final float a2) {
 		return 3 * getA(a1, a2) * t * t + 2 * getB(a1, a2) * t + getC(a1);
 	}
 
-	private static float getA(float a1, float a2) {
+	private static float getA(final float a1, final float a2) {
 		return 1 - 3 * a2 + 3 * a1;
 	}
 
-	private static float getB(float a1, float a2) {
+	private static float getB(final float a1, final float a2) {
 		return 3 * a2 - 6 * a1;
 	}
 
-	private static float getC(float a1) {
+	private static float getC(final float a1) {
 		return 3 * a1;
 	}
 
-	private static float[] createSampleValues(float x1, float x2) {
-		float[] sampleValues = new float[SPLINE_TABLE_SIZE];
+	private static float[] createSampleValues(final float x1, final float x2) {
+		final float[] sampleValues = new float[SPLINE_TABLE_SIZE];
 		for (int i = 0; i < SPLINE_TABLE_SIZE; i++) {
 			sampleValues[i] = calcBezier(i * SAMPLE_STEP_SIZE, x1, x2);
 		}

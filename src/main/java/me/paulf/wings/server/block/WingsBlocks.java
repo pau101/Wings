@@ -22,7 +22,7 @@ public final class WingsBlocks {
 	public static final Block AMETHYST_ORE = Blocks.AIR;
 
 	@SubscribeEvent
-	public static void register(RegistryEvent.Register<Block> event) {
+	public static void register(final RegistryEvent.Register<Block> event) {
 		event.getRegistry().registerAll(
 			Reg.withName(BlockWingsOre.create(() -> WingsItems.FAIRY_DUST, 0, 2, HarvestLevel.STONE)
 				.setCreativeTab(ItemGroupWings.instance()),

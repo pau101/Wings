@@ -19,13 +19,13 @@ public final class WingsHooksClient {
 
 	private static int selectedItemSlot = 0;
 
-	public static void onTurn(Entity entity, float deltaYaw) {
+	public static void onTurn(final Entity entity, final float deltaYaw) {
 		if (entity instanceof EntityLivingBase) {
-			EntityLivingBase living = (EntityLivingBase) entity;
-			float theta = MathHelper.wrapDegrees(living.rotationYaw - living.renderYawOffset);
-			GetLivingHeadLimitEvent ev = GetLivingHeadLimitEvent.create(living);
+			final EntityLivingBase living = (EntityLivingBase) entity;
+			final float theta = MathHelper.wrapDegrees(living.rotationYaw - living.renderYawOffset);
+			final GetLivingHeadLimitEvent ev = GetLivingHeadLimitEvent.create(living);
 			MinecraftForge.EVENT_BUS.post(ev);
-			float limit = ev.getHardLimit();
+			final float limit = ev.getHardLimit();
 			if (theta < -limit || theta > limit) {
 				living.renderYawOffset += deltaYaw;
 				living.prevRenderYawOffset += deltaYaw;
@@ -33,26 +33,27 @@ public final class WingsHooksClient {
 		}
 	}
 
-	public static boolean onCheckRenderEmptyHand(boolean isMainHand, ItemStack itemStackMainHand) {
+	public static boolean onCheckRenderEmptyHand(final boolean isMainHand, final ItemStack itemStackMainHand) {
 		return isMainHand || !isMap(itemStackMainHand);
 	}
 
-	public static boolean onCheckDoReequipAnimation(ItemStack from, ItemStack to, int slot) {
-		boolean fromEmpty = from.isEmpty(), toEmpty = to.isEmpty();
-		boolean isOffHand = slot == -1;
+	public static boolean onCheckDoReequipAnimation(final ItemStack from, final ItemStack to, final int slot) {
+		final boolean fromEmpty = from.isEmpty();
+		final boolean toEmpty = to.isEmpty();
+		final boolean isOffHand = slot == -1;
 		if (toEmpty && isOffHand) {
-			Minecraft mc = Minecraft.getMinecraft();
-			EntityPlayerSP player = mc.player;
+			final Minecraft mc = Minecraft.getMinecraft();
+			final EntityPlayerSP player = mc.player;
 			if (player == null) {
 				return true;
 			}
-			boolean fromMap = isMap(GetItemStackMainHand.invoke(mc.getItemRenderer()));
-			boolean toMap = isMap(player.getHeldItemMainhand());
+			final boolean fromMap = isMap(GetItemStackMainHand.invoke(mc.getItemRenderer()));
+			final boolean toMap = isMap(player.getHeldItemMainhand());
 			if (fromMap || toMap) {
 				return fromMap != toMap;
 			}
 			if (fromEmpty) {
-				EmptyOffHandPresentEvent ev = new EmptyOffHandPresentEvent(player);
+				final EmptyOffHandPresentEvent ev = new EmptyOffHandPresentEvent(player);
 				MinecraftForge.EVENT_BUS.post(ev);
 				return ev.getResult() != Event.Result.ALLOW;
 			}
@@ -60,11 +61,11 @@ public final class WingsHooksClient {
 		if (fromEmpty || toEmpty) {
 			return fromEmpty != toEmpty;
 		}
-		boolean hasSlotChange = !isOffHand && selectedItemSlot != (selectedItemSlot = slot);
+		final boolean hasSlotChange = !isOffHand && selectedItemSlot != (selectedItemSlot = slot);
 		return from.getItem().shouldCauseReequipAnimation(from, to, hasSlotChange);
 	}
 
-	private static boolean isMap(ItemStack stack) {
+	private static boolean isMap(final ItemStack stack) {
 		return stack.getItem() instanceof ItemMap;
 	}
 
@@ -75,10 +76,10 @@ public final class WingsHooksClient {
 			.name("field_187467_d", "itemStackMainHand")
 			.type(ItemStack.class);
 
-		private static ItemStack invoke(ItemRenderer instance) {
+		private static ItemStack invoke(final ItemRenderer instance) {
 			try {
 				return (ItemStack) MH.invokeExact(instance);
-			} catch (Throwable t) {
+			} catch (final Throwable t) {
 				throw Access.rethrow(t);
 			}
 		}
