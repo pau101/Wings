@@ -76,7 +76,7 @@ public final class ClientProxy extends Proxy {
 		Stream.concat(manager.getSkinMap().values().stream(), manager.entityRenderMap.values().stream())
 			.filter(RenderLivingBase.class::isInstance)
 			.map(RenderLivingBase.class::cast)
-			.filter(render -> render.getMainModel() instanceof ModelBiped && ((ModelBiped) render.getMainModel()).bipedBody != null)
+			.filter(render -> render.getMainModel() instanceof ModelBiped)
 			.forEach(render -> render.addLayer(new LayerWings(render, ((ModelBiped) render.getMainModel()).bipedBody, (player, scale, bodyTransform) -> {
 				if (player.isSneaking()) {
 					GlStateManager.translate(0.0F, 0.2F, 0.0F);

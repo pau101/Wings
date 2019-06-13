@@ -11,11 +11,13 @@ import net.gobbob.mobends.animation.Animation;
 import net.gobbob.mobends.client.event.EventHandlerRenderPlayer;
 import net.gobbob.mobends.client.model.ModelRendererBends;
 import net.gobbob.mobends.client.model.entity.ModelBendsPlayer;
-import net.gobbob.mobends.client.renderer.entity.RenderBendsPlayer;
 import net.gobbob.mobends.data.EntityData;
 import net.minecraft.client.model.ModelBase;
+import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.entity.RenderLivingBase;
+import net.minecraft.client.renderer.entity.RenderPlayer;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.math.MathHelper;
@@ -26,6 +28,9 @@ import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import org.lwjgl.util.vector.Vector3f;
+
+import java.util.Map;
+import java.util.stream.Stream;
 
 @Integration(
 	id = "mobends_wings",
@@ -70,15 +75,24 @@ public final class WingsMoBendsIntegration {
 
 		@Override
 		void init() {
-			for (final Object obj : AnimatedEntity.skinMap.values()) {
-				final RenderBendsPlayer renderer = (RenderBendsPlayer) obj;
-				renderer.addLayer(new LayerWings(renderer, renderer.getMainModel().bipedBody, (player, scale, bodyTransform) -> {
+			Stream.concat(
+				this.getSkinMap().values().stream(),
+				AnimatedEntity.animatedEntities.values().stream().map(ae -> ae.renderer)
+			)
+				.filter(RenderLivingBase.class::isInstance)
+				.map(RenderLivingBase.class::cast)
+				.filter(render -> render.getMainModel() instanceof ModelBiped)
+				.forEach(render -> render.addLayer(new LayerWings(render, ((ModelBiped) render.getMainModel()).bipedBody, (player, scale, bodyTransform) -> {
 					bodyTransform.accept(scale);
 					GlStateManager.translate(0.0F, -12.0F * scale, 0.0F);
-				}));
-			}
+				})));
 			final AnimatedEntity ae = AnimatedEntity.get("player");
 			ae.add(new AnimationWings());
+		}
+
+		@SuppressWarnings("unchecked")
+		Map<String, RenderPlayer> getSkinMap() {
+			return (Map<String, RenderPlayer>) AnimatedEntity.skinMap;
 		}
 	}
 
