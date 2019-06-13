@@ -16,6 +16,7 @@ import me.paulf.wings.util.CapabilityProviders;
 import me.paulf.wings.util.ItemAccessor;
 import me.paulf.wings.util.ModConfigSaver;
 import me.paulf.wings.util.SimpleStorage;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.network.NetHandlerPlayServer;
@@ -29,7 +30,7 @@ import java.util.function.Consumer;
 public abstract class Proxy {
 	protected final Network network = new Network();
 
-	private ItemAccessor<EntityPlayer> wingsAccessor = ItemAccessor.none();
+	private ItemAccessor<EntityLivingBase> wingsAccessor = ItemAccessor.none();
 
 	public void preinit() {
 		CapabilityManager.INSTANCE.register(Flight.class, SimpleStorage.ofVoid(), FlightDefault::new);
@@ -69,7 +70,7 @@ public abstract class Proxy {
 		}
 	}
 
-	public final ItemAccessor<EntityPlayer> getWingsAccessor() {
+	public final ItemAccessor<EntityLivingBase> getWingsAccessor() {
 		return this.wingsAccessor;
 	}
 

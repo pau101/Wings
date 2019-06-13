@@ -3,6 +3,7 @@ package me.paulf.wings;
 import me.paulf.wings.server.flight.Flight;
 import me.paulf.wings.util.CapabilityProviders;
 import me.paulf.wings.util.ItemAccessor;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
@@ -39,7 +40,7 @@ public final class WingsMod {
 		this.requireProxy().addFlightListeners(player, instance);
 	}
 
-	public ItemAccessor<EntityPlayer> getWingsAccessor() {
+	public ItemAccessor<EntityLivingBase> getWingsAccessor() {
 		return this.requireProxy().getWingsAccessor();
 	}
 

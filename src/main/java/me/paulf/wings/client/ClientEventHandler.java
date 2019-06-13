@@ -123,7 +123,7 @@ public final class ClientEventHandler {
 			final AbstractClientPlayer player = (AbstractClientPlayer) entity;
 			final FlightView flight = FlightViews.get(player);
 			if (flight != null) {
-				flight.tick(player, FlightApparatuses.find(player));
+				flight.tick(FlightApparatuses.find(player));
 			}
 		}
 	}

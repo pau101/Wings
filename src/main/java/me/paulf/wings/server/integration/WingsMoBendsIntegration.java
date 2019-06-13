@@ -72,7 +72,7 @@ public final class WingsMoBendsIntegration {
 		void init() {
 			for (final Object obj : AnimatedEntity.skinMap.values()) {
 				final RenderBendsPlayer renderer = (RenderBendsPlayer) obj;
-				renderer.addLayer(new LayerWings(renderer, (player, scale, bodyTransform) -> {
+				renderer.addLayer(new LayerWings(renderer, renderer.getMainModel().bipedBody, (player, scale, bodyTransform) -> {
 					bodyTransform.accept(scale);
 					GlStateManager.translate(0.0F, -12.0F * scale, 0.0F);
 				}));

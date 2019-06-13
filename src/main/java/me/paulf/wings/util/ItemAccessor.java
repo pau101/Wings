@@ -1,9 +1,7 @@
 package me.paulf.wings.util;
 
 import com.google.common.collect.ImmutableList;
-import it.unimi.dsi.fastutil.ints.IntIterator;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
-import net.minecraftforge.items.IItemHandler;
 
 public final class ItemAccessor<T extends ICapabilityProvider> {
 	private final ImmutableList<ItemPlacing<T>> placings;
@@ -15,10 +13,7 @@ public final class ItemAccessor<T extends ICapabilityProvider> {
 	public Iterable<HandlerSlot> enumerate(final T provider) {
 		final ImmutableList.Builder<HandlerSlot> slots = ImmutableList.builder();
 		for (final ItemPlacing<T> placing : this.placings) {
-			final IItemHandler handler = placing.getStorage(provider);
-			for (final IntIterator it = placing.getSlots().iterator(); it.hasNext(); ) {
-				slots.add(HandlerSlot.create(handler, it.nextInt()));
-			}
+			placing.enumerate(provider, slots);
 		}
 		return slots.build();
 	}

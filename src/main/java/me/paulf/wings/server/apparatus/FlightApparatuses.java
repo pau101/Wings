@@ -6,7 +6,7 @@ import me.paulf.wings.util.CapabilityHolder;
 import me.paulf.wings.util.CapabilityProviders;
 import me.paulf.wings.util.HandlerSlot;
 import me.paulf.wings.util.Util;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityInject;
@@ -32,7 +32,7 @@ public final class FlightApparatuses {
 		return HOLDER.state().providerBuilder(instance);
 	}
 
-	public static ItemStack find(final EntityPlayer player) {
+	public static ItemStack find(final EntityLivingBase player) {
 		return HOLDER.state().find(player);
 	}
 
@@ -42,12 +42,12 @@ public final class FlightApparatuses {
 	}
 
 	private interface WingedState extends CapabilityHolder.State<ItemStack, FlightApparatus> {
-		ItemStack find(EntityPlayer player);
+		ItemStack find(EntityLivingBase player);
 	}
 
 	private static final class WingedAbsentState extends CapabilityHolder.AbsentState<ItemStack, FlightApparatus> implements WingedState {
 		@Override
-		public ItemStack find(final EntityPlayer player) {
+		public ItemStack find(final EntityLivingBase player) {
 			return ItemStack.EMPTY;
 		}
 	}
@@ -58,7 +58,7 @@ public final class FlightApparatuses {
 		}
 
 		@Override
-		public ItemStack find(final EntityPlayer player) {
+		public ItemStack find(final EntityLivingBase player) {
 			for (final HandlerSlot slot : WingsMod.instance().getWingsAccessor().enumerate(player)) {
 				final ItemStack stack = slot.get();
 				if (this.has(stack, null)) {

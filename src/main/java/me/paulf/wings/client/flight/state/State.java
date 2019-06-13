@@ -34,7 +34,7 @@ public abstract class State {
 		return this;
 	}
 
-	private State getNext(final Flight flight, final double x, final double y, final double z,final  EntityPlayer player, final ItemStack wings) {
+	private State getNext(final Flight flight, final double x, final double y, final double z, final EntityPlayer player, final ItemStack wings) {
 		if (flight.isFlying()) {
 			if (y < 0 && player.rotationPitch >= this.getPitch(x, y, z)) {
 				return this.createGlide();

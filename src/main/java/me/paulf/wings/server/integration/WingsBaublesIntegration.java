@@ -4,15 +4,13 @@ import baubles.api.BaubleType;
 import baubles.api.BaublesApi;
 import baubles.api.cap.BaubleItem;
 import baubles.api.cap.BaublesCapabilities;
-import it.unimi.dsi.fastutil.ints.IntArrayList;
-import it.unimi.dsi.fastutil.ints.IntList;
-import it.unimi.dsi.fastutil.ints.IntLists;
+import baubles.api.cap.IBaublesItemHandler;
 import me.paulf.wings.WingsMod;
 import me.paulf.wings.server.asm.plugin.Integration;
 import me.paulf.wings.server.flight.ConstructWingsAccessorEvent;
 import me.paulf.wings.server.item.ItemWings;
 import me.paulf.wings.util.CapabilityProviders;
-import me.paulf.wings.util.ItemPlacing;
+import me.paulf.wings.util.HandlerSlot;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
@@ -21,7 +19,6 @@ import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.items.IItemHandler;
 
 @Integration(
 	id = "bauble_wings",
@@ -34,15 +31,12 @@ public final class WingsBaublesIntegration {
 		MinecraftForge.EVENT_BUS.register(new Object() {
 			@SubscribeEvent
 			public void onConstructWingsAccessor(final ConstructWingsAccessorEvent event) {
-				event.addPlacing(new ItemPlacing<EntityPlayer>() {
-					@Override
-					public IItemHandler getStorage(final EntityPlayer player) {
-						return BaublesApi.getBaublesHandler(player);
-					}
-
-					@Override
-					public IntList getSlots() {
-						return IntLists.unmodifiable(IntArrayList.wrap(BaubleType.BODY.getValidSlots()));
+				event.addPlacing((player, handlers) -> {
+					if (player instanceof EntityPlayer) {
+						final IBaublesItemHandler handler = BaublesApi.getBaublesHandler((EntityPlayer) player);
+						for (final int slot : BaubleType.BODY.getValidSlots()) {
+							handlers.add(HandlerSlot.create(handler, slot));
+						}
 					}
 				});
 			}

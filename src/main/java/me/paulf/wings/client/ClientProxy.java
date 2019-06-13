@@ -21,9 +21,11 @@ import me.paulf.wings.util.CapabilityProviders;
 import me.paulf.wings.util.KeyInputListener;
 import me.paulf.wings.util.SimpleStorage;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.color.ItemColors;
-import net.minecraft.client.renderer.entity.RenderPlayer;
+import net.minecraft.client.renderer.entity.RenderLivingBase;
+import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.settings.KeyConflictContext;
@@ -34,6 +36,7 @@ import org.lwjgl.input.Keyboard;
 
 import java.util.function.Consumer;
 import java.util.function.Supplier;
+import java.util.stream.Stream;
 
 public final class ClientProxy extends Proxy {
 	private final ModelWings<AnimatorAvian> avianWings = new ModelWingsAvian();
@@ -69,14 +72,17 @@ public final class ClientProxy extends Proxy {
 		final Minecraft mc = Minecraft.getMinecraft();
 		final ItemColors colors = mc.getItemColors();
 		colors.registerItemColorHandler((stack, pass) -> pass == 0 ? 0x9B172D : 0xFFFFFF, WingsItems.BAT_BLOOD);
-		for (final RenderPlayer renderer : mc.getRenderManager().getSkinMap().values()) {
-			renderer.addLayer(new LayerWings(renderer, (player, scale, bodyTransform) -> {
+		final RenderManager manager = mc.getRenderManager();
+		Stream.concat(manager.getSkinMap().values().stream(), manager.entityRenderMap.values().stream())
+			.filter(RenderLivingBase.class::isInstance)
+			.map(RenderLivingBase.class::cast)
+			.filter(render -> render.getMainModel() instanceof ModelBiped && ((ModelBiped) render.getMainModel()).bipedBody != null)
+			.forEach(render -> render.addLayer(new LayerWings(render, ((ModelBiped) render.getMainModel()).bipedBody, (player, scale, bodyTransform) -> {
 				if (player.isSneaking()) {
 					GlStateManager.translate(0.0F, 0.2F, 0.0F);
 				}
 				bodyTransform.accept(scale);
-			}));
-		}
+			})));
 	}
 
 	@Override

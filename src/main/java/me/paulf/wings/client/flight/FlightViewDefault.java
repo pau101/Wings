@@ -29,11 +29,14 @@ public final class FlightViewDefault implements FlightView {
 		public void ifFormPresent(final Consumer<FormRenderer> consumer) {}
 	});
 
+	private final EntityPlayer player;
+
 	private final SmoothingFunction eyeHeightFunc = SmoothingFunction.create(t -> Mth.easeOutCirc(Mth.easeInOut(t)));
 
 	private WingState animator = this.absentAnimator;
 
-	public FlightViewDefault(final Flight flight) {
+	public FlightViewDefault(final EntityPlayer player, final Flight flight) {
+		this.player = player;
 		this.flight = flight;
 	}
 
@@ -43,7 +46,7 @@ public final class FlightViewDefault implements FlightView {
 	}
 
 	@Override
-	public void tick(final EntityPlayer player, final ItemStack wings) {
+	public void tick(final ItemStack wings) {
 		if (!wings.isEmpty()) {
 			final FlightApparatusView view = FlightApparatusViews.get(wings);
 			if (view == null) {
@@ -51,7 +54,7 @@ public final class FlightViewDefault implements FlightView {
 			} else {
 				this.animator = this.animator.next(wings, view);
 			}
-			this.animator.update(player);
+			this.animator.update(this.player);
 		}
 	}
 

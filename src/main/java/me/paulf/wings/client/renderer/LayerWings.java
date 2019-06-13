@@ -4,34 +4,38 @@ import me.paulf.wings.client.flight.FlightView;
 import me.paulf.wings.client.flight.FlightViews;
 import me.paulf.wings.server.apparatus.FlightApparatuses;
 import me.paulf.wings.util.function.FloatConsumer;
-import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.model.ModelBase;
+import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.entity.RenderPlayer;
+import net.minecraft.client.renderer.entity.RenderLivingBase;
 import net.minecraft.client.renderer.entity.layers.LayerArmorBase;
 import net.minecraft.client.renderer.entity.layers.LayerRenderer;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
 
-public final class LayerWings implements LayerRenderer<AbstractClientPlayer> {
-	private final RenderPlayer renderer;
+public final class LayerWings implements LayerRenderer<EntityLivingBase> {
+	private final RenderLivingBase<?> renderer;
+
+	private final ModelRenderer body;
 
 	private final TransformFunction transform;
 
-	public LayerWings(final RenderPlayer renderer, final TransformFunction transform) {
+	public LayerWings(final RenderLivingBase<?> renderer, final ModelRenderer body, final TransformFunction transform) {
 		this.renderer = renderer;
+		this.body = body;
 		this.transform = transform;
 	}
 
 	@Override
-	public void doRenderLayer(final AbstractClientPlayer player, final float limbSwing, final float limbSwingAmount, final float delta, final float age, final float yawHead, final float headPitch, final float scale) {
+	public void doRenderLayer(final EntityLivingBase player, final float limbSwing, final float limbSwingAmount, final float delta, final float age, final float yawHead, final float headPitch, final float scale) {
 		final ItemStack stack;
 		final FlightView flight;
 		if (!player.isInvisible() && !(stack = FlightApparatuses.find(player)).isEmpty() && (flight = FlightViews.get(player)) != null) {
 			flight.ifFormPresent(form -> {
 				this.renderer.bindTexture(form.getTexture());
 				GlStateManager.pushMatrix();
-				this.transform.apply(player, scale, this.renderer.getMainModel().bipedBody::postRender);
+				this.transform.apply(player, scale, this.body::postRender);
 				GlStateManager.enableCull();
 				form.render(delta, scale);
 				if (stack.hasEffect()) {
@@ -56,6 +60,6 @@ public final class LayerWings implements LayerRenderer<AbstractClientPlayer> {
 
 	@FunctionalInterface
 	public interface TransformFunction {
-		void apply(AbstractClientPlayer player, float scale, FloatConsumer bodyTransform);
+		void apply(EntityLivingBase player, float scale, FloatConsumer bodyTransform);
 	}
 }
