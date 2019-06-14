@@ -22,6 +22,7 @@ import me.paulf.wings.util.KeyInputListener;
 import me.paulf.wings.util.SimpleStorage;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.ModelBiped;
+import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.color.ItemColors;
 import net.minecraft.client.renderer.entity.RenderLivingBase;
@@ -77,12 +78,15 @@ public final class ClientProxy extends Proxy {
 			.filter(RenderLivingBase.class::isInstance)
 			.map(RenderLivingBase.class::cast)
 			.filter(render -> render.getMainModel() instanceof ModelBiped)
-			.forEach(render -> render.addLayer(new LayerWings(render, ((ModelBiped) render.getMainModel()).bipedBody, (player, scale, bodyTransform) -> {
-				if (player.isSneaking()) {
-					GlStateManager.translate(0.0F, 0.2F, 0.0F);
-				}
-				bodyTransform.accept(scale);
-			})));
+			.forEach(render -> {
+				final ModelRenderer body = ((ModelBiped) render.getMainModel()).bipedBody;
+				render.addLayer(new LayerWings(render, (player, scale) -> {
+					if (player.isSneaking()) {
+						GlStateManager.translate(0.0F, 0.2F, 0.0F);
+					}
+					body.postRender(scale);
+				}));
+			});
 	}
 
 	@Override

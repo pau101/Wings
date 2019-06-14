@@ -82,10 +82,13 @@ public final class WingsMoBendsIntegration {
 				.filter(RenderLivingBase.class::isInstance)
 				.map(RenderLivingBase.class::cast)
 				.filter(render -> render.getMainModel() instanceof ModelBiped)
-				.forEach(render -> render.addLayer(new LayerWings(render, ((ModelBiped) render.getMainModel()).bipedBody, (player, scale, bodyTransform) -> {
-					bodyTransform.accept(scale);
-					GlStateManager.translate(0.0F, -12.0F * scale, 0.0F);
-				})));
+				.forEach(render -> {
+					final ModelRenderer body = ((ModelBiped) render.getMainModel()).bipedBody;
+					render.addLayer(new LayerWings(render, (player, scale) -> {
+						body.postRender(scale);
+						GlStateManager.translate(0.0F, -12.0F * scale, 0.0F);
+					}));
+				});
 			final AnimatedEntity ae = AnimatedEntity.get("player");
 			ae.add(new AnimationWings());
 		}

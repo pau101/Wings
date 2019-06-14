@@ -3,9 +3,7 @@ package me.paulf.wings.client.renderer;
 import me.paulf.wings.client.flight.FlightView;
 import me.paulf.wings.client.flight.FlightViews;
 import me.paulf.wings.server.apparatus.FlightApparatuses;
-import me.paulf.wings.util.function.FloatConsumer;
 import net.minecraft.client.model.ModelBase;
-import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.entity.RenderLivingBase;
 import net.minecraft.client.renderer.entity.layers.LayerArmorBase;
@@ -17,13 +15,10 @@ import net.minecraft.item.ItemStack;
 public final class LayerWings implements LayerRenderer<EntityLivingBase> {
 	private final RenderLivingBase<?> renderer;
 
-	private final ModelRenderer body;
-
 	private final TransformFunction transform;
 
-	public LayerWings(final RenderLivingBase<?> renderer, final ModelRenderer body, final TransformFunction transform) {
+	public LayerWings(final RenderLivingBase<?> renderer, final TransformFunction transform) {
 		this.renderer = renderer;
-		this.body = body;
 		this.transform = transform;
 	}
 
@@ -35,7 +30,7 @@ public final class LayerWings implements LayerRenderer<EntityLivingBase> {
 			flight.ifFormPresent(form -> {
 				this.renderer.bindTexture(form.getTexture());
 				GlStateManager.pushMatrix();
-				this.transform.apply(player, scale, this.body::postRender);
+				this.transform.apply(player, scale);
 				GlStateManager.enableCull();
 				form.render(delta, scale);
 				if (stack.hasEffect()) {
@@ -60,6 +55,6 @@ public final class LayerWings implements LayerRenderer<EntityLivingBase> {
 
 	@FunctionalInterface
 	public interface TransformFunction {
-		void apply(EntityLivingBase player, float scale, FloatConsumer bodyTransform);
+		void apply(final EntityLivingBase player, final float scale);
 	}
 }
