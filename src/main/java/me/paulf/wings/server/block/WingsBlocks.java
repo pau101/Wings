@@ -5,8 +5,8 @@ import me.paulf.wings.server.item.WingsItems;
 import me.paulf.wings.server.item.group.ItemGroupWings;
 import me.paulf.wings.util.HarvestLevel;
 import me.paulf.wings.util.Reg;
+import me.paulf.wings.util.Util;
 import net.minecraft.block.Block;
-import net.minecraft.init.Blocks;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -17,9 +17,9 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 public final class WingsBlocks {
 	private WingsBlocks() {}
 
-	public static final Block FAIRY_DUST_ORE = Blocks.AIR;
+	public static final Block FAIRY_DUST_ORE = Util.sneakyNull();
 
-	public static final Block AMETHYST_ORE = Blocks.AIR;
+	public static final Block AMETHYST_ORE = Util.sneakyNull();
 
 	@SubscribeEvent
 	public static void register(final RegistryEvent.Register<Block> event) {

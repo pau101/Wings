@@ -7,6 +7,7 @@ import me.paulf.wings.server.config.WingsItemsConfig;
 import me.paulf.wings.server.item.group.ItemGroupWings;
 import me.paulf.wings.util.CapabilityProviders;
 import me.paulf.wings.util.Reg;
+import me.paulf.wings.util.Util;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.util.ResourceLocation;
@@ -23,29 +24,29 @@ import java.util.function.Function;
 public final class WingsItems {
 	private WingsItems() {}
 
-	public static final Item FAIRY_DUST = Items.AIR;
+	public static final Item FAIRY_DUST = Util.sneakyNull();
 
-	public static final Item AMETHYST = Items.AIR;
+	public static final Item AMETHYST = Util.sneakyNull();
 
-	public static final Item BAT_BLOOD = Items.AIR;
+	public static final Item BAT_BLOOD = Util.sneakyNull();
 
-	public static final Item ANGEL_WINGS = Items.AIR;
+	public static final Item ANGEL_WINGS = Util.sneakyNull();
 
-	public static final Item SLIME_WINGS = Items.AIR;
+	public static final Item SLIME_WINGS = Util.sneakyNull();
 
-	public static final Item BLUE_BUTTERFLY_WINGS = Items.AIR;
+	public static final Item BLUE_BUTTERFLY_WINGS = Util.sneakyNull();
 
-	public static final Item MONARCH_BUTTERFLY_WINGS = Items.AIR;
+	public static final Item MONARCH_BUTTERFLY_WINGS = Util.sneakyNull();
 
-	public static final Item FIRE_WINGS = Items.AIR;
+	public static final Item FIRE_WINGS = Util.sneakyNull();
 
-	public static final Item BAT_WINGS = Items.AIR;
+	public static final Item BAT_WINGS = Util.sneakyNull();
 
-	public static final Item FAIRY_WINGS = Items.AIR;
+	public static final Item FAIRY_WINGS = Util.sneakyNull();
 
-	public static final Item EVIL_WINGS = Items.AIR;
+	public static final Item EVIL_WINGS = Util.sneakyNull();
 
-	public static final Item DRAGON_WINGS = Items.AIR;
+	public static final Item DRAGON_WINGS = Util.sneakyNull();
 
 	@SubscribeEvent
 	public static void register(final RegistryEvent.Register<Item> event) {

@@ -7,6 +7,8 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.registries.IForgeRegistry;
 import net.minecraftforge.registries.IForgeRegistryEntry;
 
+import javax.annotation.Nonnull;
+
 public final class Util {
 	private Util() {}
 
@@ -36,5 +38,11 @@ public final class Util {
 			throw new IllegalStateException("Missing registry object: " + id);
 		}
 		return v;
+	}
+
+	@Nonnull
+	public static <T> T sneakyNull() {
+		//noinspection ConstantConditions
+		return null;
 	}
 }
