@@ -1,5 +1,7 @@
 package me.paulf.wings.client.flight;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.IVertexBuilder;
 import me.paulf.wings.util.function.FloatConsumer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
@@ -16,6 +18,6 @@ public interface FlightView {
 	interface FormRenderer {
 		ResourceLocation getTexture();
 
-		void render(final float delta, final float scale);
+		void render(final MatrixStack matrixStack, final IVertexBuilder buffer, final int packedLight, final int packedOverlay, final float red, final float green, final float blue, final float alpha, final float delta);
 	}
 }

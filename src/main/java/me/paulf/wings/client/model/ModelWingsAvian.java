@@ -1,8 +1,14 @@
 package me.paulf.wings.client.model;
 
 import com.google.common.collect.ImmutableList;
+import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.IVertexBuilder;
+import it.unimi.dsi.fastutil.objects.ObjectList;
 import me.paulf.wings.client.flight.AnimatorAvian;
-import net.minecraft.client.model.ModelRenderer;
+import net.minecraft.client.renderer.model.ModelRenderer;
+import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
+
+import java.util.Objects;
 
 public final class ModelWingsAvian extends ModelWings<AnimatorAvian> {
 	private final ModelRenderer root;
@@ -91,7 +97,7 @@ public final class ModelWingsAvian extends ModelWings<AnimatorAvian> {
 	}
 
 	@Override
-	public void render(final AnimatorAvian animator, final float delta, final float scale) {
+	public void render(final AnimatorAvian animator, final float delta, final MatrixStack matrixStack, final IVertexBuilder buffer, final int packedLight, final int packedOverlay, final float red, final float green, final float blue, final float alpha) {
 		for (int i = 0; i < this.bonesLeft.size(); i++) {
 			final ModelRenderer left = this.bonesLeft.get(i);
 			final ModelRenderer right = this.bonesRight.get(i);
@@ -102,7 +108,7 @@ public final class ModelWingsAvian extends ModelWings<AnimatorAvian> {
 			final ModelRenderer right = this.feathersRight.get(i);
 			setAngles(left, right, animator.getFeatherRotation(i, delta));
 		}
-		this.root.render(scale);
+		this.root.render(matrixStack, buffer, packedLight, packedOverlay, red, green, blue, alpha);
 	}
 
 	private static void add3DTexture(
@@ -111,6 +117,7 @@ public final class ModelWingsAvian extends ModelWings<AnimatorAvian> {
 		final float offX, final float offY, final float offZ,
 		final int width, final int height
 	) {
-		model.cubeList.add(Model3DTexture.create(model, offX, offY, offZ, width, height, u, v));
+		ObjectList<ModelRenderer.ModelBox> cubeList = Objects.requireNonNull(ObfuscationReflectionHelper.getPrivateValue(ModelRenderer.class, model, "field_78804_l")); // "cubeList"
+		cubeList.add(Model3DTexture.create(offX, offY, offZ, width, height, u, v, 64, 64));
 	}
 }

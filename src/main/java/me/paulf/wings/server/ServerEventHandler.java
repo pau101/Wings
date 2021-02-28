@@ -10,25 +10,24 @@ import me.paulf.wings.server.flight.Flight;
 import me.paulf.wings.server.flight.Flights;
 import me.paulf.wings.server.item.WingsItems;
 import me.paulf.wings.util.ItemPlacing;
-import net.minecraft.entity.passive.EntityBat;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Items;
-import net.minecraft.init.SoundEvents;
-import net.minecraft.inventory.EntityEquipmentSlot;
+import net.minecraft.entity.passive.BatEntity;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.ItemStack;
-import net.minecraft.stats.StatBase;
-import net.minecraft.stats.StatList;
-import net.minecraft.util.EnumActionResult;
-import net.minecraft.util.EnumHand;
+import net.minecraft.item.Items;
+import net.minecraft.stats.Stats;
+import net.minecraft.util.ActionResultType;
+import net.minecraft.util.Hand;
 import net.minecraft.util.SoundCategory;
+import net.minecraft.util.SoundEvents;
 import net.minecraftforge.event.ForgeEventFactory;
+import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.EntityMountEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
+import net.minecraftforge.eventbus.api.Event;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.eventhandler.Event;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.TickEvent;
 
 @Mod.EventBusSubscriber(modid = WingsMod.ID)
 public final class ServerEventHandler {
@@ -36,34 +35,31 @@ public final class ServerEventHandler {
 
 	@SubscribeEvent
 	public static void onPlayerEntityInteract(final PlayerInteractEvent.EntityInteract event) {
-		final EntityPlayer player = event.getEntityPlayer();
-		final EnumHand hand = event.getHand();
+		final PlayerEntity player = event.getPlayer();
+		final Hand hand = event.getHand();
 		final ItemStack stack = player.getHeldItem(hand);
-		if (event.getTarget() instanceof EntityBat && stack.getItem() == Items.GLASS_BOTTLE) {
+		if (event.getTarget() instanceof BatEntity && stack.getItem() == Items.GLASS_BOTTLE) {
 			player.world.playSound(
 				player,
-				player.posX, player.posY, player.posZ,
+				player.getPosX(), player.getPosY(), player.getPosZ(),
 				SoundEvents.ITEM_BOTTLE_FILL,
 				SoundCategory.NEUTRAL,
 				1.0F,
 				1.0F
 			);
 			final ItemStack destroyed = stack.copy();
-			if (!player.capabilities.isCreativeMode) {
+			if (!player.abilities.isCreativeMode) {
 				stack.shrink(1);
 			}
-			final StatBase useStat = StatList.getObjectUseStats(Items.GLASS_BOTTLE);
-			if (useStat != null) {
-				player.addStat(useStat);
-			}
-			final ItemStack batBlood = new ItemStack(WingsItems.BAT_BLOOD);
+			player.addStat(Stats.ITEM_USED.get(Items.GLASS_BOTTLE));
+			final ItemStack batBlood = new ItemStack(WingsItems.BAT_BLOOD.get());
 			if (stack.isEmpty()) {
 				ForgeEventFactory.onPlayerDestroyItem(player, destroyed, hand);
 				player.setHeldItem(hand, batBlood);
 			} else if (!player.inventory.addItemStackToInventory(batBlood)) {
 				player.dropItem(batBlood, false);
 			}
-			event.setCancellationResult(EnumActionResult.SUCCESS);
+			event.setCancellationResult(ActionResultType.SUCCESS);
 		}
 	}
 
@@ -80,9 +76,10 @@ public final class ServerEventHandler {
 
 	@SubscribeEvent
 	public static void onPlayerTick(final TickEvent.PlayerTickEvent event) {
-		final Flight flight;
-		if (event.phase == TickEvent.Phase.END && (flight = Flights.get(event.player)) != null) {
-			flight.tick(event.player, FlightApparatuses.find(event.player));
+		if (event.phase == TickEvent.Phase.END) {
+			Flights.get(event.player).ifPresent(flight ->
+				flight.tick(event.player, FlightApparatuses.find(event.player))
+			);
 		}
 	}
 
@@ -95,19 +92,16 @@ public final class ServerEventHandler {
 
 	@SubscribeEvent
 	public static void onPlayerFlightCheck(final PlayerFlightCheckEvent event) {
-		final Flight flight = Flights.get(event.getEntityPlayer());
-		if (flight != null && flight.isFlying()) {
-			event.setResult(Event.Result.ALLOW);
-		}
+		Flights.get(event.getPlayer()).filter(Flight::isFlying)
+			.ifPresent(flight -> event.setResult(Event.Result.ALLOW));
 	}
 
 	@SubscribeEvent
 	public static void onPlayerFlown(final PlayerFlownEvent event) {
-		final EntityPlayer player = event.getEntityPlayer();
-		final Flight flight = Flights.get(player);
-		if (flight != null) {
-			flight.onFlown(player, FlightApparatuses.find(event.getEntityPlayer()), event.getDirection());
-		}
+		final PlayerEntity player = event.getPlayer();
+		Flights.get(player).ifPresent(flight -> {
+			flight.onFlown(player, FlightApparatuses.find(event.getPlayer()), event.getDirection());
+		});
 	}
 
 	@SubscribeEvent
@@ -118,10 +112,5 @@ public final class ServerEventHandler {
 				event.disableSoftLimit();
 			}
 		});
-	}
-
-	@SubscribeEvent
-	public static void onConstructWingsAccessor(final ConstructWingsAccessorEvent event) {
-		event.addPlacing(ItemPlacing.forArmor(EntityEquipmentSlot.CHEST));
 	}
 }

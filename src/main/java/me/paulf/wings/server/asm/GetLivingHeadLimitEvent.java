@@ -1,6 +1,6 @@
 package me.paulf.wings.server.asm;
 
-import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.LivingEntity;
 import net.minecraftforge.event.entity.living.LivingEvent;
 
 public final class GetLivingHeadLimitEvent extends LivingEvent {
@@ -8,7 +8,7 @@ public final class GetLivingHeadLimitEvent extends LivingEvent {
 
 	private float softLimit;
 
-	private GetLivingHeadLimitEvent(final EntityLivingBase living) {
+	private GetLivingHeadLimitEvent(final LivingEntity living) {
 		super(living);
 	}
 
@@ -44,7 +44,7 @@ public final class GetLivingHeadLimitEvent extends LivingEvent {
 		return this.getSoftLimit() < Float.POSITIVE_INFINITY;
 	}
 
-	public static GetLivingHeadLimitEvent create(final EntityLivingBase living) {
+	public static GetLivingHeadLimitEvent create(final LivingEntity living) {
 		final GetLivingHeadLimitEvent ev = new GetLivingHeadLimitEvent(living);
 		ev.setHardLimit(75.0F);
 		ev.setSoftLimit(50.0F);

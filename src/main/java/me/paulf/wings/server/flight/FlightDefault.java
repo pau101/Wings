@@ -6,14 +6,15 @@ import me.paulf.wings.server.apparatus.FlightApparatuses;
 import me.paulf.wings.util.CubicBezier;
 import me.paulf.wings.util.Mth;
 import me.paulf.wings.util.NBTSerializer;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Items;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.item.Items;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.PacketBuffer;
+import net.minecraft.util.Util;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 
 import java.util.List;
 import java.util.function.Supplier;
@@ -97,19 +98,17 @@ public final class FlightDefault implements Flight {
 	}
 
 	@Override
-	public boolean canFly(final EntityPlayer player) {
+	public boolean canFly(final PlayerEntity player) {
 		final ItemStack stack = FlightApparatuses.find(player);
-		final FlightApparatus apparatus = FlightApparatuses.get(stack);
-		return apparatus != null && apparatus.isUsable(player, stack);
+		return FlightApparatuses.get(stack).filter(apparatus -> apparatus.isUsable(player, stack)).isPresent();
 	}
 
 	@Override
-	public boolean canLand(final EntityPlayer player, final ItemStack wings) {
-		final FlightApparatus apparatus = FlightApparatuses.get(wings);
-		return apparatus != null && apparatus.isLandable(player, wings);
+	public boolean canLand(final PlayerEntity player, final ItemStack wings) {
+		return FlightApparatuses.get(wings).filter(apparatus -> apparatus.isLandable(player, wings)).isPresent();
 	}
 
-	private void onWornUpdate(final EntityPlayer player, final ItemStack wings) {
+	private void onWornUpdate(final PlayerEntity player, final ItemStack wings) {
 		if (player.isServerWorld()) {
 			if (this.isFlying()) {
 				final float speed = (float) MathHelper.clampedLerp(MIN_SPEED, MAX_SPEED, player.moveForward);
@@ -124,32 +123,36 @@ public final class FlightDefault implements Flight {
 				final float vy = MathHelper.sin(pitch);
 				final float vz = MathHelper.cos(yaw);
 				final float vx = MathHelper.sin(yaw);
-				player.motionX += vx * vxz * speed;
-				player.motionY += vy * speed + Y_BOOST * (player.rotationPitch > 0.0F ? elevationBoost : 1.0D);
-				player.motionZ += vz * vxz * speed;
+				player.setMotion(player.getMotion().add(
+					vx * vxz * speed,
+					vy * speed + Y_BOOST * (player.rotationPitch > 0.0F ? elevationBoost : 1.0D),
+					vz * vxz * speed
+				));
 			}
 			if (this.canLand(player, wings)) {
-				if (player.motionY < 0.0D) {
-					player.motionY *= FALL_REDUCTION;
+				final Vector3d mot = player.getMotion();
+				if (mot.getY() < 0.0D) {
+					player.setMotion(mot.mul(1.0D, FALL_REDUCTION, 1.0D));
 				}
 				player.fallDistance = 0.0F;
 			}
 		}
 		if (!player.world.isRemote) {
-			final FlightApparatus apparatus = FlightApparatuses.get(wings);
-			if (apparatus == null) {
+			Util.acceptOrElse(FlightApparatuses.get(wings).resolve(), apparatus -> {
+				if (apparatus.isUsable(player, wings)) {
+					(this.state = this.state.next(wings, apparatus)).onUpdate(player, wings);
+				} else if (this.isFlying()) {
+					this.setIsFlying(false, PlayerSet.ofAll());
+					this.state = this.state.next();
+				}
+			}, () -> {
 				this.state = this.state.next();
-			} else if (apparatus.isUsable(player, wings)) {
-				(this.state = this.state.next(wings, apparatus)).onUpdate(player, wings);
-			} else if (this.isFlying()) {
-				this.setIsFlying(false, PlayerSet.ofAll());
-				this.state = this.state.next();
-			}
+			});
 		}
 	}
 
 	@Override
-	public void tick(final EntityPlayer player, final ItemStack wings) {
+	public void tick(final PlayerEntity player, final ItemStack wings) {
 		if (!wings.isEmpty()) {
 			this.onWornUpdate(player, wings);
 		} else if (!player.world.isRemote && this.isFlying()) {
@@ -159,7 +162,7 @@ public final class FlightDefault implements Flight {
 		if (this.isFlying()) {
 			if (this.getTimeFlying() < MAX_TIME_FLYING) {
 				this.setTimeFlying(this.getTimeFlying() + 1);
-			} else if (player.isUser() && player.onGround) {
+			} else if (player.isUser() && player.isOnGround()) {
 				this.setIsFlying(false, PlayerSet.ofOthers());
 			}
 		} else {
@@ -170,14 +173,15 @@ public final class FlightDefault implements Flight {
 	}
 
 	@Override
-	public void onFlown(final EntityPlayer player, final ItemStack wings, final Vec3d direction) {
-		final FlightApparatus apparatus;
-		if (!wings.isEmpty() && (apparatus = FlightApparatuses.get(wings)) != null) {
-			if (this.isFlying()) {
-				apparatus.onFlight(player, wings, direction);
-			} else if (player.motionY < -0.5D) {
-				apparatus.onLanding(player, wings, direction);
-			}
+	public void onFlown(final PlayerEntity player, final ItemStack wings, final Vector3d direction) {
+		if (!wings.isEmpty()) {
+			FlightApparatuses.get(wings).ifPresent(apparatus -> {
+				if (this.isFlying()) {
+					apparatus.onFlight(player, wings, direction);
+				} else if (player.getMotion().getY() < -0.5D) {
+					apparatus.onLanding(player, wings, direction);
+				}
+			});
 		}
 	}
 
@@ -204,7 +208,7 @@ public final class FlightDefault implements Flight {
 		this.setTimeFlying(buf.readVarInt());
 	}
 
-	public static final class Serializer implements NBTSerializer<FlightDefault, NBTTagCompound> {
+	public static final class Serializer implements NBTSerializer<FlightDefault, CompoundNBT> {
 		private static final String IS_FLYING  = "isFlying";
 
 		private static final String TIME_FLYING = "timeFlying";
@@ -216,18 +220,18 @@ public final class FlightDefault implements Flight {
 		}
 
 		@Override
-		public NBTTagCompound serialize(final FlightDefault instance) {
-			final NBTTagCompound compound = new NBTTagCompound();
-			compound.setBoolean(IS_FLYING, instance.isFlying());
-			compound.setInteger(TIME_FLYING, instance.getTimeFlying());
+		public CompoundNBT serialize(final FlightDefault instance) {
+			final CompoundNBT compound = new CompoundNBT();
+			compound.putBoolean(IS_FLYING, instance.isFlying());
+			compound.putInt(TIME_FLYING, instance.getTimeFlying());
 			return compound;
 		}
 
 		@Override
-		public FlightDefault deserialize(final NBTTagCompound compound) {
+		public FlightDefault deserialize(final CompoundNBT compound) {
 			final FlightDefault f = this.factory.get();
 			f.setIsFlying(compound.getBoolean(IS_FLYING));
-			f.setTimeFlying(compound.getInteger(TIME_FLYING));
+			f.setTimeFlying(compound.getInt(TIME_FLYING));
 			return f;
 		}
 	}
@@ -254,7 +258,7 @@ public final class FlightDefault implements Flight {
 			return new WingState(item, wf.createState(FlightDefault.this));
 		}
 
-		private void onUpdate(final EntityPlayer player, final ItemStack stack) {
+		private void onUpdate(final PlayerEntity player, final ItemStack stack) {
 			this.activity.onUpdate(player, stack);
 		}
 	}

@@ -1,9 +1,9 @@
 package me.paulf.wings.server.apparatus;
 
 import me.paulf.wings.server.flight.Flight;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 
 import java.util.function.BiPredicate;
 import java.util.function.Function;
@@ -13,13 +13,13 @@ public final class SimpleFlightApparatus implements FlightApparatus {
 
 	private final TravelListener landing;
 
-	private final BiPredicate<EntityPlayer, ItemStack> usability;
+	private final BiPredicate<PlayerEntity, ItemStack> usability;
 
-	private final BiPredicate<EntityPlayer, ItemStack> landability;
+	private final BiPredicate<PlayerEntity, ItemStack> landability;
 
 	private final Function<Flight, FlightState> vitality;
 
-	private SimpleFlightApparatus(final TravelListener flight, final TravelListener landing, final BiPredicate<EntityPlayer, ItemStack> usability, final BiPredicate<EntityPlayer, ItemStack> landability, final Function<Flight, FlightState> vitality) {
+	private SimpleFlightApparatus(final TravelListener flight, final TravelListener landing, final BiPredicate<PlayerEntity, ItemStack> usability, final BiPredicate<PlayerEntity, ItemStack> landability, final Function<Flight, FlightState> vitality) {
 		this.flight = flight;
 		this.landing = landing;
 		this.usability = usability;
@@ -28,22 +28,22 @@ public final class SimpleFlightApparatus implements FlightApparatus {
 	}
 
 	@Override
-	public void onFlight(final EntityPlayer player, final ItemStack stack, final Vec3d direction) {
+	public void onFlight(final PlayerEntity player, final ItemStack stack, final Vector3d direction) {
 		this.flight.onTravel(player, stack, direction);
 	}
 
 	@Override
-	public void onLanding(final EntityPlayer player, final ItemStack stack, final Vec3d direction) {
+	public void onLanding(final PlayerEntity player, final ItemStack stack, final Vector3d direction) {
 		this.landing.onTravel(player, stack, direction);
 	}
 
 	@Override
-	public boolean isUsable(final EntityPlayer player, final ItemStack stack) {
+	public boolean isUsable(final PlayerEntity player, final ItemStack stack) {
 		return this.usability.test(player, stack);
 	}
 
 	@Override
-	public boolean isLandable(final EntityPlayer player, final ItemStack stack) {
+	public boolean isLandable(final PlayerEntity player, final ItemStack stack) {
 		return this.landability.test(player, stack);
 	}
 
@@ -58,7 +58,7 @@ public final class SimpleFlightApparatus implements FlightApparatus {
 
 	@FunctionalInterface
 	public interface TravelListener {
-		void onTravel(EntityPlayer player, ItemStack wings, Vec3d direction);
+		void onTravel(PlayerEntity player, ItemStack wings, Vector3d direction);
 	}
 
 	public static final class Builder {
@@ -66,9 +66,9 @@ public final class SimpleFlightApparatus implements FlightApparatus {
 
 		private TravelListener landing = (p, s, d) -> {};
 
-		private BiPredicate<EntityPlayer, ItemStack> usability = (p, s) -> true;
+		private BiPredicate<PlayerEntity, ItemStack> usability = (p, s) -> true;
 
-		private BiPredicate<EntityPlayer, ItemStack> landability = (p, s) -> true;
+		private BiPredicate<PlayerEntity, ItemStack> landability = (p, s) -> true;
 
 		private Function<Flight, FlightState> vitality = f -> FlightState.VOID;
 
@@ -84,12 +84,12 @@ public final class SimpleFlightApparatus implements FlightApparatus {
 			return this;
 		}
 
-		public Builder withUsability(final BiPredicate<EntityPlayer, ItemStack> usability) {
+		public Builder withUsability(final BiPredicate<PlayerEntity, ItemStack> usability) {
 			this.usability = usability;
 			return this;
 		}
 
-		public Builder withLandability(final BiPredicate<EntityPlayer, ItemStack> landability) {
+		public Builder withLandability(final BiPredicate<PlayerEntity, ItemStack> landability) {
 			this.landability = landability;
 			return this;
 		}

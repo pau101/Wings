@@ -3,7 +3,7 @@ package me.paulf.wings.util;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import it.unimi.dsi.fastutil.objects.ObjectArrays;
 import it.unimi.dsi.fastutil.objects.ObjectListIterator;
-import net.minecraftforge.fml.relauncher.ReflectionHelper;
+import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 
 import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
@@ -108,7 +108,7 @@ public final class Access {
 					return LOOKUP.unreflect(m);
 				} catch (final NoSuchMethodException | IllegalAccessException e) {
 					if (!it.hasNext()) {
-						throw new ReflectionHelper.UnableToFindMethodException(names.elements(), e);
+						throw new RuntimeException(e);
 					}
 				}
 			}
@@ -148,7 +148,7 @@ public final class Access {
 					return LOOKUP.unreflectGetter(f);
 				} catch (final NoSuchFieldException | IllegalAccessException e) {
 					if (!it.hasNext()) {
-						throw new ReflectionHelper.UnableToFindFieldException(names.elements(), e);
+						throw new RuntimeException(e);
 					}
 				}
 			}

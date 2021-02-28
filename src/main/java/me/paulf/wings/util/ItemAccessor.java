@@ -37,7 +37,7 @@ public final class ItemAccessor<T extends ICapabilityProvider> {
 			this.placings = placings;
 		}
 
-		public Builder addPlacing(final ItemPlacing<T> placing) {
+		public Builder<T> addPlacing(final ItemPlacing<T> placing) {
 			this.placings.add(placing);
 			return this;
 		}

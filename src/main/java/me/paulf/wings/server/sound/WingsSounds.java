@@ -1,35 +1,24 @@
 package me.paulf.wings.server.sound;
 
 import me.paulf.wings.WingsMod;
-import net.minecraft.init.SoundEvents;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
-import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.registries.DeferredRegister;
+import net.minecraftforge.registries.ForgeRegistries;
 
 @Mod.EventBusSubscriber(modid = WingsMod.ID)
 public final class WingsSounds {
 	private WingsSounds() {}
 
-	private static final SoundEvent NIL = SoundEvents.ENTITY_PIG_AMBIENT;
+	public static final DeferredRegister<SoundEvent> REG = DeferredRegister.create(ForgeRegistries.SOUND_EVENTS, WingsMod.ID);
 
-	@GameRegistry.ObjectHolder(WingsMod.ID + ":item.armor.equip_wings")
-	public static final SoundEvent ITEM_ARMOR_EQUIP_WINGS = NIL;
+	public static final RegistryObject<SoundEvent> ITEM_ARMOR_EQUIP_WINGS = create("item.armor.equip_wings");
 
-	@GameRegistry.ObjectHolder(WingsMod.ID + ":item.wings.flying")
-	public static final SoundEvent ITEM_WINGS_FLYING = NIL;
+	public static final RegistryObject<SoundEvent> ITEM_WINGS_FLYING = create("item.wings.flying");
 
-	@SubscribeEvent
-	public static void register(final RegistryEvent.Register<SoundEvent> event) {
-		event.getRegistry().registerAll(
-			create("item.armor.equip_wings"),
-			create("item.wings.flying")
-		);
-	}
-
-	private static SoundEvent create(final String name) {
-		return new SoundEvent(new ResourceLocation(WingsMod.ID, name)).setRegistryName(name);
+	private static RegistryObject<SoundEvent> create(final String name) {
+		return REG.register(name, () -> new SoundEvent(new ResourceLocation(WingsMod.ID, name)));
 	}
 }

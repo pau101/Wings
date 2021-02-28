@@ -1,20 +1,22 @@
 package me.paulf.wings.client.flight;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.IVertexBuilder;
 import me.paulf.wings.client.apparatus.FlightApparatusView;
 import me.paulf.wings.client.apparatus.FlightApparatusViews;
 import me.paulf.wings.client.apparatus.WingForm;
 import me.paulf.wings.server.apparatus.FlightApparatuses;
 import me.paulf.wings.util.function.FloatConsumer;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.init.Items;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.util.ResourceLocation;
 
 import java.util.function.Consumer;
 
 public class FlightViewStatic implements FlightView {
-	private final EntityLivingBase entity;
+	private final LivingEntity entity;
 
 	private Item item = Items.AIR;
 
@@ -22,7 +24,7 @@ public class FlightViewStatic implements FlightView {
 
 	private Consumer<Consumer<FormRenderer>> state = this.emptyState;
 
-	public FlightViewStatic(final EntityLivingBase entity) {
+	public FlightViewStatic(final LivingEntity entity) {
 		this.entity = entity;
 	}
 
@@ -31,12 +33,9 @@ public class FlightViewStatic implements FlightView {
 		final ItemStack stack = FlightApparatuses.find(this.entity);
 		if (!this.item.equals(stack.getItem())) {
 			this.item = stack.getItem();
-			final FlightApparatusView view = FlightApparatusViews.get(stack);
-			if (view == null) {
-				this.state = this.emptyState;
-			} else {
-				this.state = new PresentState<>(view.getForm());
-			}
+			this.state = FlightApparatusViews.get(stack)
+				.<Consumer<Consumer<FormRenderer>>>map(view -> new PresentState<>(view.getForm()))
+				.orElse(this.emptyState);
 		}
 		this.state.accept(consumer);
 	}
@@ -63,8 +62,8 @@ public class FlightViewStatic implements FlightView {
 		}
 
 		@Override
-		public void render(final float delta, final float scale) {
-			this.form.getModel().render(this.animator, delta, scale);
+		public void render(final MatrixStack matrixStack, final IVertexBuilder buffer, final int packedLight, final int packedOverlay, final float red, final float green, final float blue, final float alpha, final float delta) {
+			this.form.getModel().render(this.animator, delta, matrixStack, buffer, packedLight, packedOverlay, red, green, blue, alpha);
 		}
 
 		@Override

@@ -1,18 +1,17 @@
 package me.paulf.wings.util;
 
 import com.google.common.collect.ImmutableList;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.inventory.EntityEquipmentSlot;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.inventory.EquipmentSlotType;
+import net.minecraft.util.Direction;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.items.CapabilityItemHandler;
 
 public interface ItemPlacing<T extends ICapabilityProvider> {
 	void enumerate(final T provider, final ImmutableList.Builder<HandlerSlot> handlers);
 
-	static <T extends EntityLivingBase> ItemPlacing<T> forArmor(final EntityEquipmentSlot slot) {
-		return (provider, handlers) -> handlers.add(
-			HandlerSlot.create(provider.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, EnumFacing.NORTH), slot.getIndex())
-		);
+	static <T extends LivingEntity> ItemPlacing<T> forArmor(final EquipmentSlotType slot) {
+		return (provider, handlers) -> provider.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, Direction.EAST)
+			.ifPresent(handler -> handlers.add(HandlerSlot.create(handler, slot.getIndex())));
 	}
 }

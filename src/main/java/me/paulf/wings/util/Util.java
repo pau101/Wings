@@ -2,12 +2,9 @@ package me.paulf.wings.util;
 
 import com.google.common.base.CaseFormat;
 import com.google.common.base.Converter;
-import net.minecraft.block.Block;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.registries.IForgeRegistry;
 import net.minecraftforge.registries.IForgeRegistryEntry;
-
-import javax.annotation.Nonnull;
 
 public final class Util {
 	private Util() {}
@@ -27,22 +24,11 @@ public final class Util {
 		return name;
 	}
 
-	public static Block setHarvestLevel(final Block block, final HarvestClass harvestClass, final HarvestLevel harvestLevel) {
-		block.setHarvestLevel(harvestClass.getName(), harvestLevel.getValue());
-		return block;
-	}
-
 	private static <V extends IForgeRegistryEntry<V>> V require(final IForgeRegistry<V> registry, final ResourceLocation id) {
 		final V v = registry.containsKey(id) ? registry.getValue(id) : null;
 		if (v == null) {
 			throw new IllegalStateException("Missing registry object: " + id);
 		}
 		return v;
-	}
-
-	@Nonnull
-	public static <T> T sneakyNull() {
-		//noinspection ConstantConditions
-		return null;
 	}
 }

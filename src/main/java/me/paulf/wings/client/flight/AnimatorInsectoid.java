@@ -1,7 +1,7 @@
 package me.paulf.wings.client.flight;
 
 import me.paulf.wings.util.Mth;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 
 public final class AnimatorInsectoid implements Animator {
 	private static final float IDLE_FLAP_RATE = 0.05F;
@@ -41,8 +41,8 @@ public final class AnimatorInsectoid implements Animator {
 		this.beginIdle();
 	}
 
-	public Vec3d getRotation(final float delta) {
-		return new Vec3d(0.0D, Math.sin(Mth.lerp(this.prevFlapCycle, this.flapCycle, delta)) * 35.0D - 42.0D, 0.0D);
+	public Vector3d getRotation(final float delta) {
+		return new Vector3d(0.0D, Math.sin(Mth.lerp(this.prevFlapCycle, this.flapCycle, delta)) * 35.0D - 42.0D, 0.0D);
 	}
 
 	@Override

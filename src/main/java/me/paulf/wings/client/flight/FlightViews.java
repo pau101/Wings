@@ -3,32 +3,32 @@ package me.paulf.wings.client.flight;
 import me.paulf.wings.WingsMod;
 import me.paulf.wings.server.flight.AttachFlightCapabilityEvent;
 import me.paulf.wings.util.CapabilityHolder;
-import net.minecraft.client.entity.AbstractClientPlayer;
+import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityInject;
+import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.relauncher.Side;
 
 import javax.annotation.Nullable;
 
-@Mod.EventBusSubscriber(modid = WingsMod.ID, value = Side.CLIENT)
+@Mod.EventBusSubscriber(modid = WingsMod.ID, value = Dist.CLIENT)
 public final class FlightViews {
 	private FlightViews() {}
 
-	private static final CapabilityHolder<EntityLivingBase, FlightView, CapabilityHolder.State<EntityLivingBase, FlightView>> HOLDER = CapabilityHolder.create();
+	private static final CapabilityHolder<LivingEntity, FlightView, CapabilityHolder.State<LivingEntity, FlightView>> HOLDER = CapabilityHolder.create();
 
-	public static boolean has(final EntityLivingBase player) {
+	public static boolean has(final LivingEntity player) {
 		return HOLDER.state().has(player, null);
 	}
 
-	@Nullable
-	public static FlightView get(final EntityLivingBase player) {
+	public static LazyOptional<FlightView> get(final LivingEntity player) {
 		return HOLDER.state().get(player, null);
 	}
 
@@ -40,10 +40,10 @@ public final class FlightViews {
 	@SubscribeEvent
 	public static void onAttachCapabilities(final AttachFlightCapabilityEvent event) {
 		final Entity entity = event.getObject();
-		if (entity instanceof AbstractClientPlayer) {
+		if (entity instanceof ClientPlayerEntity) {
 			event.addCapability(
 				new ResourceLocation(WingsMod.ID, "flight_view"),
-				HOLDER.state().providerBuilder(new FlightViewDefault((EntityPlayer) entity, event.getInstance())).build()
+				HOLDER.state().providerBuilder(new FlightViewDefault((PlayerEntity) entity, event.getInstance())).build()
 			);
 		}
 	}
@@ -51,10 +51,10 @@ public final class FlightViews {
 	@SubscribeEvent
 	public static void onAttachCapabilities(final AttachCapabilitiesEvent<Entity> event) {
 		final Entity entity = event.getObject();
-		if (entity instanceof EntityLivingBase && !(entity instanceof AbstractClientPlayer)) {
+		if (entity instanceof LivingEntity && !(entity instanceof ClientPlayerEntity)) {
 			event.addCapability(
 				new ResourceLocation(WingsMod.ID, "flight_view"),
-				HOLDER.state().providerBuilder(new FlightViewStatic((EntityLivingBase) entity)).build()
+				HOLDER.state().providerBuilder(new FlightViewStatic((LivingEntity) entity)).build()
 			);
 		}
 	}

@@ -5,6 +5,7 @@ import me.paulf.wings.util.CapabilityProviders;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityInject;
+import net.minecraftforge.common.util.LazyOptional;
 
 import javax.annotation.Nullable;
 
@@ -21,8 +22,7 @@ public final class FlightApparatusViews {
 		return HOLDER.state().has(stack, null);
 	}
 
-	@Nullable
-	public static FlightApparatusView get(final ItemStack stack) {
+	public static LazyOptional<FlightApparatusView> get(final ItemStack stack) {
 		return HOLDER.state().get(stack, null);
 	}
 

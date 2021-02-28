@@ -4,8 +4,6 @@ import me.paulf.wings.server.apparatus.FlightApparatus;
 import me.paulf.wings.server.apparatus.SimpleFlightApparatus;
 import me.paulf.wings.server.config.WingsItemsConfig;
 import me.paulf.wings.server.dreamcatcher.InSomniable;
-import me.paulf.wings.server.dreamcatcher.Playable;
-import me.paulf.wings.server.fix.WingsFixes;
 import me.paulf.wings.server.flight.ConstructWingsAccessorEvent;
 import me.paulf.wings.server.flight.Flight;
 import me.paulf.wings.server.flight.FlightDefault;
@@ -14,55 +12,58 @@ import me.paulf.wings.server.net.clientbound.MessageSetWingSettings;
 import me.paulf.wings.server.net.clientbound.MessageSyncFlight;
 import me.paulf.wings.util.CapabilityProviders;
 import me.paulf.wings.util.ItemAccessor;
-import me.paulf.wings.util.ModConfigSaver;
+import me.paulf.wings.util.ItemPlacing;
 import me.paulf.wings.util.SimpleStorage;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.network.NetHandlerPlayServer;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.CapabilityManager;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.network.FMLNetworkEvent;
+import net.minecraftforge.event.entity.player.PlayerEvent;
+import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.minecraftforge.fml.event.lifecycle.FMLLoadCompleteEvent;
+import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 
 import java.util.function.Consumer;
 
 public abstract class Proxy {
 	protected final Network network = new Network();
 
-	private ItemAccessor<EntityLivingBase> wingsAccessor = ItemAccessor.none();
+	private ItemAccessor<LivingEntity> wingsAccessor = ItemAccessor.none();
 
-	public void preinit() {
+	public void init(final IEventBus modBus) {
+		modBus.addListener(this::setup);
+		MinecraftForge.EVENT_BUS.<PlayerEvent.PlayerLoggedInEvent>addListener(e ->
+			network.sendToPlayer(new MessageSetWingSettings(WingsItemsConfig.createWingAttributes()), (ServerPlayerEntity) e.getPlayer())
+		);
+		modBus.<ConstructWingsAccessorEvent>addListener(e -> e.addPlacing(ItemPlacing.forArmor(EquipmentSlotType.CHEST)));
+		modBus.<FMLLoadCompleteEvent>addListener(e -> this.lateinit());
+	}
+
+	protected void setup(final FMLCommonSetupEvent event) {
 		CapabilityManager.INSTANCE.register(Flight.class, SimpleStorage.ofVoid(), FlightDefault::new);
 		CapabilityManager.INSTANCE.register(FlightApparatus.class, SimpleStorage.ofVoid(), SimpleFlightApparatus.builder()::build);
 		CapabilityManager.INSTANCE.register(InSomniable.class, SimpleStorage.ofVoid(), InSomniable::new);
-		CapabilityManager.INSTANCE.register(Playable.class, SimpleStorage.ofVoid(), Playable::new);
-		WingsFixes.register();
-		MinecraftForge.EVENT_BUS.register(new Object() {
-			@SubscribeEvent
-			public void onClientConnectedEvent(final FMLNetworkEvent.ServerConnectionFromClientEvent event) {
-				((NetHandlerPlayServer) event.getHandler()).sendPacket(Proxy.this.network.createPacket(new MessageSetWingSettings(WingsItemsConfig.createWingAttributes())));
-			}
-		});
-		MinecraftForge.EVENT_BUS.register(ModConfigSaver.create(WingsMod.ID));
 	}
 
-	protected void init() {
+	protected void lateinit() {
 		final ConstructWingsAccessorEvent event = new ConstructWingsAccessorEvent();
-		MinecraftForge.EVENT_BUS.post(event);
+		FMLJavaModLoadingContext.get().getModEventBus().post(event);
 		this.wingsAccessor = event.build();
 	}
 
-	public void addFlightListeners(final EntityPlayer player, final Flight instance) {
-		if (player instanceof EntityPlayerMP) {
-			instance.registerFlyingListener(isFlying -> player.capabilities.allowFlying = isFlying);
+	public void addFlightListeners(final PlayerEntity player, final Flight instance) {
+		if (player instanceof ServerPlayerEntity) {
+			instance.registerFlyingListener(isFlying -> player.abilities.allowFlying = isFlying);
 			instance.registerFlyingListener(isFlying -> {
 				if (isFlying) {
-					player.dismountRidingEntity();
+					player.dismount();
 				}
 			});
 			final Flight.Notifier notifier = Flight.Notifier.of(
-				() -> this.network.sendToPlayer(new MessageSyncFlight(player, instance), (EntityPlayerMP) player),
+				() -> this.network.sendToPlayer(new MessageSyncFlight(player, instance), (ServerPlayerEntity) player),
 				p -> this.network.sendToPlayer(new MessageSyncFlight(player, instance), p),
 				() -> this.network.sendToAllTracking(new MessageSyncFlight(player, instance), player)
 			);
@@ -70,7 +71,7 @@ public abstract class Proxy {
 		}
 	}
 
-	public final ItemAccessor<EntityLivingBase> getWingsAccessor() {
+	public final ItemAccessor<LivingEntity> getWingsAccessor() {
 		return this.wingsAccessor;
 	}
 

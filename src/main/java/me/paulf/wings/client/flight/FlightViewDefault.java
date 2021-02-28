@@ -1,5 +1,7 @@
 package me.paulf.wings.client.flight;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.IVertexBuilder;
 import me.paulf.wings.client.apparatus.FlightApparatusView;
 import me.paulf.wings.client.apparatus.FlightApparatusViews;
 import me.paulf.wings.client.apparatus.WingForm;
@@ -10,10 +12,10 @@ import me.paulf.wings.server.flight.Flight;
 import me.paulf.wings.util.Mth;
 import me.paulf.wings.util.SmoothingFunction;
 import me.paulf.wings.util.function.FloatConsumer;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Items;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.util.ResourceLocation;
 
 import java.util.function.Consumer;
@@ -23,19 +25,19 @@ public final class FlightViewDefault implements FlightView {
 
 	private final WingState absentAnimator = new WingState(Items.AIR, new Strategy() {
 		@Override
-		public void update(final EntityPlayer player) {}
+		public void update(final PlayerEntity player) {}
 
 		@Override
 		public void ifFormPresent(final Consumer<FormRenderer> consumer) {}
 	});
 
-	private final EntityPlayer player;
+	private final PlayerEntity player;
 
 	private final SmoothingFunction eyeHeightFunc = SmoothingFunction.create(t -> Mth.easeOutCirc(Mth.easeInOut(t)));
 
 	private WingState animator = this.absentAnimator;
 
-	public FlightViewDefault(final EntityPlayer player, final Flight flight) {
+	public FlightViewDefault(final PlayerEntity player, final Flight flight) {
 		this.player = player;
 		this.flight = flight;
 	}
@@ -48,12 +50,9 @@ public final class FlightViewDefault implements FlightView {
 	@Override
 	public void tick(final ItemStack wings) {
 		if (!wings.isEmpty()) {
-			final FlightApparatusView view = FlightApparatusViews.get(wings);
-			if (view == null) {
-				this.animator = this.animator.next();
-			} else {
-				this.animator = this.animator.next(wings, view);
-			}
+			this.animator = FlightApparatusViews.get(wings)
+				.map(view -> this.animator.next(wings, view))
+				.orElseGet(this.animator::next);
 			this.animator.update(this.player);
 		}
 	}
@@ -64,7 +63,7 @@ public final class FlightViewDefault implements FlightView {
 	}
 
 	private interface Strategy {
-		void update(EntityPlayer player);
+		void update(PlayerEntity player);
 
 		void ifFormPresent(Consumer<FormRenderer> consumer);
 	}
@@ -95,7 +94,7 @@ public final class FlightViewDefault implements FlightView {
 			return new WingState(item, new WingStrategy<>(shape));
 		}
 
-		private void update(final EntityPlayer player) {
+		private void update(final PlayerEntity player) {
 			this.behavior.update(player);
 		}
 
@@ -117,13 +116,13 @@ public final class FlightViewDefault implements FlightView {
 			}
 
 			@Override
-			public void update(final EntityPlayer player) {
+			public void update(final PlayerEntity player) {
 				this.animator.update();
 				final State state = this.state.update(
 					FlightViewDefault.this.flight,
-					player.posX - player.prevPosX,
-					player.posY - player.prevPosY,
-					player.posZ - player.prevPosZ,
+					player.getPosX() - player.prevPosX,
+					player.getPosY() - player.prevPosY,
+					player.getPosZ() - player.prevPosZ,
 					player,
 					FlightApparatuses.find(player)
 				);
@@ -142,8 +141,8 @@ public final class FlightViewDefault implements FlightView {
 					}
 
 					@Override
-					public void render(final float delta, final float scale) {
-						WingStrategy.this.shape.getModel().render(WingStrategy.this.animator, delta, scale);
+					public void render(final MatrixStack matrixStack, final IVertexBuilder buffer, final int packedLight, final int packedOverlay, final float red, final float green, final float blue, final float alpha, final float delta) {
+						WingStrategy.this.shape.getModel().render(WingStrategy.this.animator, delta, matrixStack, buffer, packedLight, packedOverlay, red, green, blue, alpha);
 					}
 				});
 			}

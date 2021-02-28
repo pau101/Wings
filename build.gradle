@@ -2,77 +2,90 @@ buildscript {
 	repositories {
 		jcenter()
 		maven {
-			url "http://files.minecraftforge.net/maven"
+			url 'http://files.minecraftforge.net/maven'
 		}
 	}
 	dependencies {
-		classpath "net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT"
+		classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '3.+', changing: true
 	}
 }
 
-apply plugin: "net.minecraftforge.gradle.forge"
+apply plugin: 'net.minecraftforge.gradle'
 
 repositories {
 	maven {
-		url "http://maven.thiakil.com"
+		url 'https://maven.theillusivec4.top'
 	}
 	maven {
-		url "https://maven.mcmoddev.com"
-	}
-	maven {
-		url "http://dvs1.progwml6.com/files/maven"
+		url 'http://dvs1.progwml6.com/files/maven'
 	}
 }
 
-version = "${modVersion}-1.12.2"
-group = "me.paulf.wings"
-archivesBaseName = "wings"
-sourceCompatibility = JavaVersion.VERSION_1_8
+version = '2.0.0'
+group = 'me.paulf.wings'
+archivesBaseName = 'wings'
+sourceCompatibility = targetCompatibility = JavaVersion.VERSION_1_8
 
 minecraft {
-	version = "1.12.2-${project.forgeVersion}"
-	runDir = "run"
-	mappings = project.mcpVersion
-	makeObfSourceJar = false
-	clientJvmArgs = serverJvmArgs = [ "-Dfml.coreMods.load=${project.corePlugin}" ]
+	mappings channel: 'snapshot', version: '20201028-1.16.3'
+	runs {
+		client {
+			workingDirectory project.file('run')
+			property 'forge.logging.markers', 'REGISTRIES,REGISTRYDUMP'
+			property 'forge.logging.console.level', 'debug'
+			args '--width', '1280', '--height', '720'
+			mods {
+				wings {
+					source sourceSets.main
+				}
+			}
+		}
+		server {
+			workingDirectory project.file('run')
+			property 'forge.logging.markers', 'REGISTRIES,REGISTRYDUMP'
+			property 'forge.logging.console.level', 'debug'
+			mods {
+				wings {
+					source sourceSets.main
+				}
+			}
+		}
+		data {
+			workingDirectory project.file('run')
+			property 'forge.logging.markers', 'REGISTRIES,REGISTRYDUMP'
+			property 'forge.logging.console.level', 'debug'
+			mods {
+				wings {
+					source sourceSets.main
+				}
+			}
+		}
+	}
 }
 
 jar {
-	manifest {
-		attributes "FMLCorePlugin": project.corePlugin
-		attributes "FMLCorePluginContainsFMLMod": "true"
-	}
+	classifier '1.16.4'
 }
 
 dependencies {
-	deobfCompile "com.azanor.baubles:Baubles:1.12-1.5.2"
-	deobfCompile "net.ilexiconn:llibrary:1.7.19-1.12.2"
-	deobfCompile "net.ilexiconn:llibrary-core:1.0.11-1.12.2"
-	deobfCompile "mezz.jei:jei_1.12.2:4.15.+:api"
-	runtime "mezz.jei:jei_1.12.2:4.15.+"
+	minecraft 'net.minecraftforge:forge:1.16.4-35.1.4'
+	compileOnly fg.deobf('mezz.jei:jei-1.16.4:7.6.0.62:api')
+	runtimeOnly fg.deobf('mezz.jei:jei-1.16.4:7.6.0.62')
+	compileOnly fg.deobf('top.theillusivec4.curios:curios-forge:1.16.4-4.0.3.5:api')
+	runtimeOnly fg.deobf('top.theillusivec4.curios:curios-forge:1.16.4-4.0.3.5')
 }
-
-// workaround for FML DirectoryDiscoverer limitations
-sourceSets {
-	main {
-		output.resourcesDir = output.classesDir
-	}
-}
-
-jar {
-	duplicatesStrategy = DuplicatesStrategy.EXCLUDE
-}
-// end workaround
 
 processResources {
 	def vars = [
-		"version": project.modVersion,
-		"forgeVersion": project.forgeVersion,
-		"llibraryVersionRange": project.llibraryVersionRange,
-		"jeiVersionRange": project.jeiVersionRange
+		'version': project.version
 	]
 	inputs.properties(vars)
-	from("src/main/template-resources") {
+	from (sourceSets.main.resources.srcDirs) {
+		include('META-INF/mods.toml')
 		expand(vars)
+	}
+	from (sourceSets.main.resources.srcDirs) {
+		exclude('META-INF/mods.toml')
+		exclude('**/*.xcf')
 	}
 }

@@ -2,11 +2,12 @@ package me.paulf.wings.util;
 
 import com.google.common.collect.ImmutableListMultimap;
 import net.minecraft.client.settings.KeyBinding;
+import net.minecraft.client.util.InputMappings;
+import net.minecraftforge.client.event.InputEvent;
 import net.minecraftforge.client.settings.IKeyConflictContext;
 import net.minecraftforge.client.settings.KeyModifier;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.InputEvent;
 
 public final class KeyInputListener {
 	private final ImmutableListMultimap<KeyBinding, Runnable> bindings;
@@ -87,7 +88,7 @@ public final class KeyInputListener {
 
 		@Override
 		public BindingBuilder key(final String desc, final IKeyConflictContext context, final KeyModifier modifier, final int keyCode) {
-			final KeyBinding binding = new KeyBinding(desc, context, modifier, keyCode, this.category);
+			final KeyBinding binding = new KeyBinding(desc, context, modifier, InputMappings.Type.KEYSYM, keyCode, this.category);
 			ClientRegistry.registerKeyBinding(binding);
 			return new BindingBuilder(this, binding);
 		}

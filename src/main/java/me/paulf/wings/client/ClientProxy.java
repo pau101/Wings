@@ -21,19 +21,24 @@ import me.paulf.wings.util.CapabilityProviders;
 import me.paulf.wings.util.KeyInputListener;
 import me.paulf.wings.util.SimpleStorage;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.model.ModelBiped;
-import net.minecraft.client.model.ModelRenderer;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.color.ItemColors;
-import net.minecraft.client.renderer.entity.RenderLivingBase;
-import net.minecraft.client.renderer.entity.RenderManager;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.client.renderer.entity.EntityRendererManager;
+import net.minecraft.client.renderer.entity.LivingRenderer;
+import net.minecraft.client.renderer.entity.model.BipedModel;
+import net.minecraft.client.renderer.model.ModelRenderer;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.Pose;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.client.event.ColorHandlerEvent;
 import net.minecraftforge.client.settings.KeyConflictContext;
 import net.minecraftforge.client.settings.KeyModifier;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.CapabilityManager;
-import org.lwjgl.input.Keyboard;
+import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
+import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import org.lwjgl.glfw.GLFW;
 
 import java.util.function.Consumer;
 import java.util.function.Supplier;
@@ -45,52 +50,56 @@ public final class ClientProxy extends Proxy {
 	private final ModelWings<AnimatorInsectoid> insectoidWings = new ModelWingsInsectoid();
 
 	@Override
-	public void preinit() {
-		super.preinit();
+	public void init(final IEventBus modBus) {
+		super.init(modBus);
+		MinecraftForge.EVENT_BUS.register(KeyInputListener.builder()
+			.category("key.categories.wings")
+				.key("key.wings.fly", KeyConflictContext.IN_GAME, KeyModifier.NONE, GLFW.GLFW_KEY_R)
+					.onPress(() -> {
+						PlayerEntity player = Minecraft.getInstance().player;
+						Flights.get(player).filter(flight -> flight.canFly(player)).ifPresent(flight ->
+							flight.toggleIsFlying(Flight.PlayerSet.ofOthers())
+						);
+					})
+			.build()
+		);
+		modBus.<FMLClientSetupEvent>addListener(e -> {
+			final Minecraft mc = Minecraft.getInstance();
+			final EntityRendererManager manager = mc.getRenderManager();
+			Stream.concat(manager.getSkinMap().values().stream(), manager.renderers.values().stream())
+				.filter(LivingRenderer.class::isInstance)
+				.map(r -> (LivingRenderer<?, ?>) r)
+				.filter(render -> render.getEntityModel() instanceof BipedModel<?>)
+				.forEach(render -> {
+					final ModelRenderer body = ((BipedModel<?>) render.getEntityModel()).bipedBody;
+					@SuppressWarnings("unchecked")
+					final LivingRenderer<LivingEntity, BipedModel<LivingEntity>> livingRender = (LivingRenderer<LivingEntity, BipedModel<LivingEntity>>) render;
+					livingRender.addLayer(new LayerWings(livingRender, (player, stack) -> {
+						if (player.isCrouching()) {
+							stack.translate(0.0D, 0.2D, 0.0D);
+						}
+						body.translateRotate(stack);
+					}));
+				});
+		});
+		modBus.<ColorHandlerEvent.Item>addListener(e -> {
+			e.getItemColors().register((stack, pass) -> pass == 0 ? 0x9B172D : 0xFFFFFF, WingsItems.BAT_BLOOD.get());
+		});
+	}
+
+	@Override
+	protected void setup(FMLCommonSetupEvent event) {
+		super.setup(event);
 		CapabilityManager.INSTANCE.register(FlightView.class, SimpleStorage.ofVoid(), () -> {
 			throw new UnsupportedOperationException();
 		});
 		CapabilityManager.INSTANCE.register(FlightApparatusView.class, SimpleStorage.ofVoid(), () -> {
 			throw new UnsupportedOperationException();
 		});
-		MinecraftForge.EVENT_BUS.register(KeyInputListener.builder()
-			.category("key.categories.wings")
-				.key("key.wings.fly", KeyConflictContext.IN_GAME, KeyModifier.NONE, Keyboard.KEY_R)
-					.onPress(() -> {
-						EntityPlayer player = Minecraft.getMinecraft().player;
-						Flight flight = Flights.get(player);
-						if (flight != null && flight.canFly(player)) {
-							flight.toggleIsFlying(Flight.PlayerSet.ofOthers());
-						}
-					})
-			.build()
-		);
 	}
 
 	@Override
-	protected void init() {
-		super.init();
-		final Minecraft mc = Minecraft.getMinecraft();
-		final ItemColors colors = mc.getItemColors();
-		colors.registerItemColorHandler((stack, pass) -> pass == 0 ? 0x9B172D : 0xFFFFFF, WingsItems.BAT_BLOOD);
-		final RenderManager manager = mc.getRenderManager();
-		Stream.concat(manager.getSkinMap().values().stream(), manager.entityRenderMap.values().stream())
-			.filter(RenderLivingBase.class::isInstance)
-			.map(RenderLivingBase.class::cast)
-			.filter(render -> render.getMainModel() instanceof ModelBiped)
-			.forEach(render -> {
-				final ModelRenderer body = ((ModelBiped) render.getMainModel()).bipedBody;
-				render.addLayer(new LayerWings(render, (player, scale) -> {
-					if (player.isSneaking()) {
-						GlStateManager.translate(0.0F, 0.2F, 0.0F);
-					}
-					body.postRender(scale);
-				}));
-			});
-	}
-
-	@Override
-	public void addFlightListeners(final EntityPlayer player, final Flight flight) {
+	public void addFlightListeners(final PlayerEntity player, final Flight flight) {
 		super.addFlightListeners(player, flight);
 		if (player.isUser()) {
 			final Flight.Notifier notifier = Flight.Notifier.of(

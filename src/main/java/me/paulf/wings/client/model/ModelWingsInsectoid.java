@@ -1,7 +1,9 @@
 package me.paulf.wings.client.model;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.IVertexBuilder;
 import me.paulf.wings.client.flight.AnimatorInsectoid;
-import net.minecraft.client.model.ModelRenderer;
+import net.minecraft.client.renderer.model.ModelRenderer;
 
 public final class ModelWingsInsectoid extends ModelWings<AnimatorInsectoid> {
 	private final ModelRenderer root;
@@ -24,8 +26,8 @@ public final class ModelWingsInsectoid extends ModelWings<AnimatorInsectoid> {
 	}
 
 	@Override
-	public void render(final AnimatorInsectoid animator, final float delta, final float scale) {
+	public void render(final AnimatorInsectoid animator, final float delta, final MatrixStack matrixStack, final IVertexBuilder buffer, final int packedLight, final int packedOverlay, final float red, final float green, final float blue, final float alpha) {
 		setAngles(this.wingLeft, this.wingRight, animator.getRotation(delta));
-		this.root.render(scale);
+		this.root.render(matrixStack, buffer, packedLight, packedOverlay, red, green, blue, alpha);
 	}
 }

@@ -1,8 +1,9 @@
 package me.paulf.wings.util;
 
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
+import net.minecraftforge.common.util.LazyOptional;
 
 import javax.annotation.Nullable;
 import java.util.function.Function;
@@ -27,24 +28,24 @@ public final class CapabilityHolder<T extends ICapabilityProvider, R, S extends 
 	}
 
 	public interface State<T extends ICapabilityProvider, R> {
-		boolean has(T provider, @Nullable EnumFacing side);
+		default boolean has(T provider, @Nullable Direction side) {
+			return this.get(provider, side).isPresent();
+		}
 
-		@Nullable
-		R get(T provider, @Nullable EnumFacing side);
+		LazyOptional<R> get(T provider, @Nullable Direction side);
 
 		<U extends R> CapabilityProviders.NonSerializingSingleBuilder<U> providerBuilder(U instance);
 	}
 
 	public static abstract class AbsentState<T extends ICapabilityProvider, R> implements State<T, R> {
 		@Override
-		public final boolean has(final T provider, @Nullable final EnumFacing side) {
+		public final boolean has(final T provider, @Nullable final Direction side) {
 			return false;
 		}
 
-		@Nullable
 		@Override
-		public final R get(final T provider, @Nullable final EnumFacing side) {
-			return null;
+		public final LazyOptional<R> get(final T provider, @Nullable final Direction side) {
+			return LazyOptional.empty();
 		}
 
 		@Override
@@ -61,13 +62,7 @@ public final class CapabilityHolder<T extends ICapabilityProvider, R, S extends 
 		}
 
 		@Override
-		public final boolean has(final T provider, @Nullable final EnumFacing side) {
-			return provider.hasCapability(this.capability, side);
-		}
-
-		@Nullable
-		@Override
-		public final R get(final T provider, @Nullable final EnumFacing side) {
+		public final LazyOptional<R> get(final T provider, @Nullable final Direction side) {
 			return provider.getCapability(this.capability, side);
 		}
 

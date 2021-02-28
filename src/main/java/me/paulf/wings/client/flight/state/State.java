@@ -3,7 +3,7 @@ package me.paulf.wings.client.flight.state;
 import me.paulf.wings.client.flight.Animator;
 import me.paulf.wings.server.flight.Flight;
 import me.paulf.wings.util.Mth;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.MathHelper;
 
@@ -27,14 +27,14 @@ public abstract class State {
 		this.animation = animation;
 	}
 
-	public final State update(final Flight flight, final double x, final double y, final double z, final EntityPlayer player, final ItemStack wings) {
+	public final State update(final Flight flight, final double x, final double y, final double z, final PlayerEntity player, final ItemStack wings) {
 		if (this.time++ > this.stateDelay) {
 			return this.getNext(flight, x, y, z, player, wings);
 		}
 		return this;
 	}
 
-	private State getNext(final Flight flight, final double x, final double y, final double z, final EntityPlayer player, final ItemStack wings) {
+	private State getNext(final Flight flight, final double x, final double y, final double z, final PlayerEntity player, final ItemStack wings) {
 		if (flight.isFlying()) {
 			if (y < 0 && player.rotationPitch >= this.getPitch(x, y, z)) {
 				return this.createGlide();
@@ -79,7 +79,7 @@ public abstract class State {
 		return this.createIdle();
 	}
 
-	protected State getDescent(final Flight flight, final EntityPlayer player, final ItemStack wings) {
+	protected State getDescent(final Flight flight, final PlayerEntity player, final ItemStack wings) {
 		return flight.canLand(player, wings) ? this.createLand() : this.createFall();
 	}
 }

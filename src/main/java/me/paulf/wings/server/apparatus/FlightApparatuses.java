@@ -6,10 +6,11 @@ import me.paulf.wings.util.CapabilityHolder;
 import me.paulf.wings.util.CapabilityProviders;
 import me.paulf.wings.util.HandlerSlot;
 import me.paulf.wings.util.Util;
-import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityInject;
+import net.minecraftforge.common.util.LazyOptional;
 
 import javax.annotation.Nullable;
 import java.util.Arrays;
@@ -23,8 +24,7 @@ public final class FlightApparatuses {
 		return HOLDER.state().has(stack, null);
 	}
 
-	@Nullable
-	public static FlightApparatus get(final ItemStack stack) {
+	public static LazyOptional<FlightApparatus> get(final ItemStack stack) {
 		return HOLDER.state().get(stack, null);
 	}
 
@@ -32,7 +32,7 @@ public final class FlightApparatuses {
 		return HOLDER.state().providerBuilder(instance);
 	}
 
-	public static ItemStack find(final EntityLivingBase player) {
+	public static ItemStack find(final LivingEntity player) {
 		return HOLDER.state().find(player);
 	}
 
@@ -42,12 +42,12 @@ public final class FlightApparatuses {
 	}
 
 	private interface WingedState extends CapabilityHolder.State<ItemStack, FlightApparatus> {
-		ItemStack find(EntityLivingBase player);
+		ItemStack find(LivingEntity player);
 	}
 
 	private static final class WingedAbsentState extends CapabilityHolder.AbsentState<ItemStack, FlightApparatus> implements WingedState {
 		@Override
-		public ItemStack find(final EntityLivingBase player) {
+		public ItemStack find(final LivingEntity player) {
 			return ItemStack.EMPTY;
 		}
 	}
@@ -58,7 +58,7 @@ public final class FlightApparatuses {
 		}
 
 		@Override
-		public ItemStack find(final EntityLivingBase player) {
+		public ItemStack find(final LivingEntity player) {
 			for (final HandlerSlot slot : WingsMod.instance().getWingsAccessor().enumerate(player)) {
 				final ItemStack stack = slot.get();
 				if (this.has(stack, null)) {

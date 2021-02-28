@@ -2,11 +2,12 @@ package me.paulf.wings.util;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
-import net.minecraft.nbt.NBTBase;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.nbt.INBT;
+import net.minecraft.util.Direction;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.common.util.INBTSerializable;
+import net.minecraftforge.common.util.LazyOptional;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -30,14 +31,14 @@ public final class CapabilityProviders {
 
 	public static <T> SingleBuilder<T> builder(final Capability<T> capability) {
 		return new NonSerializingSingleBuilderImpl<>(capability, capability.getDefaultInstance())
-			.serializedBy(new NBTSerializer<T, NBTBase>() {
+			.serializedBy(new NBTSerializer<T, INBT>() {
 				@Override
-				public NBTBase serialize(final T instance) {
+				public INBT serialize(final T instance) {
 					return capability.writeNBT(instance, null);
 				}
 
 				@Override
-				public T deserialize(final NBTBase compound) {
+				public T deserialize(final INBT compound) {
 					final T instance = capability.getDefaultInstance();
 					capability.readNBT(instance, null, compound);
 					return instance;
@@ -94,25 +95,14 @@ public final class CapabilityProviders {
 		}
 
 		@Override
-		public boolean hasCapability(@Nonnull final Capability<?> capability, @Nullable final EnumFacing facing) {
+		public <T> LazyOptional<T> getCapability(@Nonnull final Capability<T> capability, @Nullable final Direction facing) {
 			for (final ICapabilityProvider provider : this.providers) {
-				if (provider.hasCapability(capability, facing)) {
-					return true;
-				}
-			}
-			return false;
-		}
-
-		@Nullable
-		@Override
-		public <T> T getCapability(@Nonnull final Capability<T> capability, @Nullable final EnumFacing facing) {
-			for (final ICapabilityProvider provider : this.providers) {
-				final T instance = provider.getCapability(capability, facing);
-				if (instance != null) {
+				final LazyOptional<T> instance = provider.getCapability(capability, facing);
+				if (instance.isPresent()) {
 					return instance;
 				}
 			}
-			return null;
+			return LazyOptional.empty();
 		}
 	}
 
@@ -120,7 +110,7 @@ public final class CapabilityProviders {
 		private static final EmptySingleBuilder<?> INSTANCE = new EmptySingleBuilder<>();
 
 		@Override
-		public <N extends NBTBase> SingleBuilder<T> serializedBy(final NBTSerializer<T, N> serializer) {
+		public <N extends INBT> SingleBuilder<T> serializedBy(final NBTSerializer<T, N> serializer) {
 			return this;
 		}
 
@@ -139,14 +129,8 @@ public final class CapabilityProviders {
 		private static final EmptyProvider INSTANCE = new EmptyProvider();
 
 		@Override
-		public boolean hasCapability(@Nonnull final Capability<?> capability, @Nullable final EnumFacing facing) {
-			return false;
-		}
-
-		@Nullable
-		@Override
-		public <T> T getCapability(@Nonnull final Capability<T> capability, @Nullable final EnumFacing facing) {
-			return null;
+		public <T> LazyOptional<T> getCapability(@Nonnull final Capability<T> capability, @Nullable final Direction facing) {
+			return LazyOptional.empty();
 		}
 	}
 
@@ -154,31 +138,27 @@ public final class CapabilityProviders {
 		final Capability<? super T> capability;
 
 		T instance;
+		LazyOptional<T> lazy;
 
 		private SingleProvider(final Capability<? super T> capability, final T instance) {
 			this.capability = capability;
 			this.instance = instance;
+			this.lazy = LazyOptional.of(() -> instance);
 		}
 
 		@Override
-		public boolean hasCapability(@Nonnull final Capability<?> capability, @Nullable final EnumFacing facing) {
-			return this.capability == capability;
-		}
-
-		@Nullable
-		@Override
-		public <C> C getCapability(@Nonnull final Capability<C> capability, @Nullable final EnumFacing facing) {
-			return this.capability == capability ? this.capability.cast(this.instance) : null;
+		public <C> LazyOptional<C> getCapability(@Nonnull final Capability<C> capability, @Nullable final Direction facing) {
+			return this.capability == capability ? this.lazy.cast() : LazyOptional.empty();
 		}
 	}
 
 	private static final class SimpleSingleProvider<T> extends SingleProvider<T> {
-		private SimpleSingleProvider(final Capability<? super T> capability, final T instance) {
+		private SimpleSingleProvider(final Capability<T> capability, final T instance) {
 			super(capability, instance);
 		}
 	}
 
-	private static final class SerializingSingleProvider<T, N extends NBTBase> extends SingleProvider<T> implements INBTSerializable<N> {
+	private static final class SerializingSingleProvider<T, N extends INBT> extends SingleProvider<T> implements INBTSerializable<N> {
 		final NBTSerializer<T, N> serializer;
 
 		private SerializingSingleProvider(final Capability<? super T> capability, final T instance, final NBTSerializer<T, N> serializer) {
@@ -215,7 +195,7 @@ public final class CapabilityProviders {
 	}
 
 	public interface NonSerializingSingleBuilder<T> extends SingleBuilder<T> {
-		<N extends NBTBase> SingleBuilder<T> serializedBy(NBTSerializer<T, N> serializer);
+		<N extends INBT> SingleBuilder<T> serializedBy(NBTSerializer<T, N> serializer);
 	}
 
 	private static final class NonSerializingSingleBuilderImpl<T> extends AbstractSingleBuilder<T> implements NonSerializingSingleBuilder<T> {
@@ -224,7 +204,7 @@ public final class CapabilityProviders {
 		}
 
 		@Override
-		public <N extends NBTBase> SerializingSingleBuilderImpl<T, N> serializedBy(final NBTSerializer<T, N> serializer) {
+		public <N extends INBT> SerializingSingleBuilderImpl<T, N> serializedBy(final NBTSerializer<T, N> serializer) {
 			return new SerializingSingleBuilderImpl<>(this.capability, this.instance, serializer);
 		}
 
@@ -240,7 +220,7 @@ public final class CapabilityProviders {
 		}
 	}
 
-	private static final class SerializingSingleBuilderImpl<T, N extends NBTBase> extends AbstractSingleBuilder<T> implements SingleBuilder<T> {
+	private static final class SerializingSingleBuilderImpl<T, N extends INBT> extends AbstractSingleBuilder<T> implements SingleBuilder<T> {
 		private final NBTSerializer<T, N> serializer;
 
 		private SerializingSingleBuilderImpl(final Capability<? super T> capability, final T instance, final NBTSerializer<T, N> serializer) {

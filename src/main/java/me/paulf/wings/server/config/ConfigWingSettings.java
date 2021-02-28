@@ -3,35 +3,34 @@ package me.paulf.wings.server.config;
 import me.paulf.wings.server.item.ImmutableWingSettings;
 import me.paulf.wings.server.item.WingSettings;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.common.config.Config;
 
 @SuppressWarnings("DeprecatedIsStillUsed")
 public final class ConfigWingSettings implements WingSettings {
 	private final ResourceLocation key;
 
 	@Deprecated
-	@Config.LangKey("config.wings.items.settings.requiredFlightSatiation")
-	@Config.RangeInt(min = 0, max = 20)
+//	@Config.LangKey("config.wings.items.settings.requiredFlightSatiation") FIXME: config
+//	@Config.RangeInt(min = 0, max = 20)
 	public int requiredFlightSatiation;
 
 	@Deprecated
-	@Config.LangKey("config.wings.items.settings.flyingExertion")
-	@Config.RangeDouble(min = 0.0D, max = 10.0D)
+//	@Config.LangKey("config.wings.items.settings.flyingExertion")
+//	@Config.RangeDouble(min = 0.0D, max = 10.0D)
 	public double flyingExertion;
 
 	@Deprecated
-	@Config.LangKey("config.wings.items.settings.requiredLandSatiation")
-	@Config.RangeInt(min = 0, max = 20)
+//	@Config.LangKey("config.wings.items.settings.requiredLandSatiation")
+//	@Config.RangeInt(min = 0, max = 20)
 	public int requiredLandSatiation;
 
 	@Deprecated
-	@Config.LangKey("config.wings.items.settings.landingExertion")
-	@Config.RangeDouble(min = 0.0D, max = 10.0D)
+//	@Config.LangKey("config.wings.items.settings.landingExertion")
+//	@Config.RangeDouble(min = 0.0D, max = 10.0D)
 	public double landingExertion;
 
 	@Deprecated
-	@Config.LangKey("config.wings.items.settings.durability")
-	@Config.RangeInt(min = 0, max = Short.MAX_VALUE)
+//	@Config.LangKey("config.wings.items.settings.durability")
+//	@Config.RangeInt(min = 0, max = Short.MAX_VALUE)
 	public int itemDurability;
 
 	ConfigWingSettings(final ResourceLocation key, final int itemDurability) {

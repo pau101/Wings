@@ -1,8 +1,8 @@
 package me.paulf.wings.util;
 
-import net.minecraft.nbt.NBTBase;
+import net.minecraft.nbt.INBT;
 
-public interface NBTSerializer<T, N extends NBTBase> {
+public interface NBTSerializer<T, N extends INBT> {
 	N serialize(final T instance);
 
 	T deserialize(final N compound);

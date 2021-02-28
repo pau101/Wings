@@ -1,10 +1,10 @@
 package me.paulf.wings.server.flight;
 
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 
 import java.util.function.Consumer;
 
@@ -31,13 +31,13 @@ public interface Flight {
 
 	void registerSyncListener(final SyncListener listener);
 
-	boolean canFly(final EntityPlayer player);
+	boolean canFly(final PlayerEntity player);
 
-	boolean canLand(final EntityPlayer player, final ItemStack wings);
+	boolean canLand(final PlayerEntity player, final ItemStack wings);
 
-	void tick(final EntityPlayer player, final ItemStack wings);
+	void tick(final PlayerEntity player, final ItemStack wings);
 
-	void onFlown(final EntityPlayer player, final ItemStack wings, final Vec3d direction);
+	void onFlown(final PlayerEntity player, final ItemStack wings, final Vector3d direction);
 
 	void clone(final Flight other);
 
@@ -74,7 +74,7 @@ public interface Flight {
 			return Notifier::notifySelf;
 		}
 
-		static PlayerSet ofPlayer(final EntityPlayerMP player) {
+		static PlayerSet ofPlayer(final ServerPlayerEntity player) {
 			return n -> n.notifyPlayer(player);
 		}
 
@@ -93,11 +93,11 @@ public interface Flight {
 	interface Notifier {
 		void notifySelf();
 
-		void notifyPlayer(EntityPlayerMP player);
+		void notifyPlayer(ServerPlayerEntity player);
 
 		void notifyOthers();
 
-		static Notifier of(final Runnable notifySelf, final Consumer<EntityPlayerMP> notifyPlayer, final Runnable notifyOthers) {
+		static Notifier of(final Runnable notifySelf, final Consumer<ServerPlayerEntity> notifyPlayer, final Runnable notifyOthers) {
 			return new Notifier() {
 				@Override
 				public void notifySelf() {
@@ -105,7 +105,7 @@ public interface Flight {
 				}
 
 				@Override
-				public void notifyPlayer(final EntityPlayerMP player) {
+				public void notifyPlayer(final ServerPlayerEntity player) {
 					notifyPlayer.accept(player);
 				}
 

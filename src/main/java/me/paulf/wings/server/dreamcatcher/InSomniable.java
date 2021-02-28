@@ -2,11 +2,12 @@ package me.paulf.wings.server.dreamcatcher;
 
 import me.paulf.wings.server.item.WingsItems;
 import me.paulf.wings.util.NBTSerializer;
-import net.minecraft.entity.item.EntityItem;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.item.ItemEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants;
 
@@ -23,7 +24,7 @@ public final class InSomniable {
 		this.state = state;
 	}
 
-	public void onPlay(final World world, final EntityPlayer player, final BlockPos pos, final int note) {
+	public void onPlay(final World world, final PlayerEntity player, final BlockPos pos, final int note) {
 		this.state = this.state.onPlay(world, player, pos, note);
 	}
 
@@ -32,7 +33,7 @@ public final class InSomniable {
 	}
 
 	private interface State {
-		State onPlay(World world, EntityPlayer player, BlockPos pos, int note);
+		State onPlay(World world, PlayerEntity player, BlockPos pos, int note);
 
 		State copy();
 
@@ -73,13 +74,13 @@ public final class InSomniable {
 		}
 
 		@Override
-		public State onPlay(final World world, final EntityPlayer player, final BlockPos pos, final int note) {
+		public State onPlay(final World world, final PlayerEntity player, final BlockPos pos, final int note) {
 			if (note >= 6 && note <= 14 && ((this.state = (this.state | this.mask[note - 6]) << 1) & 0x20000) == 0) {
-				final ItemStack stack = new ItemStack(WingsItems.BLUE_BUTTERFLY_WINGS);
-				stack.setTranslatableName(this.members[world.rand.nextInt(this.members.length)]);
-				final EntityItem entity = new EntityItem(world, pos.getX() + 0.5D, pos.getY() + 1.25D, pos.getZ() + 0.5D, stack);
+				final ItemStack stack = new ItemStack(WingsItems.BLUE_BUTTERFLY_WINGS.get());
+				stack.setDisplayName(new TranslationTextComponent(this.members[world.rand.nextInt(this.members.length)]));
+				final ItemEntity entity = new ItemEntity(world, pos.getX() + 0.5D, pos.getY() + 1.25D, pos.getZ() + 0.5D, stack);
 				entity.setDefaultPickupDelay();
-				world.spawnEntity(entity);
+				world.addEntity(entity);
 				return InSomniacState.INSTANCE;
 			}
 			return this;
@@ -100,7 +101,7 @@ public final class InSomniable {
 		private static final State INSTANCE = new InSomniacState();
 
 		@Override
-		public State onPlay(final World world, final EntityPlayer player, final BlockPos pos, final int note) {
+		public State onPlay(final World world, final PlayerEntity player, final BlockPos pos, final int note) {
 			return this;
 		}
 
@@ -113,21 +114,21 @@ public final class InSomniable {
 		public void ifSearching(final IntConsumer consumer) {}
 	}
 
-	public static final class Serializer implements NBTSerializer<InSomniable, NBTTagCompound> {
+	public static final class Serializer implements NBTSerializer<InSomniable, CompoundNBT> {
 		private static final String SEARCH_STATE = "SearchState";
 
 		@Override
-		public NBTTagCompound serialize(final InSomniable instance) {
-			final NBTTagCompound compound = new NBTTagCompound();
-			instance.state.ifSearching(state -> compound.setInteger(SEARCH_STATE, state));
+		public CompoundNBT serialize(final InSomniable instance) {
+			final CompoundNBT compound = new CompoundNBT();
+			instance.state.ifSearching(state -> compound.putInt(SEARCH_STATE, state));
 			return compound;
 		}
 
 		@Override
-		public InSomniable deserialize(final NBTTagCompound compound) {
+		public InSomniable deserialize(final CompoundNBT compound) {
 			final State state;
-			if (compound.hasKey(SEARCH_STATE, Constants.NBT.TAG_INT)) {
-				state = new SearchState(compound.getInteger(SEARCH_STATE));
+			if (compound.contains(SEARCH_STATE, Constants.NBT.TAG_INT)) {
+				state = new SearchState(compound.getInt(SEARCH_STATE));
 			} else {
 				state = InSomniacState.INSTANCE;
 			}
