@@ -1,6 +1,0 @@
-{
-	"parent": "block/cube_all",
-	"textures": {
-		"all": "wings:blocks/fairy_dust_ore"
-	}
-}

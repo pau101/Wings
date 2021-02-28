@@ -36,7 +36,7 @@ public abstract class Proxy {
 	public void init(final IEventBus modBus) {
 		modBus.addListener(this::setup);
 		MinecraftForge.EVENT_BUS.<PlayerEvent.PlayerLoggedInEvent>addListener(e ->
-			network.sendToPlayer(new MessageSetWingSettings(WingsItemsConfig.createWingAttributes()), (ServerPlayerEntity) e.getPlayer())
+			this.network.sendToPlayer(new MessageSetWingSettings(WingsItemsConfig.createWingAttributes()), (ServerPlayerEntity) e.getPlayer())
 		);
 		modBus.<ConstructWingsAccessorEvent>addListener(e -> e.addPlacing(ItemPlacing.forArmor(EquipmentSlotType.CHEST)));
 		modBus.<FMLLoadCompleteEvent>addListener(e -> this.lateinit());

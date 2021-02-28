@@ -24,13 +24,7 @@ public final class WingsItems {
 
 	public static final DeferredRegister<Item> REG = DeferredRegister.create(ForgeRegistries.ITEMS, WingsMod.ID);
 
-//	public static final RegistryObject<Item> FAIRY_DUST_ORE = REG.register("fairy_dust_ore", () -> new BlockItem(WingsBlocks.FAIRY_DUST_ORE.get(), new Item.Properties().group(ItemGroupWings.instance())));
-
-//	public static final RegistryObject<Item> AMETHYST_ORE = REG.register("amethyst_ore", () -> new BlockItem(WingsBlocks.AMETHYST_ORE.get(), new Item.Properties().group(ItemGroupWings.instance())));
-
 	public static final RegistryObject<Item> FAIRY_DUST = REG.register("fairy_dust", () -> new Item(new Item.Properties().group(ItemGroupWings.instance())));
-
-	public static final RegistryObject<Item> AMETHYST = REG.register("amethyst", () -> new Item(new Item.Properties().group(ItemGroupWings.instance())));
 
 	public static final RegistryObject<Item> BAT_BLOOD = REG.register("bat_blood", () -> new Item(new Item.Properties().containerItem(Items.GLASS_BOTTLE).group(ItemGroupWings.instance())));
 
