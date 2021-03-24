@@ -26,10 +26,11 @@ public final class WingsHooks {
 		return ev.getValue();
 	}
 
-	public static void onUpdateBodyRotation(final LivingEntity living, final float movementYaw) {
-		living.renderYawOffset += MathHelper.wrapDegrees(movementYaw - living.renderYawOffset) * 0.3F;
+	public static boolean onUpdateBodyRotation(final LivingEntity living, final float movementYaw) {
 		final GetLivingHeadLimitEvent ev = GetLivingHeadLimitEvent.create(living);
 		MinecraftForge.EVENT_BUS.post(ev);
+		if (ev.isVanilla()) return false;
+		living.renderYawOffset += MathHelper.wrapDegrees(movementYaw - living.renderYawOffset) * 0.3F;
 		final float hLimit = ev.getHardLimit();
 		final float sLimit = ev.getSoftLimit();
 		final float theta = MathHelper.clamp(
@@ -41,6 +42,7 @@ public final class WingsHooks {
 		if (theta * theta > sLimit * sLimit) {
 			living.renderYawOffset += theta * 0.2F;
 		}
+		return true;
 	}
 
 	public static void onAddFlown(final PlayerEntity player, final double x, final double y, final double z) {

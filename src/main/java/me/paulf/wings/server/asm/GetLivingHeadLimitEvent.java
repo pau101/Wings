@@ -44,6 +44,10 @@ public final class GetLivingHeadLimitEvent extends LivingEvent {
 		return this.getSoftLimit() < Float.POSITIVE_INFINITY;
 	}
 
+	public boolean isVanilla() {
+		return this.hardLimit == 75.0F && this.softLimit == 50.0F;
+	}
+
 	public static GetLivingHeadLimitEvent create(final LivingEntity living) {
 		final GetLivingHeadLimitEvent ev = new GetLivingHeadLimitEvent(living);
 		ev.setHardLimit(75.0F);
