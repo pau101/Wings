@@ -9,9 +9,8 @@ import me.paulf.wings.client.flight.state.State;
 import me.paulf.wings.client.flight.state.StateIdle;
 import me.paulf.wings.server.apparatus.FlightApparatuses;
 import me.paulf.wings.server.flight.Flight;
-import me.paulf.wings.util.Mth;
-import me.paulf.wings.util.SmoothingFunction;
 import me.paulf.wings.util.function.FloatConsumer;
+import net.minecraft.entity.Pose;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -32,8 +31,6 @@ public final class FlightViewDefault implements FlightView {
 	});
 
 	private final PlayerEntity player;
-
-	private final SmoothingFunction eyeHeightFunc = SmoothingFunction.create(t -> Mth.easeOutCirc(Mth.easeInOut(t)));
 
 	private WingState animator = this.absentAnimator;
 
@@ -58,8 +55,10 @@ public final class FlightViewDefault implements FlightView {
 	}
 
 	@Override
-	public void tickEyeHeight(final float value, final float delta, final FloatConsumer valueOut) {
-		this.eyeHeightFunc.accept(this.flight.getFlyingAmount(delta), SmoothingFunction.Sign.valueOf(this.flight.isFlying()), value, valueOut);
+	public void tickEyeHeight(final float value, final FloatConsumer valueOut) {
+		if (this.flight.isFlying() || (this.flight.getFlyingAmount(1.0F) > 0.0F && this.player.getPose() == Pose.FALL_FLYING)) {
+			valueOut.accept(1.0F);
+		}
 	}
 
 	private interface Strategy {

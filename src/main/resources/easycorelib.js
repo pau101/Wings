@@ -1,4 +1,5 @@
 // v1.0.0
+// v1.1.0 - Skip non opcode nodes for before and after predicates
 (function (scope) {
 
 var ASMAPI = Java.type("net.minecraftforge.coremod.api.ASMAPI");
@@ -428,6 +429,9 @@ InstructionTarget.prototype.after = function (second) {
     var secondP = getInstruction(second).asPredicate();
     return new InstructionTarget(this.target, this.strategy, function (n) {
         var previous = n.getPrevious();
+        while (previous && previous.getOpcode() == -1) {
+            previous = previous.getPrevious();
+        }
         return previous && first(n) && secondP(previous);
     });
 };
@@ -437,6 +441,9 @@ InstructionTarget.prototype.before = function (second) {
     var secondP = getInstruction(second).asPredicate();
     return new InstructionTarget(this.target, this.strategy, function (n) {
         var next = n.getNext();
+        while (next && next.getOpcode() == -1) {
+            next = next.getNext();
+        }
         return next && first(n) && secondP(next);
     });
 };

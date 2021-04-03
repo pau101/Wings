@@ -6,21 +6,14 @@ import net.minecraftforge.eventbus.api.Event;
 public final class GetCameraEyeHeightEvent extends Event {
 	private final Entity entity;
 
-	private final float delta;
-
 	private float value;
 
-	private GetCameraEyeHeightEvent(final Entity entity, final float delta) {
+	private GetCameraEyeHeightEvent(final Entity entity) {
 		this.entity = entity;
-		this.delta = delta;
 	}
 
 	public Entity getEntity() {
 		return this.entity;
-	}
-
-	public float getDelta() {
-		return this.delta;
 	}
 
 	public void setValue(final float value) {
@@ -31,9 +24,9 @@ public final class GetCameraEyeHeightEvent extends Event {
 		return this.value;
 	}
 
-	public static GetCameraEyeHeightEvent create(final Entity entity, final float delta) {
-		final GetCameraEyeHeightEvent ev = new GetCameraEyeHeightEvent(entity, delta);
-		ev.setValue(entity.getEyeHeight());
+	public static GetCameraEyeHeightEvent create(final Entity entity, final float eyeHeight) {
+		final GetCameraEyeHeightEvent ev = new GetCameraEyeHeightEvent(entity);
+		ev.setValue(eyeHeight);
 		return ev;
 	}
 }

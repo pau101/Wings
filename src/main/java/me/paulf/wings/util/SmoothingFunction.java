@@ -2,6 +2,7 @@ package me.paulf.wings.util;
 
 import me.paulf.wings.util.function.FloatConsumer;
 import me.paulf.wings.util.function.FloatUnaryOperator;
+import org.apache.logging.log4j.LogManager;
 
 public final class SmoothingFunction {
 	private final FloatUnaryOperator easing;

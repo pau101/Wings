@@ -2,7 +2,6 @@ package me.paulf.wings.client.flight;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
-import me.paulf.wings.client.apparatus.FlightApparatusView;
 import me.paulf.wings.client.apparatus.FlightApparatusViews;
 import me.paulf.wings.client.apparatus.WingForm;
 import me.paulf.wings.server.apparatus.FlightApparatuses;
@@ -44,7 +43,7 @@ public class FlightViewStatic implements FlightView {
 	public void tick(final ItemStack wings) {}
 
 	@Override
-	public void tickEyeHeight(final float value, final float delta, final FloatConsumer valueOut) {}
+	public void tickEyeHeight(final float value, final FloatConsumer valueOut) {}
 
 	private static final class PresentState<T extends Animator> implements FormRenderer, Consumer<Consumer<FormRenderer>> {
 		final WingForm<T> form;

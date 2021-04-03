@@ -13,7 +13,7 @@ public interface FlightView {
 
 	void tick(final ItemStack wings);
 
-	void tickEyeHeight(final float value, final float delta, final FloatConsumer valueOut);
+	void tickEyeHeight(final float value, final FloatConsumer valueOut);
 
 	interface FormRenderer {
 		ResourceLocation getTexture();

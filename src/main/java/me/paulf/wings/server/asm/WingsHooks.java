@@ -14,14 +14,18 @@ import net.minecraftforge.eventbus.api.Event;
 public final class WingsHooks {
 	private WingsHooks() {}
 
+	public static boolean onFlightCheck(final LivingEntity living, final boolean defaultValue) {
+		return living instanceof PlayerEntity && WingsHooks.onFlightCheck((PlayerEntity) living, defaultValue);
+	}
+
 	public static boolean onFlightCheck(final PlayerEntity player, final boolean defaultValue) {
 		final PlayerFlightCheckEvent ev = new PlayerFlightCheckEvent(player);
 		MinecraftForge.EVENT_BUS.post(ev);
 		return ev.getResult() == Event.Result.ALLOW || ev.getResult() == Event.Result.DEFAULT && defaultValue;
 	}
 
-	public static float onGetCameraEyeHeight(final Entity entity, final float delta) {
-		final GetCameraEyeHeightEvent ev = GetCameraEyeHeightEvent.create(entity, delta);
+	public static float onGetCameraEyeHeight(final Entity entity, final float eyeHeight) {
+		final GetCameraEyeHeightEvent ev = GetCameraEyeHeightEvent.create(entity, eyeHeight);
 		MinecraftForge.EVENT_BUS.post(ev);
 		return ev.getValue();
 	}
