@@ -16,6 +16,7 @@ var PlayerEntity = net.minecraft.entity.player.PlayerEntity,
     ActiveRenderInfo = net.minecraft.client.renderer.ActiveRenderInfo,
     FirstPersonRenderer = net.minecraft.client.renderer.FirstPersonRenderer,
     AbstractClientPlayerEntity = net.minecraft.client.entity.player.AbstractClientPlayerEntity,
+    ClientPlayerEntity = net.minecraft.client.entity.player.ClientPlayerEntity,
     ItemStack = net.minecraft.item.ItemStack,
     PlayerModel = net.minecraft.client.renderer.entity.model.PlayerModel,
     MatrixStack = com.mojang.blaze3d.matrix.MatrixStack
@@ -86,10 +87,7 @@ easycore.inMethod(Entity.func_195049_a(double, double)) // rotateTowards
     .atLast(_return).prepend(
         aload(0),
         dup,
-//        getfield(Entity.field_70177_z, float), // rotationYaw
-//        f2d,
         dload(7),
-//        dsub,
         d2f,
         invokestatic(WingsHooksClient.onTurn(Entity, float))
     )
@@ -155,6 +153,16 @@ easycore.inMethod(net.minecraft.client.renderer.entity.PlayerRenderer.func_22562
  */
 easycore.inMethod(LivingEntity.func_213314_bj()) // isActualySwimming
     .atFirst(invokevirtual(LivingEntity.func_184613_cA(), boolean)).append( // isElytraFlying
+        aload(0),
+        swap,
+        invokestatic(WingsHooks.onFlightCheck(LivingEntity, boolean), boolean)
+    )
+
+/**
+ * Disable crouching while flying
+ */
+easycore.inMethod(net.minecraft.client.entity.player.ClientPlayerEntity.func_70636_d()) // livingTick
+    .atFirst(invokevirtual(ClientPlayerEntity.func_203007_ba())).append( // isSwimming
         aload(0),
         swap,
         invokestatic(WingsHooks.onFlightCheck(LivingEntity, boolean), boolean)

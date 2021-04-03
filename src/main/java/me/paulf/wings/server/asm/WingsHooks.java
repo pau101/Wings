@@ -9,7 +9,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.eventbus.api.Event;
 
 public final class WingsHooks {
 	private WingsHooks() {}
@@ -19,9 +18,10 @@ public final class WingsHooks {
 	}
 
 	public static boolean onFlightCheck(final PlayerEntity player, final boolean defaultValue) {
+		if (defaultValue) return true;
 		final PlayerFlightCheckEvent ev = new PlayerFlightCheckEvent(player);
 		MinecraftForge.EVENT_BUS.post(ev);
-		return ev.getResult() == Event.Result.ALLOW || ev.getResult() == Event.Result.DEFAULT && defaultValue;
+		return ev.isFlying();
 	}
 
 	public static float onGetCameraEyeHeight(final Entity entity, final float eyeHeight) {

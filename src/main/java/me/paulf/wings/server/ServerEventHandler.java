@@ -93,7 +93,7 @@ public final class ServerEventHandler {
 	@SubscribeEvent
 	public static void onPlayerFlightCheck(final PlayerFlightCheckEvent event) {
 		Flights.get(event.getPlayer()).filter(Flight::isFlying)
-			.ifPresent(flight -> event.setResult(Event.Result.ALLOW));
+			.ifPresent(flight -> event.setFlying());
 	}
 
 	@SubscribeEvent
