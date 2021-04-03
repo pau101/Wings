@@ -161,7 +161,7 @@ easycore.inMethod(LivingEntity.func_213314_bj()) // isActualySwimming
 /**
  * Disable crouching while flying
  */
-easycore.inMethod(net.minecraft.client.entity.player.ClientPlayerEntity.func_70636_d()) // livingTick
+easycore.inMethod(ClientPlayerEntity.func_70636_d()) // livingTick
     .atFirst(invokevirtual(ClientPlayerEntity.func_203007_ba())).append( // isSwimming
         aload(0),
         swap,
