@@ -23,7 +23,7 @@ public class ServerMessageContext extends MessageContext {
     }
 
     public ServerWorld getWorld() {
-        return this.getPlayer().getServerWorld();
+        return this.getPlayer().getLevel();
     }
 
     public ServerPlayerEntity getPlayer() {

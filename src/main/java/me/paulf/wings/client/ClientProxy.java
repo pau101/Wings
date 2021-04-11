@@ -65,20 +65,20 @@ public final class ClientProxy extends Proxy {
 		);
 		modBus.<FMLClientSetupEvent>addListener(e -> {
 			final Minecraft mc = Minecraft.getInstance();
-			final EntityRendererManager manager = mc.getRenderManager();
+			final EntityRendererManager manager = mc.getEntityRenderDispatcher();
 			Stream.concat(manager.getSkinMap().values().stream(), manager.renderers.values().stream())
 				.filter(LivingRenderer.class::isInstance)
 				.map(r -> (LivingRenderer<?, ?>) r)
-				.filter(render -> render.getEntityModel() instanceof BipedModel<?>)
+				.filter(render -> render.getModel() instanceof BipedModel<?>)
 				.forEach(render -> {
-					final ModelRenderer body = ((BipedModel<?>) render.getEntityModel()).bipedBody;
+					final ModelRenderer body = ((BipedModel<?>) render.getModel()).body;
 					@SuppressWarnings("unchecked")
 					final LivingRenderer<LivingEntity, BipedModel<LivingEntity>> livingRender = (LivingRenderer<LivingEntity, BipedModel<LivingEntity>>) render;
 					livingRender.addLayer(new LayerWings(livingRender, (player, stack) -> {
 						if (player.isCrouching()) {
 							stack.translate(0.0D, 0.2D, 0.0D);
 						}
-						body.translateRotate(stack);
+						body.translateAndRotate(stack);
 					}));
 				});
 		});
@@ -101,7 +101,7 @@ public final class ClientProxy extends Proxy {
 	@Override
 	public void addFlightListeners(final PlayerEntity player, final Flight flight) {
 		super.addFlightListeners(player, flight);
-		if (player.isUser()) {
+		if (player.isLocalPlayer()) {
 			final Flight.Notifier notifier = Flight.Notifier.of(
 				() -> {},
 				p -> {},

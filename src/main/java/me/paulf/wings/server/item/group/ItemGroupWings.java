@@ -15,7 +15,7 @@ public final class ItemGroupWings extends ItemGroup {
 	}
 
 	@Override
-	public ItemStack createIcon() {
+	public ItemStack makeIcon() {
 		return new ItemStack(WingsItems.ANGEL_WINGS.get());
 	}
 

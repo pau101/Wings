@@ -27,8 +27,8 @@ public final class BlockWingsOre extends Block {
 
 	public static BlockWingsOre create(final int minExp, final int maxExp, final HarvestLevel harvestLevel) {
 		return new BlockWingsOre(
-			Properties.create(Material.ROCK)
-				.hardnessAndResistance(3.0F, 5.0F)
+			Properties.of(Material.STONE)
+				.strength(3.0F, 5.0F)
 				.harvestTool(ToolType.PICKAXE)
 				.harvestLevel(harvestLevel.getValue()),
 			minExp,

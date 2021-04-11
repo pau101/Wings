@@ -19,7 +19,7 @@ public final class KeyInputListener {
 	@SubscribeEvent
 	public void onKey(final InputEvent.KeyInputEvent event) {
 		this.bindings.asMap().entrySet().stream()
-			.filter(e -> e.getKey().isPressed())
+			.filter(e -> e.getKey().consumeClick())
 			.flatMap(e -> e.getValue().stream())
 			.forEach(Runnable::run);
 	}

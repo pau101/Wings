@@ -36,13 +36,13 @@ public final class WingsHooksClient {
 	public static void onTurn(final Entity entity, final float deltaYaw) {
 		if (entity instanceof LivingEntity) {
 			final LivingEntity living = (LivingEntity) entity;
-			final float theta = MathHelper.wrapDegrees(living.rotationYaw - living.renderYawOffset);
+			final float theta = MathHelper.wrapDegrees(living.yRot - living.yBodyRot);
 			final GetLivingHeadLimitEvent ev = GetLivingHeadLimitEvent.create(living);
 			MinecraftForge.EVENT_BUS.post(ev);
 			final float limit = ev.getHardLimit();
 			if (theta < -limit || theta > limit) {
-				living.renderYawOffset += deltaYaw;
-				living.prevRenderYawOffset += deltaYaw;
+				living.yBodyRot += deltaYaw;
+				living.yBodyRotO += deltaYaw;
 			}
 		}
 	}
@@ -61,8 +61,8 @@ public final class WingsHooksClient {
 			if (player == null) {
 				return true;
 			}
-			final boolean fromMap = isMap(GetItemStackMainHand.invoke(mc.getFirstPersonRenderer()));
-			final boolean toMap = isMap(player.getHeldItemMainhand());
+			final boolean fromMap = isMap(GetItemStackMainHand.invoke(mc.getItemInHandRenderer()));
+			final boolean toMap = isMap(player.getMainHandItem());
 			if (fromMap || toMap) {
 				return fromMap != toMap;
 			}
@@ -87,7 +87,7 @@ public final class WingsHooksClient {
 		private GetItemStackMainHand() {}
 
 		private static final MethodHandle MH = Access.getter(FirstPersonRenderer.class)
-			.name("field_187467_d", "itemStackMainHand")
+			.name("field_187467_d", "mainHandItem")
 			.type(ItemStack.class);
 
 		private static ItemStack invoke(final FirstPersonRenderer instance) {

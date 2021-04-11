@@ -25,7 +25,7 @@ archivesBaseName = 'wings'
 sourceCompatibility = targetCompatibility = JavaVersion.VERSION_1_8
 
 minecraft {
-	mappings channel: 'snapshot', version: '20201028-1.16.3'
+	mappings channel: 'official', version: '1.16.5'
 	runs {
 		client {
 			workingDirectory project.file('run')
@@ -66,11 +66,11 @@ jar {
 }
 
 dependencies {
-	minecraft 'net.minecraftforge:forge:1.16.4-35.1.4'
-	compileOnly fg.deobf('mezz.jei:jei-1.16.4:7.6.0.62:api')
-	runtimeOnly fg.deobf('mezz.jei:jei-1.16.4:7.6.0.62')
-	compileOnly fg.deobf('top.theillusivec4.curios:curios-forge:1.16.4-4.0.3.5:api')
-	runtimeOnly fg.deobf('top.theillusivec4.curios:curios-forge:1.16.4-4.0.3.5')
+	minecraft 'net.minecraftforge:forge:1.16.5-36.1.4'
+	compileOnly fg.deobf('mezz.jei:jei-1.16.5:7.6.3.81:api')
+	runtimeOnly fg.deobf('mezz.jei:jei-1.16.5:7.6.3.81')
+	compileOnly fg.deobf('top.theillusivec4.curios:curios-forge:1.16.5-4.0.5.0:api')
+	runtimeOnly fg.deobf('top.theillusivec4.curios:curios-forge:1.16.5-4.0.5.0')
 }
 
 processResources {

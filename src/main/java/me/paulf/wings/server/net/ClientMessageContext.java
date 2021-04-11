@@ -23,7 +23,7 @@ public class ClientMessageContext extends MessageContext {
     }
 
     public ClientWorld getWorld() {
-        return Objects.requireNonNull(this.getMinecraft().world);
+        return Objects.requireNonNull(this.getMinecraft().level);
     }
 
     public PlayerEntity getPlayer() {

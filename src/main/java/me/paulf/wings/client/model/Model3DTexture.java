@@ -58,12 +58,12 @@ public final class Model3DTexture extends ModelRenderer.ModelBox {
 		}
 		Object[] quads = (Object[]) Array.newInstance(texturedQuadClass, faceCount);
 		int[] quadIndex = {0};
-		final float x0 = this.posX1;
-		final float x1 = (this.posX1 + this.width);
-		final float y0 = this.posY1;
-		final float y1 = (this.posY1 + this.height);
-		final float z0 = this.posZ1;
-		final float z1 = (this.posZ1 + 1);
+		final float x0 = this.minX;
+		final float x1 = (this.minX + this.width);
+		final float y0 = this.minY;
+		final float y1 = (this.minY + this.height);
+		final float z0 = this.minZ;
+		final float z1 = (this.minZ + 1);
 		FaceAdder faces = (fx0, fy0, fz0, fx1, fy1, fz1, fu1, fv1, fu2, fv2, normal) -> {
 			Object[] vertices = (Object[]) Array.newInstance(positionTextureVertexClass, 4);
 			try {

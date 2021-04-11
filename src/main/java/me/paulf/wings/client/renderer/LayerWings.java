@@ -31,16 +31,16 @@ public final class LayerWings extends LayerRenderer<LivingEntity, BipedModel<Liv
 				flight.ifFormPresent(form -> {
 					// RenderType.getArmorCutoutNoCull(armorResource)
 					//buffer.getBuffer(RenderType.getEntityCutout(form.getTexture()));
-					IVertexBuilder builder = ItemRenderer.getArmorVertexBuilder(
+					IVertexBuilder builder = ItemRenderer.getArmorFoilBuffer(
 						buffer,
-						RenderType.getEntityCutout(form.getTexture()),
+						RenderType.entityCutout(form.getTexture()),
 						false,
-						stack.hasEffect()
+						stack.hasFoil()
 					);
-					matrixStack.push();
+					matrixStack.pushPose();
 					this.transform.apply(player, matrixStack);
 					form.render(matrixStack, builder, packedLight, OverlayTexture.NO_OVERLAY, 1.0F, 1.0F, 1.0F, 1.0F, delta);
-					matrixStack.pop();
+					matrixStack.popPose();
 				});
 			});
 		}
