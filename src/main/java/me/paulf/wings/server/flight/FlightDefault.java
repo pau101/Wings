@@ -26,11 +26,11 @@ public final class FlightDefault implements Flight {
 
 	private static final int MAX_TIME_FLYING = 20;
 
-	private static final float MIN_SPEED = 0.3F;
+	private static final float MIN_SPEED = 0.03F;
 
-	private static final float MAX_SPEED = 0.715F;
+	private static final float MAX_SPEED = 0.0715F;
 
-	private static final float Y_BOOST = 0.5F;
+	private static final float Y_BOOST = 0.05F;
 
 	private static final float FALL_REDUCTION = 0.9F;
 
@@ -113,9 +113,9 @@ public final class FlightDefault implements Flight {
 			if (this.isFlying()) {
 				final float speed = (float) MathHelper.clampedLerp(MIN_SPEED, MAX_SPEED, player.zza);
 				final float elevationBoost = Mth.transform(
-					Math.abs(player.xRot),
-					45.0F, 90.0F,
-					1.0F, 0.0F
+						Math.abs(player.xRot),
+						45.0F, 90.0F,
+						1.0F, 0.0F
 				);
 				final float pitch = -Mth.toRadians(player.xRot - PITCH_OFFSET * elevationBoost);
 				final float yaw = -Mth.toRadians(player.yRot) - Mth.PI;
@@ -123,15 +123,15 @@ public final class FlightDefault implements Flight {
 				final float vy = MathHelper.sin(pitch);
 				final float vz = MathHelper.cos(yaw);
 				final float vx = MathHelper.sin(yaw);
-				player.setDeltaMovement(
-					vx * vxz * speed,
-					vy * (speed + Y_BOOST * (player.xRot > 0.0F ? elevationBoost : 1.0D)),
-					vz * vxz * speed
-				);
-//				player.setDeltaMovement(0.000000000000000000000000000000001d, 0.000000000000000000000000000000001d, 0.000000000000000000000000000000001d);
+
+				player.setDeltaMovement(player.getDeltaMovement().add(
+						vx * vxz * speed,
+						vy * speed + Y_BOOST * (player.xRot > 0.0F ? elevationBoost : 1.0D),
+						vz * vxz * speed
+				));
 			}
 			if (this.canLand(player, wings)) {
-				final Vector3d mot = player.position();
+				final Vector3d mot = player.getDeltaMovement();
 				if (mot.y() < 0.0D) {
 					player.setDeltaMovement(mot.multiply(1.0D, FALL_REDUCTION, 1.0D));
 				}
@@ -146,9 +146,7 @@ public final class FlightDefault implements Flight {
 					this.setIsFlying(false, PlayerSet.ofAll());
 					this.state = this.state.next();
 				}
-			}, () -> {
-				this.state = this.state.next();
-			});
+			}, () -> this.state = this.state.next());
 		}
 	}
 
@@ -179,7 +177,7 @@ public final class FlightDefault implements Flight {
 			FlightApparatuses.get(wings).ifPresent(apparatus -> {
 				if (this.isFlying()) {
 					apparatus.onFlight(player, wings, direction);
-				} else if (player.position().y() < -0.5D) {
+				} else if (player.getDeltaMovement().y() < -0.5D) {
 					apparatus.onLanding(player, wings, direction);
 				}
 			});
