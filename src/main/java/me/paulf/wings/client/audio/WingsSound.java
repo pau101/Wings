@@ -33,7 +33,7 @@ public final class WingsSound extends TickableSound {
 			this.x = (float) this.player.getX();
 			this.y = (float) this.player.getY();
 			this.z = (float) this.player.getZ();
-			final float velocity = (float) this.player.position().length();
+			final float velocity = (float) this.player.getDeltaMovement().length();
 			if (velocity >= 0.01F) {
 				final float halfVel = velocity * 0.5F;
 				this.volume = MathHelper.clamp(halfVel * halfVel, 0.0F, 1.0F);

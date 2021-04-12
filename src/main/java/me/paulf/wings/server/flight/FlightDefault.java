@@ -113,9 +113,9 @@ public final class FlightDefault implements Flight {
 			if (this.isFlying()) {
 				final float speed = (float) MathHelper.clampedLerp(MIN_SPEED, MAX_SPEED, player.zza);
 				final float elevationBoost = Mth.transform(
-						Math.abs(player.xRot),
-						45.0F, 90.0F,
-						1.0F, 0.0F
+					Math.abs(player.xRot),
+					45.0F, 90.0F,
+					1.0F, 0.0F
 				);
 				final float pitch = -Mth.toRadians(player.xRot - PITCH_OFFSET * elevationBoost);
 				final float yaw = -Mth.toRadians(player.yRot) - Mth.PI;
