@@ -50,12 +50,11 @@ public abstract class Proxy {
 
 	protected void setup(final FMLCommonSetupEvent event) {
 		CapabilityManager.INSTANCE.register(Flight.class, SimpleStorage.ofVoid(), FlightDefault::new);
-		CapabilityManager.INSTANCE.register(FlightApparatus.class, SimpleStorage.ofVoid(), SimpleFlightApparatus.builder()::build);
 		CapabilityManager.INSTANCE.register(InSomniable.class, SimpleStorage.ofVoid(), InSomniable::new);
 		event.enqueueWork(() -> {
 			BrewingRecipeRegistry.addRecipe(
 				new PotionMix(Potions.SLOW_FALLING,
-					Ingredient.fromItems(Items.BONE),
+					Ingredient.of(Items.BONE),
 					WingsPotions.ANGEL_WINGS.get()
 				)
 			);

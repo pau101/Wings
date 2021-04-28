@@ -34,7 +34,7 @@ public final class WingsMod {
 
 	private static WingsMod INSTANCE;
 
-	public static final Registry<FlightApparatus> WINGS = new DefaultedRegistry<>(ID + ":angel_wings", RegistryKey.getOrCreateRootKey(new ResourceLocation(ID, "wings")), Lifecycle.experimental());
+	public static final Registry<FlightApparatus> WINGS = new DefaultedRegistry<>(ID + ":angel_wings", RegistryKey.createRegistryKey(new ResourceLocation(ID, "wings")), Lifecycle.experimental());
 
 	public static final FlightApparatus ANGEL_WINGS = Registry.register(WINGS, ID + ":angel_wings", new SimpleFlightApparatus(WingsItemsConfig.ANGEL));
 	public static final FlightApparatus BAT_WINGS = Registry.register(WINGS, ID + ":bat_wings", new SimpleFlightApparatus(WingsItemsConfig.BAT));

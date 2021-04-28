@@ -16,7 +16,7 @@ public final class WingsItems {
 
 	public static final DeferredRegister<Item> REG = DeferredRegister.create(ForgeRegistries.ITEMS, WingsMod.ID);
 
-	public static final RegistryObject<Item> BAT_BLOOD = REG.register("bat_blood", () -> new Item(new Item.Properties().containerItem(Items.GLASS_BOTTLE).group(ItemGroup.FOOD)));
+	public static final RegistryObject<Item> BAT_BLOOD = REG.register("bat_blood", () -> new Item(new Item.Properties().craftRemainder(Items.GLASS_BOTTLE).tab(ItemGroup.TAB_FOOD)));
 
 	public static final class Names {
 		private Names() {}

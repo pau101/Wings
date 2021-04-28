@@ -74,22 +74,22 @@ public final class DebugFlightAnimation {
 		public void tick(final TickEvent.ClientTickEvent event) {
 			if (event.phase == TickEvent.Phase.END) {
 				final Minecraft mc = Minecraft.getInstance();
-				final ClientWorld world = mc.world;
-				if (world != null && (this.player == null || this.player.world != world)) {
+				final ClientWorld world = mc.level;
+				if (world != null && (this.player == null || this.player.level != world)) {
 					this.player = new RemoteClientPlayerEntity(world, PROFILE) {{
-						this.getDataManager().set(PLAYER_MODEL_FLAG, (byte) 0xFF);
+						this.getEntityData().set(DATA_PLAYER_MODE_CUSTOMISATION, (byte) 0xFF);
 					}};
-					this.player.setEntityId(-this.player.getEntityId());
-					this.player.setPosition(0.0D, 62.0D, 0.0D);
-					this.player.prevPosZ = -1.0D;
-					this.player.prevPosY = 63.0D;
-					this.player.addPotionEffect(new EffectInstance(WingsEffects.WINGS.get()));
+					this.player.setId(-this.player.getId());
+					this.player.setPos(0.0D, 62.0D, 0.0D);
+					this.player.zo = -1.0D;
+					this.player.yo = 63.0D;
+					this.player.addEffect(new EffectInstance(WingsEffects.WINGS.get()));
 					Flights.get(this.player).ifPresent(flight -> flight.setIsFlying(true));
 					final Int2ObjectMap<Entity> entities = ObfuscationReflectionHelper.getPrivateValue(ClientWorld.class, world, "entitiesById");
-					entities.put(this.player.getEntityId(), this.player);
+					entities.put(this.player.getId(), this.player);
 				}
 				if (this.player != null && mc.getConnection() != null) {
-					this.player.ticksExisted++;
+					this.player.tickCount++;
 					this.player.tick();
 				}
 			}
@@ -98,19 +98,19 @@ public final class DebugFlightAnimation {
 		@SubscribeEvent
 		public void render(final RenderWorldLastEvent event) {
 			final Minecraft mc = Minecraft.getInstance();
-			if (mc.world != null && mc.player != null && mc.renderViewEntity != null) {
-				final EntityRendererManager manager = mc.getRenderManager();
-				Vector3d projectedView = mc.gameRenderer.getActiveRenderInfo().getProjectedView();
-				manager.renderEntityStatic(
+			if (mc.level != null && mc.player != null && mc.cameraEntity != null) {
+				final EntityRendererManager manager = mc.getEntityRenderDispatcher();
+				Vector3d projectedView = mc.gameRenderer.getMainCamera().getPosition();
+				manager.render(
 					this.player,
-					this.player.getPosX() - projectedView.getX(),
-					this.player.getPosY() - projectedView.getY(),
-					this.player.getPosZ() - projectedView.getZ(),
+					this.player.getX() - projectedView.x(),
+					this.player.getY() - projectedView.y(),
+					this.player.getZ() - projectedView.z(),
 					0.0F,
 					event.getPartialTicks(),
 					event.getMatrixStack(),
-					mc.getRenderTypeBuffers().getBufferSource(),
-					manager.getPackedLight(this.player, event.getPartialTicks())
+					mc.renderBuffers().bufferSource(),
+					manager.getPackedLightCoords(this.player, event.getPartialTicks())
 				);
 			}
 		}

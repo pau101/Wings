@@ -80,10 +80,10 @@ public final class InSomniable {
 		public State onPlay(final World world, final PlayerEntity player, final BlockPos pos, final int note) {
 			if (note >= 6 && note <= 14 && ((this.state = (this.state | this.mask[note - 6]) << 1) & 0x20000) == 0) {
 				final ItemStack stack = WingsPotions.ANGEL_WINGS.get().createStack();
-				stack.setDisplayName(new TranslationTextComponent(this.members[world.rand.nextInt(this.members.length)]));
+				stack.setHoverName(new TranslationTextComponent(this.members[world.random.nextInt(this.members.length)]));
 				final ItemEntity entity = new ItemEntity(world, pos.getX() + 0.5D, pos.getY() + 1.25D, pos.getZ() + 0.5D, stack);
-				entity.setDefaultPickupDelay();
-				world.addEntity(entity);
+				entity.setDefaultPickUpDelay();
+				world.addFreshEntity(entity);
 				return InSomniacState.INSTANCE;
 			}
 			return this;
