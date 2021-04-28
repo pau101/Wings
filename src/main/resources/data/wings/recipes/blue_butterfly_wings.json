@@ -1,0 +1,28 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        "IDB",
+        "GMG",
+        "G G"
+    ],
+    "key": {
+        "I": {
+            "tag": "forge:dyes/black"
+        },
+        "B": {
+            "tag": "forge:dyes/blue"
+        },
+        "G": {
+            "tag": "forge:ingots/gold"
+        },
+        "M": {
+            "item": "minecraft:phantom_membrane"
+        },
+        "D": {
+            "tag": "forge:gems/diamond"
+        }
+    },
+    "result": {
+        "item": "wings:blue_butterfly_wings"
+    }
+}

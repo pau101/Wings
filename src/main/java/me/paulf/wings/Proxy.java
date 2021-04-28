@@ -10,6 +10,8 @@ import me.paulf.wings.server.flight.FlightDefault;
 import me.paulf.wings.server.net.Network;
 import me.paulf.wings.server.net.clientbound.MessageSetWingSettings;
 import me.paulf.wings.server.net.clientbound.MessageSyncFlight;
+import me.paulf.wings.server.potion.PotionMix;
+import me.paulf.wings.server.potion.WingsPotions;
 import me.paulf.wings.util.CapabilityProviders;
 import me.paulf.wings.util.ItemAccessor;
 import me.paulf.wings.util.ItemPlacing;
@@ -18,7 +20,11 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.EquipmentSlotType;
+import net.minecraft.item.Items;
+import net.minecraft.item.crafting.Ingredient;
+import net.minecraft.potion.Potions;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.common.brewing.BrewingRecipeRegistry;
 import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -46,6 +52,14 @@ public abstract class Proxy {
 		CapabilityManager.INSTANCE.register(Flight.class, SimpleStorage.ofVoid(), FlightDefault::new);
 		CapabilityManager.INSTANCE.register(FlightApparatus.class, SimpleStorage.ofVoid(), SimpleFlightApparatus.builder()::build);
 		CapabilityManager.INSTANCE.register(InSomniable.class, SimpleStorage.ofVoid(), InSomniable::new);
+		event.enqueueWork(() -> {
+			BrewingRecipeRegistry.addRecipe(
+				new PotionMix(Potions.SLOW_FALLING,
+					Ingredient.fromItems(Items.BONE),
+					WingsPotions.ANGEL_WINGS.get()
+				)
+			);
+		});
 	}
 
 	protected void lateinit() {

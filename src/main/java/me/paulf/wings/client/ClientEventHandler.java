@@ -4,7 +4,6 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 import me.paulf.wings.WingsMod;
 import me.paulf.wings.client.audio.WingsSound;
 import me.paulf.wings.client.flight.FlightViews;
-import me.paulf.wings.server.apparatus.FlightApparatuses;
 import me.paulf.wings.server.asm.ApplyPlayerRotationsEvent;
 import me.paulf.wings.server.asm.EmptyOffHandPresentEvent;
 import me.paulf.wings.server.asm.GetCameraEyeHeightEvent;
@@ -97,7 +96,7 @@ public final class ClientEventHandler {
 	public static void onEmptyOffHandPresentEvent(final EmptyOffHandPresentEvent event) {
 		Flights.get(event.getPlayer()).ifPresent(flight -> {
 			if (flight.isFlying()) {
-			 event.setResult(Event.Result.ALLOW);
+				event.setResult(Event.Result.ALLOW);
 			}
 		});
 	}
@@ -111,10 +110,10 @@ public final class ClientEventHandler {
 
 	@SubscribeEvent
 	public static void onPlayerTick(final TickEvent.PlayerTickEvent event) {
-		final PlayerEntity entity;
-		if (event.phase == TickEvent.Phase.END && (entity = event.player) instanceof ClientPlayerEntity) {
+		final PlayerEntity entity = event.player;
+		if (event.phase == TickEvent.Phase.END && entity instanceof ClientPlayerEntity) {
 			final ClientPlayerEntity player = (ClientPlayerEntity) entity;
-			FlightViews.get(player).ifPresent(flight -> flight.tick(FlightApparatuses.find(player)));
+			FlightViews.get(player).ifPresent(flight -> flight.tick());
 		}
 	}
 }

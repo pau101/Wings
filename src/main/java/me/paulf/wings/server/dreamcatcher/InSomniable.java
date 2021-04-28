@@ -1,11 +1,14 @@
 package me.paulf.wings.server.dreamcatcher;
 
 import me.paulf.wings.server.item.WingsItems;
+import me.paulf.wings.server.potion.WingsPotions;
 import me.paulf.wings.util.NBTSerializer;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.potion.PotionUtils;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
@@ -76,11 +79,11 @@ public final class InSomniable {
 		@Override
 		public State onPlay(final World world, final PlayerEntity player, final BlockPos pos, final int note) {
 			if (note >= 6 && note <= 14 && ((this.state = (this.state | this.mask[note - 6]) << 1) & 0x20000) == 0) {
-				final ItemStack stack = new ItemStack(WingsItems.BLUE_BUTTERFLY_WINGS.get());
-				stack.setHoverName(new TranslationTextComponent(this.members[world.random.nextInt(this.members.length)]));
+				final ItemStack stack = WingsPotions.ANGEL_WINGS.get().createStack();
+				stack.setDisplayName(new TranslationTextComponent(this.members[world.rand.nextInt(this.members.length)]));
 				final ItemEntity entity = new ItemEntity(world, pos.getX() + 0.5D, pos.getY() + 1.25D, pos.getZ() + 0.5D, stack);
-				entity.setDefaultPickUpDelay();
-				world.addFreshEntity(entity);
+				entity.setDefaultPickupDelay();
+				world.addEntity(entity);
 				return InSomniacState.INSTANCE;
 			}
 			return this;

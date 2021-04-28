@@ -10,7 +10,7 @@ public interface FlightApparatus {
 
 	void onLanding(final PlayerEntity player, final ItemStack stack, final Vector3d direction);
 
-	boolean isUsable(final PlayerEntity player, final ItemStack stack);
+	boolean isUsable(final PlayerEntity player);
 
 	boolean isLandable(final PlayerEntity player, final ItemStack stack);
 

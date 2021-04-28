@@ -1,18 +1,14 @@
 package me.paulf.wings.server;
 
 import me.paulf.wings.WingsMod;
-import me.paulf.wings.server.apparatus.FlightApparatuses;
 import me.paulf.wings.server.asm.GetLivingHeadLimitEvent;
 import me.paulf.wings.server.asm.PlayerFlightCheckEvent;
 import me.paulf.wings.server.asm.PlayerFlownEvent;
-import me.paulf.wings.server.flight.ConstructWingsAccessorEvent;
 import me.paulf.wings.server.flight.Flight;
 import me.paulf.wings.server.flight.Flights;
 import me.paulf.wings.server.item.WingsItems;
-import me.paulf.wings.util.ItemPlacing;
 import net.minecraft.entity.passive.BatEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.stats.Stats;
@@ -25,7 +21,6 @@ import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.EntityMountEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
-import net.minecraftforge.eventbus.api.Event;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
@@ -78,7 +73,7 @@ public final class ServerEventHandler {
 	public static void onPlayerTick(final TickEvent.PlayerTickEvent event) {
 		if (event.phase == TickEvent.Phase.END) {
 			Flights.get(event.player).ifPresent(flight ->
-				flight.tick(event.player, FlightApparatuses.find(event.player))
+				flight.tick(event.player)
 			);
 		}
 	}
@@ -100,7 +95,7 @@ public final class ServerEventHandler {
 	public static void onPlayerFlown(final PlayerFlownEvent event) {
 		final PlayerEntity player = event.getPlayer();
 		Flights.get(player).ifPresent(flight -> {
-			flight.onFlown(player, FlightApparatuses.find(event.getPlayer()), event.getDirection());
+			flight.onFlown(player, event.getDirection());
 		});
 	}
 

@@ -1,8 +1,11 @@
 package me.paulf.wings.server.flight;
 
+import com.google.common.base.MoreObjects;
 import com.google.common.collect.Lists;
 import me.paulf.wings.server.apparatus.FlightApparatus;
 import me.paulf.wings.server.apparatus.FlightApparatuses;
+import me.paulf.wings.server.effect.WingsEffects;
+import me.paulf.wings.server.item.WingsItems;
 import me.paulf.wings.util.CubicBezier;
 import me.paulf.wings.util.Mth;
 import me.paulf.wings.util.NBTSerializer;
@@ -12,11 +15,13 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.PacketBuffer;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Util;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Vector3d;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.function.Supplier;
 
 public final class FlightDefault implements Flight {
@@ -48,6 +53,8 @@ public final class FlightDefault implements Flight {
 
 	private boolean isFlying;
 
+	private ResourceLocation wing = WingsItems.Names.ANGEL;
+
 	private WingState state = this.voidState;
 
 	@Override
@@ -75,6 +82,16 @@ public final class FlightDefault implements Flight {
 	}
 
 	@Override
+	public void setWing(ResourceLocation wing) {
+		this.wing = Objects.requireNonNull(wing);
+	}
+
+	@Override
+	public ResourceLocation getWing() {
+		return this.wing;
+	}
+
+	@Override
 	public float getFlyingAmount(final float delta) {
 		return FLY_AMOUNT_CURVE.eval(Mth.lerp(this.getPrevTimeFlying(), this.getTimeFlying(), delta) / MAX_TIME_FLYING);
 	}
@@ -99,69 +116,69 @@ public final class FlightDefault implements Flight {
 
 	@Override
 	public boolean canFly(final PlayerEntity player) {
-		final ItemStack stack = FlightApparatuses.find(player);
-		return FlightApparatuses.get(stack).filter(apparatus -> apparatus.isUsable(player, stack)).isPresent();
+		return WingsEffects.WINGS.filter(effect -> player.getActivePotionEffect(effect) != null).isPresent() && apparatus.isUsable(player);
 	}
 
 	@Override
-	public boolean canLand(final PlayerEntity player, final ItemStack wings) {
+	public boolean canLand(final PlayerEntity player) {
 		return FlightApparatuses.get(wings).filter(apparatus -> apparatus.isLandable(player, wings)).isPresent();
 	}
 
 	private void onWornUpdate(final PlayerEntity player, final ItemStack wings) {
-		if (player.isEffectiveAi()) {
+		if (player.isServerWorld()) {
 			if (this.isFlying()) {
-				final float speed = (float) MathHelper.clampedLerp(MIN_SPEED, MAX_SPEED, player.zza);
+				final float speed = (float) MathHelper.clampedLerp(MIN_SPEED, MAX_SPEED, player.moveForward);
 				final float elevationBoost = Mth.transform(
-					Math.abs(player.xRot),
+					Math.abs(player.rotationPitch),
 					45.0F, 90.0F,
 					1.0F, 0.0F
 				);
-				final float pitch = -Mth.toRadians(player.xRot - PITCH_OFFSET * elevationBoost);
-				final float yaw = -Mth.toRadians(player.yRot) - Mth.PI;
+				final float pitch = -Mth.toRadians(player.rotationPitch - PITCH_OFFSET * elevationBoost);
+				final float yaw = -Mth.toRadians(player.rotationYaw) - Mth.PI;
 				final float vxz = -MathHelper.cos(pitch);
 				final float vy = MathHelper.sin(pitch);
 				final float vz = MathHelper.cos(yaw);
 				final float vx = MathHelper.sin(yaw);
-
-				player.setDeltaMovement(player.getDeltaMovement().add(
-						vx * vxz * speed,
-						vy * speed + Y_BOOST * (player.xRot > 0.0F ? elevationBoost : 1.0D),
-						vz * vxz * speed
+				player.setMotion(player.getMotion().add(
+					vx * vxz * speed,
+					vy * speed + Y_BOOST * (player.rotationPitch > 0.0F ? elevationBoost : 1.0D),
+					vz * vxz * speed
 				));
 			}
-			if (this.canLand(player, wings)) {
-				final Vector3d mot = player.getDeltaMovement();
-				if (mot.y() < 0.0D) {
-					player.setDeltaMovement(mot.multiply(1.0D, FALL_REDUCTION, 1.0D));
+			if (this.canLand(player)) {
+				final Vector3d mot = player.getMotion();
+				if (mot.getY() < 0.0D) {
+					player.setMotion(mot.mul(1.0D, FALL_REDUCTION, 1.0D));
 				}
 				player.fallDistance = 0.0F;
 			}
 		}
-		if (!player.level.isClientSide) {
-			Util.ifElse(FlightApparatuses.get(wings).resolve(), apparatus -> {
+		if (!player.world.isRemote) {
+			Util.acceptOrElse(FlightApparatuses.get(wings).resolve(), apparatus -> {
 				if (apparatus.isUsable(player, wings)) {
 					(this.state = this.state.next(wings, apparatus)).onUpdate(player, wings);
 				} else if (this.isFlying()) {
 					this.setIsFlying(false, PlayerSet.ofAll());
 					this.state = this.state.next();
 				}
-			}, () -> this.state = this.state.next());
+			}, () -> {
+				this.state = this.state.next();
+			});
 		}
 	}
 
 	@Override
-	public void tick(final PlayerEntity player, final ItemStack wings) {
+	public void tick(final PlayerEntity player) {
 		if (!wings.isEmpty()) {
 			this.onWornUpdate(player, wings);
-		} else if (!player.level.isClientSide && this.isFlying()) {
+		} else if (!player.world.isRemote && this.isFlying()) {
 			this.setIsFlying(false, Flight.PlayerSet.ofAll());
 		}
 		this.setPrevTimeFlying(this.getTimeFlying());
 		if (this.isFlying()) {
 			if (this.getTimeFlying() < MAX_TIME_FLYING) {
 				this.setTimeFlying(this.getTimeFlying() + 1);
-			} else if (player.isLocalPlayer() && player.isOnGround()) {
+			} else if (player.isUser() && player.isOnGround()) {
 				this.setIsFlying(false, PlayerSet.ofOthers());
 			}
 		} else {
@@ -172,12 +189,12 @@ public final class FlightDefault implements Flight {
 	}
 
 	@Override
-	public void onFlown(final PlayerEntity player, final ItemStack wings, final Vector3d direction) {
+	public void onFlown(final PlayerEntity player, final Vector3d direction) {
 		if (!wings.isEmpty()) {
 			FlightApparatuses.get(wings).ifPresent(apparatus -> {
 				if (this.isFlying()) {
 					apparatus.onFlight(player, wings, direction);
-				} else if (player.getDeltaMovement().y() < -0.5D) {
+				} else if (player.getMotion().getY() < -0.5D) {
 					apparatus.onLanding(player, wings, direction);
 				}
 			});
@@ -212,6 +229,8 @@ public final class FlightDefault implements Flight {
 
 		private static final String TIME_FLYING = "timeFlying";
 
+		private static final String WING = "wing";
+
 		private final Supplier<FlightDefault> factory;
 
 		public Serializer(final Supplier<FlightDefault> factory) {
@@ -223,6 +242,7 @@ public final class FlightDefault implements Flight {
 			final CompoundNBT compound = new CompoundNBT();
 			compound.putBoolean(IS_FLYING, instance.isFlying());
 			compound.putInt(TIME_FLYING, instance.getTimeFlying());
+			compound.putString(WING, instance.getWing().toString());
 			return compound;
 		}
 
@@ -231,6 +251,7 @@ public final class FlightDefault implements Flight {
 			final FlightDefault f = this.factory.get();
 			f.setIsFlying(compound.getBoolean(IS_FLYING));
 			f.setTimeFlying(compound.getInt(TIME_FLYING));
+			f.setWing(MoreObjects.firstNonNull(ResourceLocation.tryCreate(compound.getString(WING)), WingsItems.Names.ANGEL));
 			return f;
 		}
 	}

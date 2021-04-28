@@ -2,8 +2,8 @@ package me.paulf.wings.server.flight;
 
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketBuffer;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.vector.Vector3d;
 
 import java.util.function.Consumer;
@@ -25,6 +25,10 @@ public interface Flight {
 
 	int getTimeFlying();
 
+	void setWing(ResourceLocation wing);
+
+	ResourceLocation getWing();
+
 	float getFlyingAmount(final float delta);
 
 	void registerFlyingListener(final FlyingListener listener);
@@ -33,11 +37,11 @@ public interface Flight {
 
 	boolean canFly(final PlayerEntity player);
 
-	boolean canLand(final PlayerEntity player, final ItemStack wings);
+	boolean canLand(final PlayerEntity player);
 
-	void tick(final PlayerEntity player, final ItemStack wings);
+	void tick(final PlayerEntity player);
 
-	void onFlown(final PlayerEntity player, final ItemStack wings, final Vector3d direction);
+	void onFlown(final PlayerEntity player, final Vector3d direction);
 
 	void clone(final Flight other);
 

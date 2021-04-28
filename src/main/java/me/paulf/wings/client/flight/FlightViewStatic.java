@@ -40,7 +40,7 @@ public class FlightViewStatic implements FlightView {
 	}
 
 	@Override
-	public void tick(final ItemStack wings) {}
+	public void tick() {}
 
 	@Override
 	public void tickEyeHeight(final float value, final FloatConsumer valueOut) {}

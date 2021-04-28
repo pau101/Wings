@@ -9,11 +9,11 @@ import me.paulf.wings.client.flight.state.State;
 import me.paulf.wings.client.flight.state.StateIdle;
 import me.paulf.wings.server.apparatus.FlightApparatuses;
 import me.paulf.wings.server.flight.Flight;
+import me.paulf.wings.server.item.WingsItems;
 import me.paulf.wings.util.function.FloatConsumer;
 import net.minecraft.entity.Pose;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.util.ResourceLocation;
 
@@ -22,7 +22,7 @@ import java.util.function.Consumer;
 public final class FlightViewDefault implements FlightView {
 	private final Flight flight;
 
-	private final WingState absentAnimator = new WingState(Items.AIR, new Strategy() {
+	private final WingState absentAnimator = new WingState(WingsItems.Names.ANGEL, new Strategy() {
 		@Override
 		public void update(final PlayerEntity player) {}
 
@@ -45,13 +45,11 @@ public final class FlightViewDefault implements FlightView {
 	}
 
 	@Override
-	public void tick(final ItemStack wings) {
-		if (!wings.isEmpty()) {
-			this.animator = FlightApparatusViews.get(wings)
-				.map(view -> this.animator.next(wings, view))
-				.orElseGet(this.animator::next);
-			this.animator.update(this.player);
-		}
+	public void tick() {
+		this.animator = FlightApparatusViews.get(wings)
+			.map(view -> this.animator.next(wings, view))
+			.orElseGet(this.animator::next);
+		this.animator.update(this.player);
 	}
 
 	@Override
@@ -68,12 +66,12 @@ public final class FlightViewDefault implements FlightView {
 	}
 
 	private final class WingState {
-		private final Item item;
+		private final ResourceLocation wing;
 
 		private final Strategy behavior;
 
-		private WingState(final Item item, final Strategy behavior) {
-			this.item = item;
+		private WingState(final ResourceLocation wing, final Strategy behavior) {
+			this.wing = wing;
 			this.behavior = behavior;
 		}
 
@@ -81,16 +79,15 @@ public final class FlightViewDefault implements FlightView {
 			return FlightViewDefault.this.absentAnimator;
 		}
 
-		private WingState next(final ItemStack stack, final FlightApparatusView view) {
-			final Item item = stack.getItem();
-			if (this.item.equals(item)) {
+		private WingState next(final ResourceLocation wing, final FlightApparatusView view) {
+			if (this.wing.equals(wing)) {
 				return this;
 			}
-			return this.newState(item, view.getForm());
+			return this.newState(this.wing, view.getForm());
 		}
 
-		private <T extends Animator> WingState newState(final Item item, final WingForm<T> shape) {
-			return new WingState(item, new WingStrategy<>(shape));
+		private <T extends Animator> WingState newState(final ResourceLocation wing, final WingForm<T> shape) {
+			return new WingState(wing, new WingStrategy<>(shape));
 		}
 
 		private void update(final PlayerEntity player) {
@@ -119,11 +116,10 @@ public final class FlightViewDefault implements FlightView {
 				this.animator.update();
 				final State state = this.state.update(
 					FlightViewDefault.this.flight,
-					player.getX() - player.xo,
-					player.getY() - player.yo,
-					player.getZ() - player.zo,
-					player,
-					FlightApparatuses.find(player)
+					player.getPosX() - player.prevPosX,
+					player.getPosY() - player.prevPosY,
+					player.getPosZ() - player.prevPosZ,
+					player
 				);
 				if (!this.state.equals(state)) {
 					state.beginAnimation(this.animator);
