@@ -56,10 +56,10 @@ public abstract class Proxy {
 
 	public void addFlightListeners(final PlayerEntity player, final Flight instance) {
 		if (player instanceof ServerPlayerEntity) {
-			instance.registerFlyingListener(isFlying -> player.abilities.allowFlying = isFlying);
+			instance.registerFlyingListener(isFlying -> player.abilities.mayfly = isFlying);
 			instance.registerFlyingListener(isFlying -> {
 				if (isFlying) {
-					player.dismount();
+					player.removeVehicle();
 				}
 			});
 			final Flight.Notifier notifier = Flight.Notifier.of(

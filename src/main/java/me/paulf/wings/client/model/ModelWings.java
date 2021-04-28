@@ -12,19 +12,19 @@ import net.minecraft.util.math.vector.Vector3d;
 
 public abstract class ModelWings<A extends Animator> extends Model {
 	public ModelWings() {
-		super(RenderType::getEntityCutout);
+		super(RenderType::entityCutout);
 	}
 
 	@Deprecated
 	@Override
-	public void render(final MatrixStack matrixStack, final IVertexBuilder buffer, final int packedLight, final int packedOverlay, final float red, final float green, final float blue, final float alpha) {
+	public void renderToBuffer(final MatrixStack matrixStack, final IVertexBuilder buffer, final int packedLight, final int packedOverlay, final float red, final float green, final float blue, final float alpha) {
 	}
 
 	public abstract void render(A animator, float delta, final MatrixStack matrixStack, final IVertexBuilder buffer, final int packedLight, final int packedOverlay, final float red, final float green, final float blue, final float alpha);
 
 	static void setAngles(final ModelRenderer left, final ModelRenderer right, final Vector3d angles) {
-		right.rotateAngleX = (left.rotateAngleX = Mth.toRadians((float) angles.x));
-		right.rotateAngleY = -(left.rotateAngleY = Mth.toRadians((float) angles.y));
-		right.rotateAngleZ = -(left.rotateAngleZ = Mth.toRadians((float) angles.z));
+		right.xRot = (left.xRot = Mth.toRadians((float) angles.x));
+		right.yRot = -(left.yRot = Mth.toRadians((float) angles.y));
+		right.zRot = -(left.zRot = Mth.toRadians((float) angles.z));
 	}
 }

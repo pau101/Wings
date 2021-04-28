@@ -33,17 +33,17 @@ public final class ClientEventHandler {
 	public static void onAnimatePlayerModel(final AnimatePlayerModelEvent event) {
 		final PlayerEntity player = event.getPlayer();
 		Flights.get(player).ifPresent(flight -> {
-			final float delta = event.getTicksExisted() - player.ticksExisted;
+			final float delta = event.getTicksExisted() - player.tickCount;
 			final float amt = flight.getFlyingAmount(delta);
 			if (amt == 0.0F) return;
 			final PlayerModel<?> model = event.getModel();
 			final float pitch = event.getPitch();
-			model.bipedHead.rotateAngleX = Mth.toRadians(Mth.lerp(pitch, pitch / 4.0F - 90.0F, amt));
-			model.bipedLeftArm.rotateAngleX = Mth.lerp(model.bipedLeftArm.rotateAngleX, -3.2F, amt);
-			model.bipedRightArm.rotateAngleX = Mth.lerp(model.bipedRightArm.rotateAngleX, -3.2F, amt);
-			model.bipedLeftLeg.rotateAngleX = Mth.lerp(model.bipedLeftLeg.rotateAngleX, 0.0F, amt);
-			model.bipedRightLeg.rotateAngleX = Mth.lerp(model.bipedRightLeg.rotateAngleX, 0.0F, amt);
-			model.bipedHeadwear.copyModelAngles(model.bipedHead);
+			model.head.xRot = Mth.toRadians(Mth.lerp(pitch, pitch / 4.0F - 90.0F, amt));
+			model.leftArm.xRot = Mth.lerp(model.leftArm.xRot, -3.2F, amt);
+			model.rightArm.xRot = Mth.lerp(model.rightArm.xRot, -3.2F, amt);
+			model.leftLeg.xRot = Mth.lerp(model.leftLeg.xRot, 0.0F, amt);
+			model.rightLeg.xRot = Mth.lerp(model.rightLeg.xRot, 0.0F, amt);
+			model.hat.copyFrom(model.head);
 		});
 	}
 
@@ -55,13 +55,13 @@ public final class ClientEventHandler {
 			final float amt = flight.getFlyingAmount(delta);
 			if (amt > 0.0F) {
 				final float roll = Mth.lerpDegrees(
-					player.prevRenderYawOffset - player.prevRotationYaw,
-					player.renderYawOffset - player.rotationYaw,
+					player.yBodyRotO - player.yRotO,
+					player.yBodyRot - player.yRot,
 					delta
 				);
-				final float pitch = -Mth.lerpDegrees(player.prevRotationPitch, player.rotationPitch, delta) - 90.0F;
-				matrixStack.rotate(Vector3f.ZP.rotationDegrees(Mth.lerpDegrees(0.0F, roll, amt)));
-				matrixStack.rotate(Vector3f.XP.rotationDegrees(Mth.lerpDegrees(0.0F, pitch, amt)));
+				final float pitch = -Mth.lerpDegrees(player.xRotO, player.xRot, delta) - 90.0F;
+				matrixStack.mulPose(Vector3f.ZP.rotationDegrees(Mth.lerpDegrees(0.0F, roll, amt)));
+				matrixStack.mulPose(Vector3f.XP.rotationDegrees(Mth.lerpDegrees(0.0F, pitch, amt)));
 				matrixStack.translate(0.0D, -1.2D * Mth.easeInOut(amt), 0.0D);
 			}
 		});
@@ -79,13 +79,13 @@ public final class ClientEventHandler {
 
 	@SubscribeEvent
 	public static void onCameraSetup(final EntityViewRenderEvent.CameraSetup event) {
-		Flights.ifPlayer(Minecraft.getInstance().renderViewEntity, (player, flight) -> {
+		Flights.ifPlayer(Minecraft.getInstance().cameraEntity, (player, flight) -> {
 			final float delta = (float) event.getRenderPartialTicks();
 			final float amt = flight.getFlyingAmount(delta);
 			if (amt > 0.0F) {
 				final float roll = Mth.lerpDegrees(
-					player.prevRenderYawOffset - player.prevRotationYaw,
-					player.renderYawOffset - player.rotationYaw,
+					player.yBodyRotO - player.yRotO,
+					player.yBodyRot - player.yRot,
 					delta
 				);
 				event.setRoll(Mth.lerpDegrees(0.0F, -roll * 0.25F, amt));
@@ -104,8 +104,8 @@ public final class ClientEventHandler {
 
 	@SubscribeEvent
 	public static void onEntityJoinWorld(final EntityJoinWorldEvent event) {
-		Flights.ifPlayer(event.getEntity(), PlayerEntity::isUser, (player, flight) ->
-			Minecraft.getInstance().getSoundHandler().play(new WingsSound(player, flight))
+		Flights.ifPlayer(event.getEntity(), PlayerEntity::isLocalPlayer, (player, flight) ->
+			Minecraft.getInstance().getSoundManager().play(new WingsSound(player, flight))
 		);
 	}
 

@@ -20,20 +20,20 @@ public final class WingsSound extends TickableSound {
 		super(WingsSounds.ITEM_WINGS_FLYING.get(), SoundCategory.PLAYERS);
 		this.player = player;
 		this.flight = flight;
-		this.repeat = repeat;
-		this.repeatDelay = repeatDelay;
+		this.looping = repeat;
+		this.delay = repeatDelay;
 		this.volume = volume;
 	}
 
 	@Override
 	public void tick() {
 		if (!this.player.isAlive()) {
-			this.finishPlaying();
+			this.stop();
 		} else if (this.flight.getFlyingAmount(1.0F) > 0.0F) {
-			this.x = (float) this.player.getPosX();
-			this.y = (float) this.player.getPosY();
-			this.z = (float) this.player.getPosZ();
-			final float velocity = (float) this.player.getMotion().length();
+			this.x = (float) this.player.getX();
+			this.y = (float) this.player.getY();
+			this.z = (float) this.player.getZ();
+			final float velocity = (float) this.player.getDeltaMovement().length();
 			if (velocity >= 0.01F) {
 				final float halfVel = velocity * 0.5F;
 				this.volume = MathHelper.clamp(halfVel * halfVel, 0.0F, 1.0F);

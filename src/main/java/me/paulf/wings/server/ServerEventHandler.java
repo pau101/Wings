@@ -37,27 +37,27 @@ public final class ServerEventHandler {
 	public static void onPlayerEntityInteract(final PlayerInteractEvent.EntityInteract event) {
 		final PlayerEntity player = event.getPlayer();
 		final Hand hand = event.getHand();
-		final ItemStack stack = player.getHeldItem(hand);
+		final ItemStack stack = player.getItemInHand(hand);
 		if (event.getTarget() instanceof BatEntity && stack.getItem() == Items.GLASS_BOTTLE) {
-			player.world.playSound(
+			player.level.playSound(
 				player,
-				player.getPosX(), player.getPosY(), player.getPosZ(),
-				SoundEvents.ITEM_BOTTLE_FILL,
+				player.getX(), player.getY(), player.getZ(),
+				SoundEvents.BOTTLE_FILL,
 				SoundCategory.NEUTRAL,
 				1.0F,
 				1.0F
 			);
 			final ItemStack destroyed = stack.copy();
-			if (!player.abilities.isCreativeMode) {
+			if (!player.abilities.instabuild) {
 				stack.shrink(1);
 			}
-			player.addStat(Stats.ITEM_USED.get(Items.GLASS_BOTTLE));
+			player.awardStat(Stats.ITEM_USED.get(Items.GLASS_BOTTLE));
 			final ItemStack batBlood = new ItemStack(WingsItems.BAT_BLOOD.get());
 			if (stack.isEmpty()) {
 				ForgeEventFactory.onPlayerDestroyItem(player, destroyed, hand);
-				player.setHeldItem(hand, batBlood);
-			} else if (!player.inventory.addItemStackToInventory(batBlood)) {
-				player.dropItem(batBlood, false);
+				player.setItemInHand(hand, batBlood);
+			} else if (!player.inventory.add(batBlood)) {
+				player.drop(batBlood, false);
 			}
 			event.setCancellationResult(ActionResultType.SUCCESS);
 		}

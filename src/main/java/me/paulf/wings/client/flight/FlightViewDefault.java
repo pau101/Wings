@@ -119,9 +119,9 @@ public final class FlightViewDefault implements FlightView {
 				this.animator.update();
 				final State state = this.state.update(
 					FlightViewDefault.this.flight,
-					player.getPosX() - player.prevPosX,
-					player.getPosY() - player.prevPosY,
-					player.getPosZ() - player.prevPosZ,
+					player.getX() - player.xo,
+					player.getY() - player.yo,
+					player.getZ() - player.zo,
 					player,
 					FlightApparatuses.find(player)
 				);

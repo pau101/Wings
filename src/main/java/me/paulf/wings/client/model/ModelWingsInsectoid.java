@@ -13,13 +13,13 @@ public final class ModelWingsInsectoid extends ModelWings<AnimatorInsectoid> {
 	private final ModelRenderer wingRight;
 
 	public ModelWingsInsectoid() {
-		this.textureWidth = this.textureHeight = 64;
+		this.texWidth = this.texHeight = 64;
 		this.root = new ModelRenderer(this, 0, 0);
 		this.wingLeft = new ModelRenderer(this, 0, 0);
-		this.wingLeft.setRotationPoint(0, 2, 3.5F);
+		this.wingLeft.setPos(0, 2, 3.5F);
 		this.wingLeft.addBox(0, -8, 0, 19, 24, 0, 0);
 		this.wingRight = new ModelRenderer(this, 0, 24);
-		this.wingRight.setRotationPoint(0, 2, 3.5F);
+		this.wingRight.setPos(0, 2, 3.5F);
 		this.wingRight.addBox(-19, -8, 0, 19, 24, 0, 0);
 		this.root.addChild(this.wingLeft);
 		this.root.addChild(this.wingRight);

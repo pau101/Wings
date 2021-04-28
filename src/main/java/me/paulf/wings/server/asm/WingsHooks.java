@@ -34,17 +34,17 @@ public final class WingsHooks {
 		final GetLivingHeadLimitEvent ev = GetLivingHeadLimitEvent.create(living);
 		MinecraftForge.EVENT_BUS.post(ev);
 		if (ev.isVanilla()) return false;
-		living.renderYawOffset += MathHelper.wrapDegrees(movementYaw - living.renderYawOffset) * 0.3F;
+		living.yBodyRot += MathHelper.wrapDegrees(movementYaw - living.yBodyRot) * 0.3F;
 		final float hLimit = ev.getHardLimit();
 		final float sLimit = ev.getSoftLimit();
 		final float theta = MathHelper.clamp(
-			MathHelper.wrapDegrees(living.rotationYaw - living.renderYawOffset),
+			MathHelper.wrapDegrees(living.yRot - living.yBodyRot),
 			-hLimit,
 			hLimit
 		);
-		living.renderYawOffset = living.rotationYaw - theta;
+		living.yBodyRot = living.yRot - theta;
 		if (theta * theta > sLimit * sLimit) {
-			living.renderYawOffset += theta * 0.2F;
+			living.yBodyRot += theta * 0.2F;
 		}
 		return true;
 	}

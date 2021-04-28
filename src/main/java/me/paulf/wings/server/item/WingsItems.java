@@ -24,9 +24,9 @@ public final class WingsItems {
 
 	public static final DeferredRegister<Item> REG = DeferredRegister.create(ForgeRegistries.ITEMS, WingsMod.ID);
 
-	public static final RegistryObject<Item> FAIRY_DUST = REG.register("fairy_dust", () -> new Item(new Item.Properties().group(ItemGroupWings.instance())));
+	public static final RegistryObject<Item> FAIRY_DUST = REG.register("fairy_dust", () -> new Item(new Item.Properties().tab(ItemGroupWings.instance())));
 
-	public static final RegistryObject<Item> BAT_BLOOD = REG.register("bat_blood", () -> new Item(new Item.Properties().containerItem(Items.GLASS_BOTTLE).group(ItemGroupWings.instance())));
+	public static final RegistryObject<Item> BAT_BLOOD = REG.register("bat_blood", () -> new Item(new Item.Properties().craftRemainder(Items.GLASS_BOTTLE).tab(ItemGroupWings.instance())));
 
 	public static final RegistryObject<Item> ANGEL_WINGS = REG.register("angel_wings", () -> createWings(Names.ANGEL, WingsMod.instance()::createAvianWings, WingsItemsConfig.ANGEL));
 

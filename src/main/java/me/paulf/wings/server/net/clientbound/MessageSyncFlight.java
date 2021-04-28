@@ -18,7 +18,7 @@ public final class MessageSyncFlight implements Message {
 	}
 
 	public MessageSyncFlight(final PlayerEntity player, final Flight flight) {
-		this(player.getEntityId(), flight);
+		this(player.getId(), flight);
 	}
 
 	private MessageSyncFlight(final int playerId, final Flight flight) {
@@ -39,7 +39,7 @@ public final class MessageSyncFlight implements Message {
 	}
 
 	public static void handle(final MessageSyncFlight message, final ClientMessageContext context) {
-		Flights.ifPlayer(context.getWorld().getEntityByID(message.playerId),
+		Flights.ifPlayer(context.getWorld().getEntity(message.playerId),
 			(player, flight) -> flight.clone(message.flight)
 		);
 	}

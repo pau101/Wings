@@ -26,12 +26,12 @@ public final class InSomniableEventHandler {
 			final BlockPos pos = event.getPos();
 			final BlockState state = world.getBlockState(pos);
 			final Block block = state.getBlock();
-			if (block == Blocks.NOTE_BLOCK && world.isAirBlock(pos.up()) &&
-				world.isBlockModifiable(player, pos) &&
-				!player.blockActionRestricted(world, pos, ((ServerPlayerEntity) player).interactionManager.getGameType())
+			if (block == Blocks.NOTE_BLOCK && world.isEmptyBlock(pos.above()) &&
+				world.mayInteract(player, pos) &&
+				!player.blockActionRestricted(world, pos, ((ServerPlayerEntity) player).gameMode.getGameModeForPlayer())
 			) {
 				InSomniableCapability.getInSomniable(player).ifPresent(inSomniable ->
-					inSomniable.onPlay(world, player, pos, state.get(NoteBlock.NOTE))
+					inSomniable.onPlay(world, player, pos, state.getValue(NoteBlock.NOTE))
 				);
 			}
 		}

@@ -109,45 +109,44 @@ public final class FlightDefault implements Flight {
 	}
 
 	private void onWornUpdate(final PlayerEntity player, final ItemStack wings) {
-		if (player.isServerWorld()) {
+		if (player.isEffectiveAi()) {
 			if (this.isFlying()) {
-				final float speed = (float) MathHelper.clampedLerp(MIN_SPEED, MAX_SPEED, player.moveForward);
+				final float speed = (float) MathHelper.clampedLerp(MIN_SPEED, MAX_SPEED, player.zza);
 				final float elevationBoost = Mth.transform(
-					Math.abs(player.rotationPitch),
+					Math.abs(player.xRot),
 					45.0F, 90.0F,
 					1.0F, 0.0F
 				);
-				final float pitch = -Mth.toRadians(player.rotationPitch - PITCH_OFFSET * elevationBoost);
-				final float yaw = -Mth.toRadians(player.rotationYaw) - Mth.PI;
+				final float pitch = -Mth.toRadians(player.xRot - PITCH_OFFSET * elevationBoost);
+				final float yaw = -Mth.toRadians(player.yRot) - Mth.PI;
 				final float vxz = -MathHelper.cos(pitch);
 				final float vy = MathHelper.sin(pitch);
 				final float vz = MathHelper.cos(yaw);
 				final float vx = MathHelper.sin(yaw);
-				player.setMotion(player.getMotion().add(
-					vx * vxz * speed,
-					vy * speed + Y_BOOST * (player.rotationPitch > 0.0F ? elevationBoost : 1.0D),
-					vz * vxz * speed
+
+				player.setDeltaMovement(player.getDeltaMovement().add(
+						vx * vxz * speed,
+						vy * speed + Y_BOOST * (player.xRot > 0.0F ? elevationBoost : 1.0D),
+						vz * vxz * speed
 				));
 			}
 			if (this.canLand(player, wings)) {
-				final Vector3d mot = player.getMotion();
-				if (mot.getY() < 0.0D) {
-					player.setMotion(mot.mul(1.0D, FALL_REDUCTION, 1.0D));
+				final Vector3d mot = player.getDeltaMovement();
+				if (mot.y() < 0.0D) {
+					player.setDeltaMovement(mot.multiply(1.0D, FALL_REDUCTION, 1.0D));
 				}
 				player.fallDistance = 0.0F;
 			}
 		}
-		if (!player.world.isRemote) {
-			Util.acceptOrElse(FlightApparatuses.get(wings).resolve(), apparatus -> {
+		if (!player.level.isClientSide) {
+			Util.ifElse(FlightApparatuses.get(wings).resolve(), apparatus -> {
 				if (apparatus.isUsable(player, wings)) {
 					(this.state = this.state.next(wings, apparatus)).onUpdate(player, wings);
 				} else if (this.isFlying()) {
 					this.setIsFlying(false, PlayerSet.ofAll());
 					this.state = this.state.next();
 				}
-			}, () -> {
-				this.state = this.state.next();
-			});
+			}, () -> this.state = this.state.next());
 		}
 	}
 
@@ -155,14 +154,14 @@ public final class FlightDefault implements Flight {
 	public void tick(final PlayerEntity player, final ItemStack wings) {
 		if (!wings.isEmpty()) {
 			this.onWornUpdate(player, wings);
-		} else if (!player.world.isRemote && this.isFlying()) {
+		} else if (!player.level.isClientSide && this.isFlying()) {
 			this.setIsFlying(false, Flight.PlayerSet.ofAll());
 		}
 		this.setPrevTimeFlying(this.getTimeFlying());
 		if (this.isFlying()) {
 			if (this.getTimeFlying() < MAX_TIME_FLYING) {
 				this.setTimeFlying(this.getTimeFlying() + 1);
-			} else if (player.isUser() && player.isOnGround()) {
+			} else if (player.isLocalPlayer() && player.isOnGround()) {
 				this.setIsFlying(false, PlayerSet.ofOthers());
 			}
 		} else {
@@ -178,7 +177,7 @@ public final class FlightDefault implements Flight {
 			FlightApparatuses.get(wings).ifPresent(apparatus -> {
 				if (this.isFlying()) {
 					apparatus.onFlight(player, wings, direction);
-				} else if (player.getMotion().getY() < -0.5D) {
+				} else if (player.getDeltaMovement().y() < -0.5D) {
 					apparatus.onLanding(player, wings, direction);
 				}
 			});
