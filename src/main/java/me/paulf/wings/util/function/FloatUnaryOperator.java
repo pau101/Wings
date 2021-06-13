@@ -2,9 +2,9 @@ package me.paulf.wings.util.function;
 
 @FunctionalInterface
 public interface FloatUnaryOperator {
-    float applyAsFloat(final float operand);
+    float applyAsFloat(float operand);
 
     static FloatUnaryOperator identity() {
-    	return t -> t;
-	}
+        return t -> t;
+    }
 }

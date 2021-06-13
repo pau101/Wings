@@ -9,7 +9,7 @@ import net.minecraftforge.fml.network.NetworkEvent;
 import java.util.Objects;
 
 public class ServerMessageContext extends MessageContext {
-    public ServerMessageContext(final NetworkEvent.Context context) {
+    public ServerMessageContext(NetworkEvent.Context context) {
         super(context);
     }
 

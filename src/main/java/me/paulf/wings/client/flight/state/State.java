@@ -9,76 +9,76 @@ import net.minecraft.util.math.MathHelper;
 import java.util.function.Consumer;
 
 public abstract class State {
-	static final int STATE_DELAY = 2;
+    static final int STATE_DELAY = 2;
 
-	private final int stateDelay;
+    private final int stateDelay;
 
-	private final Consumer<Animator> animation;
+    private final Consumer<Animator> animation;
 
-	private int time;
+    private int time;
 
-	protected State(final Consumer<Animator> animation) {
-		this(STATE_DELAY, animation);
-	}
+    protected State(Consumer<Animator> animation) {
+        this(STATE_DELAY, animation);
+    }
 
-	protected State(final int stateDelay, final Consumer<Animator> animation) {
-		this.stateDelay = stateDelay;
-		this.animation = animation;
-	}
+    protected State(int stateDelay, Consumer<Animator> animation) {
+        this.stateDelay = stateDelay;
+        this.animation = animation;
+    }
 
-	public final State update(final Flight flight, final double x, final double y, final double z, final PlayerEntity player) {
-		if (this.time++ > this.stateDelay) {
-			return this.getNext(flight, x, y, z, player);
-		}
-		return this;
-	}
+    public final State update(Flight flight, double x, double y, double z, PlayerEntity player) {
+        if (this.time++ > this.stateDelay) {
+            return this.getNext(flight, x, y, z, player);
+        }
+        return this;
+    }
 
-	private State getNext(final Flight flight, final double x, final double y, final double z, final PlayerEntity player) {
-		if (flight.isFlying()) {
-			if (y < 0 && player.xRot >= this.getPitch(x, y, z)) {
-				return this.createGlide();
-			}
-			return this.createLift();
-		}
-		if (y < 0) {
-			return this.getDescent(flight, player);
-		}
-		return this.getDefault(y);
-	}
+    private State getNext(Flight flight, double x, double y, double z, PlayerEntity player) {
+        if (flight.isFlying()) {
+            if (y < 0 && player.xRot >= this.getPitch(x, y, z)) {
+                return this.createGlide();
+            }
+            return this.createLift();
+        }
+        if (y < 0) {
+            return this.getDescent(flight, player);
+        }
+        return this.getDefault(y);
+    }
 
-	private float getPitch(final double x, final double y, final double z) {
-		return Mth.toDegrees((float) -Math.atan2(y, MathHelper.sqrt(x * x + z * z)));
-	}
+    private float getPitch(double x, double y, double z) {
+        return Mth.toDegrees((float) -Math.atan2(y, MathHelper.sqrt(x * x + z * z)));
+    }
 
-	public final void beginAnimation(final Animator animator) {
-		this.animation.accept(animator);
-	}
+    public final void beginAnimation(Animator animator) {
+        this.animation.accept(animator);
+    }
 
-	protected State createLand() {
-		return new StateLand();
-	}
+    protected State createLand() {
+        return new StateLand();
+    }
 
-	protected State createLift() {
-		return new StateLift();
-	}
+    protected State createLift() {
+        return new StateLift();
+    }
 
-	protected State createGlide() {
-		return new StateGlide();
-	}
+    protected State createGlide() {
+        return new StateGlide();
+    }
 
-	protected State createIdle() {
-		return new StateIdle();
-	}
+    protected State createIdle() {
+        return new StateIdle();
+    }
 
-	protected State createFall() {
-		return new StateFall();
-	}
+    protected State createFall() {
+        return new StateFall();
+    }
 
-	protected State getDefault(final double y) {
-		return this.createIdle();
-	}
+    protected State getDefault(double y) {
+        return this.createIdle();
+    }
 
-	protected State getDescent(final Flight flight, final PlayerEntity player) {
-		return flight.canLand(player) ? this.createLand() : this.createFall();
-	}
+    protected State getDescent(Flight flight, PlayerEntity player) {
+        return flight.canLand(player) ? this.createLand() : this.createFall();
+    }
 }

@@ -8,9 +8,10 @@ import net.minecraftforge.fml.common.Mod;
 
 @Mod.EventBusSubscriber(value = Dist.CLIENT, modid = WingsMod.ID)
 public final class WingsModels {
-	private WingsModels() {}
+    private WingsModels() {
+    }
 
-	@SubscribeEvent
-	public static void onRegister(final ModelRegistryEvent event) {
-	}
+    @SubscribeEvent
+    public static void onRegister(ModelRegistryEvent event) {
+    }
 }

@@ -8,27 +8,28 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.PacketBuffer;
 
 public final class MessageControlFlying implements Message {
-	private boolean isFlying;
+    private boolean isFlying;
 
-	public MessageControlFlying() {}
+    public MessageControlFlying() {
+    }
 
-	public MessageControlFlying(final boolean isFlying) {
-		this.isFlying = isFlying;
-	}
+    public MessageControlFlying(boolean isFlying) {
+        this.isFlying = isFlying;
+    }
 
-	@Override
-	public void encode(final PacketBuffer buf) {
-		buf.writeBoolean(this.isFlying);
-	}
+    @Override
+    public void encode(PacketBuffer buf) {
+        buf.writeBoolean(this.isFlying);
+    }
 
-	@Override
-	public void decode(final PacketBuffer buf) {
-		this.isFlying = buf.readBoolean();
-	}
+    @Override
+    public void decode(PacketBuffer buf) {
+        this.isFlying = buf.readBoolean();
+    }
 
-	public static void handle(final MessageControlFlying message, final ServerMessageContext context) {
-		final PlayerEntity player = context.getPlayer();
-		Flights.get(player).filter(f -> f.canFly(player))
-			.ifPresent(flight -> flight.setIsFlying(message.isFlying, Flight.PlayerSet.ofOthers()));
-	}
+    public static void handle(MessageControlFlying message, ServerMessageContext context) {
+        PlayerEntity player = context.getPlayer();
+        Flights.get(player).filter(f -> f.canFly(player))
+            .ifPresent(flight -> flight.setIsFlying(message.isFlying, Flight.PlayerSet.ofOthers()));
+    }
 }

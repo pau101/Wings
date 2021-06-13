@@ -9,7 +9,7 @@ public class ApplyPlayerRotationsEvent extends PlayerEvent {
 
     private final float delta;
 
-    public ApplyPlayerRotationsEvent(final PlayerEntity player, final MatrixStack matrixStack, final float delta) {
+    public ApplyPlayerRotationsEvent(PlayerEntity player, MatrixStack matrixStack, float delta) {
         super(player);
         this.matrixStack = matrixStack;
         this.delta = delta;

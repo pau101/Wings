@@ -2,23 +2,48 @@ package me.paulf.wings.server.apparatus;
 
 import me.paulf.wings.server.flight.Flight;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.vector.Vector3d;
 
 public interface FlightApparatus {
-	void onFlight(final PlayerEntity player, final ItemStack stack, final Vector3d direction);
+    FlightApparatus VOID = new FlightApparatus() {
+        @Override
+        public void onFlight(PlayerEntity player, Vector3d direction) {
+        }
 
-	void onLanding(final PlayerEntity player, final ItemStack stack, final Vector3d direction);
+        @Override
+        public void onLanding(PlayerEntity player, Vector3d direction) {
+        }
 
-	boolean isUsable(final PlayerEntity player);
+        @Override
+        public boolean isUsable(PlayerEntity player) {
+            return false;
+        }
 
-	boolean isLandable(final PlayerEntity player, final ItemStack stack);
+        @Override
+        public boolean isLandable(PlayerEntity player) {
+            return false;
+        }
 
-	FlightState createState(final Flight flight);
+        @Override
+        public FlightState createState(Flight flight) {
+            return FlightState.VOID;
+        }
+    };
 
-	interface FlightState {
-		FlightState VOID = (player, stack) -> {};
+    void onFlight(PlayerEntity player, Vector3d direction);
 
-		void onUpdate(final PlayerEntity player, final ItemStack stack);
-	}
+    void onLanding(PlayerEntity player, Vector3d direction);
+
+    boolean isUsable(PlayerEntity player);
+
+    boolean isLandable(PlayerEntity player);
+
+    FlightState createState(Flight flight);
+
+    interface FlightState {
+        FlightState VOID = (player) -> {
+        };
+
+        void onUpdate(PlayerEntity player);
+    }
 }

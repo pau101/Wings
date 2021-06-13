@@ -1,25 +1,25 @@
 {
-    "type": "minecraft:crafting_shaped",
-    "pattern": [
-        "EDE",
-        "GMG",
-        "G G"
-    ],
-    "key": {
-        "E": {
-            "minecraft": "minecraft:dragon_breath"
-        },
-        "G": {
-            "tag": "forge:ingots/gold"
-        },
-        "M": {
-            "item": "minecraft:phantom_membrane"
-        },
-        "D": {
-            "tag": "forge:gems/diamond"
-        }
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "EDE",
+    "GMG",
+    "G G"
+  ],
+  "key": {
+    "E": {
+      "minecraft": "minecraft:dragon_breath"
     },
-    "result": {
-        "item": "wings:dragon_wings"
+    "G": {
+      "tag": "forge:ingots/gold"
+    },
+    "M": {
+      "item": "minecraft:phantom_membrane"
+    },
+    "D": {
+      "tag": "forge:gems/diamond"
     }
+  },
+  "result": {
+    "item": "wings:dragon_wings"
+  }
 }

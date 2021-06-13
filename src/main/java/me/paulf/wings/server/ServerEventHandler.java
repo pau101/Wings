@@ -26,86 +26,87 @@ import net.minecraftforge.fml.common.Mod;
 
 @Mod.EventBusSubscriber(modid = WingsMod.ID)
 public final class ServerEventHandler {
-	private ServerEventHandler() {}
+    private ServerEventHandler() {
+    }
 
-	@SubscribeEvent
-	public static void onPlayerEntityInteract(final PlayerInteractEvent.EntityInteract event) {
-		final PlayerEntity player = event.getPlayer();
-		final Hand hand = event.getHand();
-		final ItemStack stack = player.getItemInHand(hand);
-		if (event.getTarget() instanceof BatEntity && stack.getItem() == Items.GLASS_BOTTLE) {
-			player.level.playSound(
-				player,
-				player.getX(), player.getY(), player.getZ(),
-				SoundEvents.BOTTLE_FILL,
-				SoundCategory.NEUTRAL,
-				1.0F,
-				1.0F
-			);
-			final ItemStack destroyed = stack.copy();
-			if (!player.abilities.instabuild) {
-				stack.shrink(1);
-			}
-			player.awardStat(Stats.ITEM_USED.get(Items.GLASS_BOTTLE));
-			final ItemStack batBlood = new ItemStack(WingsItems.BAT_BLOOD.get());
-			if (stack.isEmpty()) {
-				ForgeEventFactory.onPlayerDestroyItem(player, destroyed, hand);
-				player.setItemInHand(hand, batBlood);
-			} else if (!player.inventory.add(batBlood)) {
-				player.drop(batBlood, false);
-			}
-			event.setCancellationResult(ActionResultType.SUCCESS);
-		}
-	}
+    @SubscribeEvent
+    public static void onPlayerEntityInteract(PlayerInteractEvent.EntityInteract event) {
+        PlayerEntity player = event.getPlayer();
+        Hand hand = event.getHand();
+        ItemStack stack = player.getItemInHand(hand);
+        if (event.getTarget() instanceof BatEntity && stack.getItem() == Items.GLASS_BOTTLE) {
+            player.level.playSound(
+                player,
+                player.getX(), player.getY(), player.getZ(),
+                SoundEvents.BOTTLE_FILL,
+                SoundCategory.NEUTRAL,
+                1.0F,
+                1.0F
+            );
+            ItemStack destroyed = stack.copy();
+            if (!player.abilities.instabuild) {
+                stack.shrink(1);
+            }
+            player.awardStat(Stats.ITEM_USED.get(Items.GLASS_BOTTLE));
+            ItemStack batBlood = new ItemStack(WingsItems.BAT_BLOOD.get());
+            if (stack.isEmpty()) {
+                ForgeEventFactory.onPlayerDestroyItem(player, destroyed, hand);
+                player.setItemInHand(hand, batBlood);
+            } else if (!player.inventory.add(batBlood)) {
+                player.drop(batBlood, false);
+            }
+            event.setCancellationResult(ActionResultType.SUCCESS);
+        }
+    }
 
-	@SubscribeEvent
-	public static void onEntityMount(final EntityMountEvent event) {
-		if (event.isMounting()) {
-			Flights.ifPlayer(event.getEntityMounting(), (player, flight) -> {
-				if (flight.isFlying()) {
-					event.setCanceled(true);
-				}
-			});
-		}
-	}
+    @SubscribeEvent
+    public static void onEntityMount(EntityMountEvent event) {
+        if (event.isMounting()) {
+            Flights.ifPlayer(event.getEntityMounting(), (player, flight) -> {
+                if (flight.isFlying()) {
+                    event.setCanceled(true);
+                }
+            });
+        }
+    }
 
-	@SubscribeEvent
-	public static void onPlayerTick(final TickEvent.PlayerTickEvent event) {
-		if (event.phase == TickEvent.Phase.END) {
-			Flights.get(event.player).ifPresent(flight ->
-				flight.tick(event.player)
-			);
-		}
-	}
+    @SubscribeEvent
+    public static void onPlayerTick(TickEvent.PlayerTickEvent event) {
+        if (event.phase == TickEvent.Phase.END) {
+            Flights.get(event.player).ifPresent(flight ->
+                flight.tick(event.player)
+            );
+        }
+    }
 
-	@SubscribeEvent
-	public static void onLivingDeath(final LivingDeathEvent event) {
-		Flights.ifPlayer(event.getEntityLiving(), (player, flight) ->
-			flight.setIsFlying(false, Flight.PlayerSet.ofAll())
-		);
-	}
+    @SubscribeEvent
+    public static void onLivingDeath(LivingDeathEvent event) {
+        Flights.ifPlayer(event.getEntityLiving(), (player, flight) ->
+            flight.setIsFlying(false, Flight.PlayerSet.ofAll())
+        );
+    }
 
-	@SubscribeEvent
-	public static void onPlayerFlightCheck(final PlayerFlightCheckEvent event) {
-		Flights.get(event.getPlayer()).filter(Flight::isFlying)
-			.ifPresent(flight -> event.setFlying());
-	}
+    @SubscribeEvent
+    public static void onPlayerFlightCheck(PlayerFlightCheckEvent event) {
+        Flights.get(event.getPlayer()).filter(Flight::isFlying)
+            .ifPresent(flight -> event.setFlying());
+    }
 
-	@SubscribeEvent
-	public static void onPlayerFlown(final PlayerFlownEvent event) {
-		final PlayerEntity player = event.getPlayer();
-		Flights.get(player).ifPresent(flight -> {
-			flight.onFlown(player, event.getDirection());
-		});
-	}
+    @SubscribeEvent
+    public static void onPlayerFlown(PlayerFlownEvent event) {
+        PlayerEntity player = event.getPlayer();
+        Flights.get(player).ifPresent(flight -> {
+            flight.onFlown(player, event.getDirection());
+        });
+    }
 
-	@SubscribeEvent
-	public static void onGetLivingHeadLimit(final GetLivingHeadLimitEvent event) {
-		Flights.ifPlayer(event.getEntityLiving(), (player, flight) -> {
-			if (flight.isFlying()) {
-				event.setHardLimit(50.0F);
-				event.disableSoftLimit();
-			}
-		});
-	}
+    @SubscribeEvent
+    public static void onGetLivingHeadLimit(GetLivingHeadLimitEvent event) {
+        Flights.ifPlayer(event.getEntityLiving(), (player, flight) -> {
+            if (flight.isFlying()) {
+                event.setHardLimit(50.0F);
+                event.disableSoftLimit();
+            }
+        });
+    }
 }

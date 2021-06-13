@@ -6,7 +6,7 @@ import net.minecraftforge.fml.network.NetworkEvent;
 public abstract class MessageContext {
     protected final NetworkEvent.Context context;
 
-    public MessageContext(final NetworkEvent.Context context) {
+    public MessageContext(NetworkEvent.Context context) {
         this.context = context;
     }
 

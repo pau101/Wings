@@ -4,17 +4,17 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 
 public class PlayerFlightCheckEvent extends PlayerEvent {
-	private boolean flying;
+    private boolean flying;
 
-	public PlayerFlightCheckEvent(final PlayerEntity player) {
-		super(player);
-	}
+    public PlayerFlightCheckEvent(PlayerEntity player) {
+        super(player);
+    }
 
-	public boolean isFlying() {
-		return this.flying;
-	}
+    public boolean isFlying() {
+        return this.flying;
+    }
 
-	public void setFlying() {
-		this.flying = true;
-	}
+    public void setFlying() {
+        this.flying = true;
+    }
 }

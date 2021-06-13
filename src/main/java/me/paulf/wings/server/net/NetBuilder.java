@@ -19,15 +19,15 @@ public final class NetBuilder {
     private SimpleChannel channel;
     private int id;
 
-    public NetBuilder(final ResourceLocation name) {
+    public NetBuilder(ResourceLocation name) {
         this.builder = NetworkRegistry.ChannelBuilder.named(name);
     }
 
-    public NetBuilder version(final int version) {
+    public NetBuilder version(int version) {
         return this.version(String.valueOf(version));
     }
 
-    public NetBuilder version(final String version) {
+    public NetBuilder version(String version) {
         if (this.version == null) {
             this.version = Objects.requireNonNull(version);
             this.builder.networkProtocolVersion(() -> version);
@@ -57,7 +57,7 @@ public final class NetBuilder {
     }
 
     private Predicate<String> optionalVersion() {
-        final String v = this.version;
+        String v = this.version;
         if (v == null) {
             throw new IllegalStateException("version not specified");
         }
@@ -65,7 +65,7 @@ public final class NetBuilder {
     }
 
     private Predicate<String> requiredVersion() {
-        final String v = this.version;
+        String v = this.version;
         if (v == null) {
             throw new IllegalStateException("version not specified");
         }
@@ -79,12 +79,12 @@ public final class NetBuilder {
         return this.channel;
     }
 
-    public <T extends Message> MessageBuilder<T, ServerMessageContext> serverbound(final Supplier<T> factory) {
+    public <T extends Message> MessageBuilder<T, ServerMessageContext> serverbound(Supplier<T> factory) {
         return new MessageBuilder<>(factory, new HandlerConsumerFactory<>(LogicalSide.SERVER, ServerMessageContext::new));
     }
 
     @SuppressWarnings("Convert2MethodRef")
-    public <T extends Message> MessageBuilder<T, ClientMessageContext> clientbound(final Supplier<T> factory) {
+    public <T extends Message> MessageBuilder<T, ClientMessageContext> clientbound(Supplier<T> factory) {
         return new MessageBuilder<>(factory, DistExecutor.runForDist(() -> () -> new HandlerConsumerFactory<>(LogicalSide.CLIENT, ClientMessageContext::new), () -> () -> new NoopConsumerFactory<>()));
     }
 
@@ -93,12 +93,12 @@ public final class NetBuilder {
     }
 
     interface ConsumerFactory<T extends Message, S extends MessageContext> {
-        BiConsumer<T, Supplier<NetworkEvent.Context>> create(final Supplier<BiConsumer<? super T, S>> handlerFactory);
+        BiConsumer<T, Supplier<NetworkEvent.Context>> create(Supplier<BiConsumer<? super T, S>> handlerFactory);
     }
 
     private static class NoopConsumerFactory<T extends Message, S extends MessageContext> implements ConsumerFactory<T, S> {
         @Override
-        public BiConsumer<T, Supplier<NetworkEvent.Context>> create(final Supplier<BiConsumer<? super T, S>> handlerFactory) {
+        public BiConsumer<T, Supplier<NetworkEvent.Context>> create(Supplier<BiConsumer<? super T, S>> handlerFactory) {
             return (msg, ctx) -> ctx.get().setPacketHandled(false);
         }
     }
@@ -107,19 +107,19 @@ public final class NetBuilder {
         private final LogicalSide side;
         private final Function<NetworkEvent.Context, S> contextFactory;
 
-        HandlerConsumerFactory(final LogicalSide side, final Function<NetworkEvent.Context, S> contextFactory) {
+        HandlerConsumerFactory(LogicalSide side, Function<NetworkEvent.Context, S> contextFactory) {
             this.side = side;
             this.contextFactory = contextFactory;
         }
 
         @Override
-        public BiConsumer<T, Supplier<NetworkEvent.Context>> create(final Supplier<BiConsumer<? super T, S>> handlerFactory) {
-            final BiConsumer<? super T, S> handler = handlerFactory.get();
+        public BiConsumer<T, Supplier<NetworkEvent.Context>> create(Supplier<BiConsumer<? super T, S>> handlerFactory) {
+            BiConsumer<? super T, S> handler = handlerFactory.get();
             return (msg, ctx) -> {
-                final NetworkEvent.Context c = ctx.get();
-                final LogicalSide receptionSide = c.getDirection().getReceptionSide();
+                NetworkEvent.Context c = ctx.get();
+                LogicalSide receptionSide = c.getDirection().getReceptionSide();
                 if (receptionSide == this.side) {
-                    final S s = this.contextFactory.apply(c);
+                    S s = this.contextFactory.apply(c);
                     c.enqueueWork(() -> handler.accept(msg, s));
                 }
                 c.setPacketHandled(true);
@@ -131,19 +131,18 @@ public final class NetBuilder {
         private final Supplier<T> factory;
         private final ConsumerFactory<T, S> consumerFactory;
 
-        protected MessageBuilder(final Supplier<T> factory, final ConsumerFactory<T, S> consumerFactory) {
+        protected MessageBuilder(Supplier<T> factory, ConsumerFactory<T, S> consumerFactory) {
             this.factory = factory;
             this.consumerFactory = consumerFactory;
         }
 
-        public NetBuilder consumer(final Supplier<BiConsumer<? super T, S>> consumer) {
-            final Supplier<T> factory = this.factory;
-            @SuppressWarnings("unchecked")
-            final Class<T> type = (Class<T>) factory.get().getClass();
+        public NetBuilder consumer(Supplier<BiConsumer<? super T, S>> consumer) {
+            Supplier<T> factory = this.factory;
+            @SuppressWarnings("unchecked") Class<T> type = (Class<T>) factory.get().getClass();
             NetBuilder.this.channel().messageBuilder(type, NetBuilder.this.id++)
                 .encoder(Message::encode)
                 .decoder(buf -> {
-                    final T msg = factory.get();
+                    T msg = factory.get();
                     msg.decode(buf);
                     return msg;
                 })

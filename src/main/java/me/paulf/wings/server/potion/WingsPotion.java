@@ -15,8 +15,8 @@ public final class WingsPotion extends Potion {
     }
 
     public ItemStack createStack() {
-        final ItemStack stack = new ItemStack(Items.POTION);
-        PotionUtils.addPotionToItemStack(stack, this);
+        ItemStack stack = new ItemStack(Items.POTION);
+        PotionUtils.setPotion(stack, this);
         stack.getOrCreateTag().putInt("CustomPotionColor", this.color);
         return stack;
     }

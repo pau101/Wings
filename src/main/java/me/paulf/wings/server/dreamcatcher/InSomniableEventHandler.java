@@ -16,24 +16,25 @@ import net.minecraftforge.fml.common.Mod;
 
 @Mod.EventBusSubscriber(modid = WingsMod.ID)
 public final class InSomniableEventHandler {
-	private InSomniableEventHandler() {}
+    private InSomniableEventHandler() {
+    }
 
-	@SubscribeEvent(priority = EventPriority.LOW)
-	public static void onLeftClickBlock(final PlayerInteractEvent.LeftClickBlock event) {
-		final PlayerEntity player = event.getPlayer();
-		if (player instanceof ServerPlayerEntity && !player.isCreative()) {
-			final World world = event.getWorld();
-			final BlockPos pos = event.getPos();
-			final BlockState state = world.getBlockState(pos);
-			final Block block = state.getBlock();
-			if (block == Blocks.NOTE_BLOCK && world.isEmptyBlock(pos.above()) &&
-				world.mayInteract(player, pos) &&
-				!player.blockActionRestricted(world, pos, ((ServerPlayerEntity) player).gameMode.getGameModeForPlayer())
-			) {
-				InSomniableCapability.getInSomniable(player).ifPresent(inSomniable ->
-					inSomniable.onPlay(world, player, pos, state.getValue(NoteBlock.NOTE))
-				);
-			}
-		}
-	}
+    @SubscribeEvent(priority = EventPriority.LOW)
+    public static void onLeftClickBlock(PlayerInteractEvent.LeftClickBlock event) {
+        PlayerEntity player = event.getPlayer();
+        if (player instanceof ServerPlayerEntity && !player.isCreative()) {
+            World world = event.getWorld();
+            BlockPos pos = event.getPos();
+            BlockState state = world.getBlockState(pos);
+            Block block = state.getBlock();
+            if (block == Blocks.NOTE_BLOCK && world.isEmptyBlock(pos.above()) &&
+                world.mayInteract(player, pos) &&
+                !player.blockActionRestricted(world, pos, ((ServerPlayerEntity) player).gameMode.getGameModeForPlayer())
+            ) {
+                InSomniableCapability.getInSomniable(player).ifPresent(inSomniable ->
+                    inSomniable.onPlay(world, player, pos, state.getValue(NoteBlock.NOTE))
+                );
+            }
+        }
+    }
 }
