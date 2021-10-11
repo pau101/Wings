@@ -1,11 +1,9 @@
 package me.paulf.wings.server.flight;
 
-import com.google.common.base.MoreObjects;
 import com.google.common.collect.Lists;
 import me.paulf.wings.WingsMod;
 import me.paulf.wings.server.apparatus.FlightApparatus;
 import me.paulf.wings.server.effect.WingsEffects;
-import me.paulf.wings.server.item.WingsItems;
 import me.paulf.wings.util.CubicBezier;
 import me.paulf.wings.util.Mth;
 import me.paulf.wings.util.NBTSerializer;
@@ -41,7 +39,7 @@ public final class FlightDefault implements Flight {
 
     private final List<SyncListener> syncListeners = Lists.newArrayList();
 
-    private final WingState voidState = new WingState(FlightApparatus.VOID, FlightApparatus.FlightState.VOID);
+    private final WingState voidState = new WingState(FlightApparatus.NONE, FlightApparatus.FlightState.NONE);
 
     private int prevTimeFlying = INITIAL_TIME_FLYING;
 
@@ -49,7 +47,7 @@ public final class FlightDefault implements Flight {
 
     private boolean isFlying;
 
-    private FlightApparatus flightApparatus = WingsMod.ANGEL_WINGS;
+    private FlightApparatus flightApparatus = FlightApparatus.NONE;
 
     private WingState state = this.voidState;
 

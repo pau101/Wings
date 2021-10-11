@@ -5,7 +5,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.math.vector.Vector3d;
 
 public interface FlightApparatus {
-    FlightApparatus VOID = new FlightApparatus() {
+    FlightApparatus NONE = new FlightApparatus() {
         @Override
         public void onFlight(PlayerEntity player, Vector3d direction) {
         }
@@ -26,7 +26,7 @@ public interface FlightApparatus {
 
         @Override
         public FlightState createState(Flight flight) {
-            return FlightState.VOID;
+            return FlightState.NONE;
         }
     };
 
@@ -41,7 +41,7 @@ public interface FlightApparatus {
     FlightState createState(Flight flight);
 
     interface FlightState {
-        FlightState VOID = (player) -> {
+        FlightState NONE = (player) -> {
         };
 
         void onUpdate(PlayerEntity player);

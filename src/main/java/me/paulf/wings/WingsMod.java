@@ -28,6 +28,7 @@ public final class WingsMod {
 
     public static final Registry<FlightApparatus> WINGS = new DefaultedRegistry<>(ID + ":angel_wings", RegistryKey.createRegistryKey(new ResourceLocation(ID, "wings")), Lifecycle.experimental());
 
+    public static final FlightApparatus NONE_WINGS = Registry.register(WINGS, ID + ":none", FlightApparatus.NONE);
     public static final FlightApparatus ANGEL_WINGS = Registry.register(WINGS, ID + ":angel_wings", new SimpleFlightApparatus(WingsItemsConfig.ANGEL));
     public static final FlightApparatus BAT_WINGS = Registry.register(WINGS, ID + ":bat_wings", new SimpleFlightApparatus(WingsItemsConfig.BAT));
     public static final FlightApparatus BLUE_BUTTERFLY_WINGS = Registry.register(WINGS, ID + ":blue_butterfly_wings", new SimpleFlightApparatus(WingsItemsConfig.BLUE_BUTTERFLY));
@@ -36,6 +37,7 @@ public final class WingsMod {
     public static final FlightApparatus FAIRY_WINGS = Registry.register(WINGS, ID + ":fairy_wings", new SimpleFlightApparatus(WingsItemsConfig.FAIRY));
     public static final FlightApparatus MONARCH_BUTTERFLY_WINGS = Registry.register(WINGS, ID + ":monarch_butterfly_wings", new SimpleFlightApparatus(WingsItemsConfig.MONARCH_BUTTERFLY));
     public static final FlightApparatus SLIME_WINGS = Registry.register(WINGS, ID + ":slime_wings", new SimpleFlightApparatus(WingsItemsConfig.SLIME));
+    public static final FlightApparatus FIRE_WINGS = Registry.register(WINGS, ID + ":fire_wings", new SimpleFlightApparatus(WingsItemsConfig.FIRE));
 
     private Proxy proxy;
 
