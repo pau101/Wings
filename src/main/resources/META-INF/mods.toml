@@ -4,7 +4,7 @@ issueTrackerURL = "https://github.com/pau101/Wings/issues"
 license = "MIT"
 [[mods]]
 modId = "wings"
-version = "${version}"
+version = "${file.jarVersion}"
 displayName = "Wings"
 displayURL = "https://minecraft.curseforge.com/projects/wings"
 authors = "pau101"

@@ -26,18 +26,18 @@ public final class WingsMod {
 
     private static WingsMod INSTANCE;
 
-    public static final Registry<FlightApparatus> WINGS = new DefaultedRegistry<>(ID + ":angel_wings", RegistryKey.createRegistryKey(new ResourceLocation(ID, "wings")), Lifecycle.experimental());
+    public static final Registry<FlightApparatus> WINGS = new DefaultedRegistry<>(Names.NONE.toString(), RegistryKey.createRegistryKey(new ResourceLocation(ID, "wings")), Lifecycle.experimental());
 
-    public static final FlightApparatus NONE_WINGS = Registry.register(WINGS, ID + ":none", FlightApparatus.NONE);
-    public static final FlightApparatus ANGEL_WINGS = Registry.register(WINGS, ID + ":angel_wings", new SimpleFlightApparatus(WingsItemsConfig.ANGEL));
-    public static final FlightApparatus BAT_WINGS = Registry.register(WINGS, ID + ":bat_wings", new SimpleFlightApparatus(WingsItemsConfig.BAT));
-    public static final FlightApparatus BLUE_BUTTERFLY_WINGS = Registry.register(WINGS, ID + ":blue_butterfly_wings", new SimpleFlightApparatus(WingsItemsConfig.BLUE_BUTTERFLY));
-    public static final FlightApparatus DRAGON_WINGS = Registry.register(WINGS, ID + ":dragon_wings", new SimpleFlightApparatus(WingsItemsConfig.DRAGON));
-    public static final FlightApparatus EVIL_WINGS = Registry.register(WINGS, ID + ":evil_wings", new SimpleFlightApparatus(WingsItemsConfig.EVIL));
-    public static final FlightApparatus FAIRY_WINGS = Registry.register(WINGS, ID + ":fairy_wings", new SimpleFlightApparatus(WingsItemsConfig.FAIRY));
-    public static final FlightApparatus MONARCH_BUTTERFLY_WINGS = Registry.register(WINGS, ID + ":monarch_butterfly_wings", new SimpleFlightApparatus(WingsItemsConfig.MONARCH_BUTTERFLY));
-    public static final FlightApparatus SLIME_WINGS = Registry.register(WINGS, ID + ":slime_wings", new SimpleFlightApparatus(WingsItemsConfig.SLIME));
-    public static final FlightApparatus FIRE_WINGS = Registry.register(WINGS, ID + ":fire_wings", new SimpleFlightApparatus(WingsItemsConfig.FIRE));
+    public static final FlightApparatus NONE_WINGS = Registry.register(WINGS, Names.NONE, FlightApparatus.NONE);
+    public static final FlightApparatus ANGEL_WINGS = Registry.register(WINGS, Names.ANGEL, new SimpleFlightApparatus(WingsItemsConfig.ANGEL));
+    public static final FlightApparatus BAT_WINGS = Registry.register(WINGS, Names.BAT, new SimpleFlightApparatus(WingsItemsConfig.BAT));
+    public static final FlightApparatus BLUE_BUTTERFLY_WINGS = Registry.register(WINGS, Names.BLUE_BUTTERFLY, new SimpleFlightApparatus(WingsItemsConfig.BLUE_BUTTERFLY));
+    public static final FlightApparatus DRAGON_WINGS = Registry.register(WINGS, Names.DRAGON, new SimpleFlightApparatus(WingsItemsConfig.DRAGON));
+    public static final FlightApparatus EVIL_WINGS = Registry.register(WINGS, Names.EVIL, new SimpleFlightApparatus(WingsItemsConfig.EVIL));
+    public static final FlightApparatus FAIRY_WINGS = Registry.register(WINGS, Names.FAIRY, new SimpleFlightApparatus(WingsItemsConfig.FAIRY));
+    public static final FlightApparatus MONARCH_BUTTERFLY_WINGS = Registry.register(WINGS, Names.MONARCH_BUTTERFLY, new SimpleFlightApparatus(WingsItemsConfig.MONARCH_BUTTERFLY));
+    public static final FlightApparatus SLIME_WINGS = Registry.register(WINGS, Names.SLIME, new SimpleFlightApparatus(WingsItemsConfig.SLIME));
+    public static final FlightApparatus FIRE_WINGS = Registry.register(WINGS, Names.FIRE, new SimpleFlightApparatus(WingsItemsConfig.FIRE));
 
     private Proxy proxy;
 
@@ -65,5 +65,26 @@ public final class WingsMod {
             throw new IllegalStateException("Proxy not initialized");
         }
         return this.proxy;
+    }
+
+    public static final class Names {
+        private Names() {
+        }
+
+        public static final ResourceLocation
+            NONE = create("none"),
+            ANGEL = create("angel_wings"),
+            SLIME = create("slime_wings"),
+            BLUE_BUTTERFLY = create("blue_butterfly_wings"),
+            MONARCH_BUTTERFLY = create("monarch_butterfly_wings"),
+            FIRE = create("fire_wings"),
+            BAT = create("bat_wings"),
+            FAIRY = create("fairy_wings"),
+            EVIL = create("evil_wings"),
+            DRAGON = create("dragon_wings");
+
+        private static ResourceLocation create(String path) {
+            return new ResourceLocation(ID, path);
+        }
     }
 }

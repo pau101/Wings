@@ -76,8 +76,12 @@ public final class FlightDefault implements Flight {
     }
 
     @Override
-    public void setWing(FlightApparatus wing) {
-        this.flightApparatus = Objects.requireNonNull(wing);
+    public void setWing(FlightApparatus wing, PlayerSet players) {
+        Objects.requireNonNull(wing);
+        if (this.flightApparatus != wing) {
+            this.flightApparatus = wing;
+            this.sync(players);
+        }
     }
 
     @Override
@@ -165,8 +169,11 @@ public final class FlightDefault implements Flight {
     public void tick(PlayerEntity player) {
         if (this.hasEffect(player)) {
             this.onWornUpdate(player);
-        } else if (!player.level.isClientSide && this.isFlying()) {
-            this.setIsFlying(false, Flight.PlayerSet.ofAll());
+        } else {
+            this.setWing(FlightApparatus.NONE);
+            if (!player.level.isClientSide && this.isFlying()) {
+                this.setIsFlying(false, PlayerSet.ofAll());
+            }
         }
         this.setPrevTimeFlying(this.getTimeFlying());
         if (this.isFlying()) {
@@ -195,6 +202,7 @@ public final class FlightDefault implements Flight {
     public void clone(Flight other) {
         this.setIsFlying(other.isFlying());
         this.setTimeFlying(other.getTimeFlying());
+        this.setWing(other.getWing());
     }
 
     @Override
@@ -206,12 +214,14 @@ public final class FlightDefault implements Flight {
     public void serialize(PacketBuffer buf) {
         buf.writeBoolean(this.isFlying());
         buf.writeVarInt(this.getTimeFlying());
+        buf.writeUtf(WingsMod.WINGS.getKey(this.getWing()).toString());
     }
 
     @Override
     public void deserialize(PacketBuffer buf) {
         this.setIsFlying(buf.readBoolean());
         this.setTimeFlying(buf.readVarInt());
+        this.setWing(WingsMod.WINGS.get(ResourceLocation.tryParse(buf.readUtf(64))));
     }
 
     public static final class Serializer implements NBTSerializer<FlightDefault, CompoundNBT> {

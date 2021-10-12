@@ -144,7 +144,7 @@ public final class CapabilityProviders {
         private SingleProvider(Capability<? super T> capability, T instance) {
             this.capability = capability;
             this.instance = instance;
-            this.lazy = LazyOptional.of(() -> instance);
+            this.lazy = LazyOptional.of(() -> this.instance);
         }
 
         @Override

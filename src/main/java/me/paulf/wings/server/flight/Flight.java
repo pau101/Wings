@@ -25,7 +25,11 @@ public interface Flight {
 
     int getTimeFlying();
 
-    void setWing(FlightApparatus wing);
+    default void setWing(FlightApparatus wing) {
+        this.setWing(wing, PlayerSet.empty());
+    }
+
+    void setWing(FlightApparatus wing, PlayerSet players);
 
     FlightApparatus getWing();
 

@@ -1,6 +1,6 @@
 package me.paulf.wings.server.dreamcatcher;
 
-import me.paulf.wings.server.potion.WingsPotions;
+import me.paulf.wings.server.item.WingsItems;
 import me.paulf.wings.util.NBTSerializer;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -76,7 +76,7 @@ public final class InSomniable {
         @Override
         public State onPlay(World world, PlayerEntity player, BlockPos pos, int note) {
             if (note >= 6 && note <= 14 && ((this.state = (this.state | this.mask[note - 6]) << 1) & 0x20000) == 0) {
-                ItemStack stack = WingsPotions.ANGEL_WINGS.get().createStack();
+                ItemStack stack = new ItemStack(WingsItems.ANGEL_WINGS_BOTTLE.get());
                 stack.setHoverName(new TranslationTextComponent(this.members[world.random.nextInt(this.members.length)]));
                 ItemEntity entity = new ItemEntity(world, pos.getX() + 0.5D, pos.getY() + 1.25D, pos.getZ() + 0.5D, stack);
                 entity.setDefaultPickUpDelay();

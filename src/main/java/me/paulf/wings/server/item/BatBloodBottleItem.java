@@ -1,9 +1,6 @@
 package me.paulf.wings.server.item;
 
-import me.paulf.wings.server.apparatus.FlightApparatus;
 import me.paulf.wings.server.effect.WingsEffects;
-import me.paulf.wings.server.flight.Flight;
-import me.paulf.wings.server.flight.Flights;
 import me.paulf.wings.server.sound.WingsSounds;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.entity.LivingEntity;
@@ -13,7 +10,6 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.item.UseAction;
-import net.minecraft.potion.EffectInstance;
 import net.minecraft.stats.Stats;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.DrinkHelper;
@@ -21,24 +17,18 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.world.World;
 
-public class WingsBottleItem extends Item {
-    private final FlightApparatus wings;
-
-    public WingsBottleItem(Properties properties, FlightApparatus wings) {
+public class BatBloodBottleItem extends Item {
+    public BatBloodBottleItem(Properties properties) {
         super(properties);
-        this.wings = wings;
     }
 
     @Override
     public ItemStack finishUsingItem(ItemStack stack, World world, LivingEntity living) {
         if (living instanceof ServerPlayerEntity) {
-            ServerPlayerEntity player = (ServerPlayerEntity) living;
-            CriteriaTriggers.CONSUME_ITEM.trigger(player, stack);
-            Flights.get(player).ifPresent(flight -> {
-                flight.setWing(this.wings, Flight.PlayerSet.ofAll());
-            });
-            player.addEffect(new EffectInstance(WingsEffects.WINGS.get(), Integer.MAX_VALUE, 0, true, false));
-            world.playSound(null, player.getX(), player.getY(), player.getZ(), WingsSounds.ITEM_ARMOR_EQUIP_WINGS.get(), SoundCategory.PLAYERS, 1.0F, 1.0F);
+            CriteriaTriggers.CONSUME_ITEM.trigger((ServerPlayerEntity) living, stack);
+            if (living.removeEffect(WingsEffects.WINGS.get())) {
+                world.playSound(null, living.getX(), living.getY(), living.getZ(), WingsSounds.ITEM_ARMOR_EQUIP_WINGS.get(), SoundCategory.PLAYERS, 1.0F, 0.8F);
+            }
         }
         if (living instanceof PlayerEntity) {
             PlayerEntity player = (PlayerEntity) living;

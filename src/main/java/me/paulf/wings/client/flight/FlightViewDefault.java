@@ -7,19 +7,19 @@ import me.paulf.wings.client.apparatus.WingForm;
 import me.paulf.wings.client.flight.state.State;
 import me.paulf.wings.client.flight.state.StateIdle;
 import me.paulf.wings.server.flight.Flight;
-import me.paulf.wings.server.item.WingsItems;
 import me.paulf.wings.util.function.FloatConsumer;
 import net.minecraft.entity.Pose;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.ResourceLocation;
 
+import java.util.Optional;
 import java.util.function.Consumer;
 
 public final class FlightViewDefault implements FlightView {
     private final Flight flight;
 
     private final WingState absentAnimator = new WingState(
-        WingForm.get(WingsMod.WINGS.get(WingsItems.Names.ANGEL))
+        WingForm.get(WingsMod.WINGS.get(WingsMod.Names.ANGEL))
             .orElseThrow(IllegalStateException::new),
         new Strategy() {
             @Override

@@ -48,7 +48,7 @@ public final class ServerEventHandler {
                 stack.shrink(1);
             }
             player.awardStat(Stats.ITEM_USED.get(Items.GLASS_BOTTLE));
-            ItemStack batBlood = new ItemStack(WingsItems.BAT_BLOOD.get());
+            ItemStack batBlood = new ItemStack(WingsItems.BAT_BLOOD_BOTTLE.get());
             if (stack.isEmpty()) {
                 ForgeEventFactory.onPlayerDestroyItem(player, destroyed, hand);
                 player.setItemInHand(hand, batBlood);

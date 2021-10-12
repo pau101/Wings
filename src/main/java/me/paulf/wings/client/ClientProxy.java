@@ -86,7 +86,7 @@ public final class ClientProxy extends Proxy {
             WingForm.register(WingsMod.SLIME_WINGS, this.createInsectoidWings(WingsMod.WINGS.getKey(WingsMod.SLIME_WINGS)));
         });
         modBus.<ColorHandlerEvent.Item>addListener(e -> {
-            e.getItemColors().register((stack, pass) -> pass == 0 ? 0x9B172D : 0xFFFFFF, WingsItems.BAT_BLOOD.get());
+            e.getItemColors().register((stack, pass) -> pass == 0 ? 0x9B172D : 0xFFFFFF, WingsItems.BAT_BLOOD_BOTTLE.get());
         });
     }
 

@@ -1,6 +1,6 @@
 {
   "parent": "item/generated",
   "textures": {
-    "layer0": "wings:items/wings/dragon"
+    "layer0": "wings:item/angel_wings_bottle"
   }
 }

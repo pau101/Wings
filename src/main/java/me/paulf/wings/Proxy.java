@@ -7,11 +7,11 @@ import me.paulf.wings.server.item.WingsItems;
 import me.paulf.wings.server.net.Network;
 import me.paulf.wings.server.net.clientbound.MessageSyncFlight;
 import me.paulf.wings.server.potion.PotionMix;
-import me.paulf.wings.server.potion.WingsPotion;
-import me.paulf.wings.server.potion.WingsPotions;
 import me.paulf.wings.util.SimpleStorage;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.potion.Potions;
@@ -35,18 +35,18 @@ public abstract class Proxy {
         CapabilityManager.INSTANCE.register(Flight.class, SimpleStorage.ofVoid(), FlightDefault::new);
         CapabilityManager.INSTANCE.register(InSomniable.class, SimpleStorage.ofVoid(), InSomniable::new);
         event.enqueueWork(() -> {
-            BiConsumer<IItemProvider, RegistryObject<WingsPotion>> reg = (item, obj) -> BrewingRecipeRegistry.addRecipe(
-                new PotionMix(Potions.SLOW_FALLING, Ingredient.of(item), obj.get().createStack())
+            BiConsumer<IItemProvider, RegistryObject<Item>> reg = (item, obj) -> BrewingRecipeRegistry.addRecipe(
+                new PotionMix(Potions.SLOW_FALLING, Ingredient.of(item), new ItemStack(obj.get()))
             );
-            reg.accept(Items.FEATHER, WingsPotions.ANGEL_WINGS);
-            reg.accept(WingsItems.BAT_BLOOD.get(), WingsPotions.BAT_WINGS);
-            reg.accept(Items.BLUE_DYE, WingsPotions.BLUE_BUTTERFLY_WINGS);
-            reg.accept(Items.DRAGON_BREATH, WingsPotions.DRAGON_WINGS);
-            reg.accept(Items.BONE, WingsPotions.EVIL_WINGS);
-            reg.accept(Items.OXEYE_DAISY, WingsPotions.FAIRY_WINGS);
-            reg.accept(Items.BLAZE_POWDER, WingsPotions.FIRE_WINGS);
-            reg.accept(Items.ORANGE_DYE, WingsPotions.MONARCH_BUTTERFLY_WINGS);
-            reg.accept(Items.SLIME_BALL, WingsPotions.SLIME_WINGS);
+            reg.accept(Items.FEATHER, WingsItems.ANGEL_WINGS_BOTTLE);
+            reg.accept(WingsItems.BAT_BLOOD_BOTTLE.get(), WingsItems.BAT_WINGS_BOTTLE);
+            reg.accept(Items.BLUE_DYE, WingsItems.BLUE_BUTTERFLY_WINGS_BOTTLE);
+            reg.accept(Items.DRAGON_BREATH, WingsItems.DRAGON_WINGS_BOTTLE);
+            reg.accept(Items.BONE, WingsItems.EVIL_WINGS_BOTTLE);
+            reg.accept(Items.OXEYE_DAISY, WingsItems.FAIRY_WINGS_BOTTLE);
+            reg.accept(Items.BLAZE_POWDER, WingsItems.FIRE_WINGS_BOTTLE);
+            reg.accept(Items.ORANGE_DYE, WingsItems.MONARCH_BUTTERFLY_WINGS_BOTTLE);
+            reg.accept(Items.SLIME_BALL, WingsItems.SLIME_WINGS_BOTTLE);
         });
     }
 
