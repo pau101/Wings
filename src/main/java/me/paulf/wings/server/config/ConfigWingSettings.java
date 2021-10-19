@@ -29,7 +29,7 @@ public final class ConfigWingSettings implements WingSettings {
     public double landingExertion;
 
     ConfigWingSettings(ResourceLocation key) {
-        this(key, 7, 0.001D, 2, 0.08D);
+        this(key, 5, 0.0001D, 2, 0.005D);
     }
 
     private ConfigWingSettings(ResourceLocation key, int requiredFlightSatiation, double flyingExertion, int requiredLandSatiation, double landingExertion) {
