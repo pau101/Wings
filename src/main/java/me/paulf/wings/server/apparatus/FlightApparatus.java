@@ -16,12 +16,12 @@ public interface FlightApparatus {
 
         @Override
         public boolean isUsable(PlayerEntity player) {
-            return false;
+            return true;
         }
 
         @Override
         public boolean isLandable(PlayerEntity player) {
-            return false;
+            return true;
         }
 
         @Override

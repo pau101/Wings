@@ -1,6 +1,9 @@
 package me.paulf.wings.server.item;
 
+import me.paulf.wings.server.apparatus.FlightApparatus;
 import me.paulf.wings.server.effect.WingsEffects;
+import me.paulf.wings.server.flight.Flight;
+import me.paulf.wings.server.flight.Flights;
 import me.paulf.wings.server.sound.WingsSounds;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.entity.LivingEntity;
@@ -26,7 +29,7 @@ public class BatBloodBottleItem extends Item {
     public ItemStack finishUsingItem(ItemStack stack, World world, LivingEntity living) {
         if (living instanceof ServerPlayerEntity) {
             CriteriaTriggers.CONSUME_ITEM.trigger((ServerPlayerEntity) living, stack);
-            if (living.removeEffect(WingsEffects.WINGS.get())) {
+            if (removeWings((ServerPlayerEntity) living)) {
                 world.playSound(null, living.getX(), living.getY(), living.getZ(), WingsSounds.ITEM_ARMOR_EQUIP_WINGS.get(), SoundCategory.PLAYERS, 1.0F, 0.8F);
             }
         }
@@ -63,5 +66,14 @@ public class BatBloodBottleItem extends Item {
     @Override
     public ActionResult<ItemStack> use(World world, PlayerEntity player, Hand hand) {
         return DrinkHelper.useDrink(world, player, hand);
+    }
+
+    public static boolean removeWings(ServerPlayerEntity player) {
+        return player.removeEffect(WingsEffects.WINGS.get());
+    }
+
+    public static boolean removeWings(ServerPlayerEntity player, FlightApparatus wings) {
+        boolean changed = Flights.get(player).filter(flight -> flight.getWing() == wings).isPresent();
+        return changed && player.removeEffect(WingsEffects.WINGS.get());
     }
 }

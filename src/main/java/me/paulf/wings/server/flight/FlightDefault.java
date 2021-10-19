@@ -169,9 +169,9 @@ public final class FlightDefault implements Flight {
     public void tick(PlayerEntity player) {
         if (this.hasEffect(player)) {
             this.onWornUpdate(player);
-        } else {
-            this.setWing(FlightApparatus.NONE);
-            if (!player.level.isClientSide && this.isFlying()) {
+        } else if (!player.level.isClientSide) {
+            this.setWing(FlightApparatus.NONE, PlayerSet.ofAll());
+            if (this.isFlying()) {
                 this.setIsFlying(false, PlayerSet.ofAll());
             }
         }

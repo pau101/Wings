@@ -39,10 +39,7 @@ public class WingsBottleItem extends Item {
         if (living instanceof ServerPlayerEntity) {
             ServerPlayerEntity player = (ServerPlayerEntity) living;
             CriteriaTriggers.CONSUME_ITEM.trigger(player, stack);
-            Flights.get(player).ifPresent(flight -> {
-                flight.setWing(this.wings, Flight.PlayerSet.ofAll());
-            });
-            player.addEffect(new EffectInstance(WingsEffects.WINGS.get(), Integer.MAX_VALUE, 0, true, false));
+            giveWing(player, this.wings);
             world.playSound(null, player.getX(), player.getY(), player.getZ(), WingsSounds.ITEM_ARMOR_EQUIP_WINGS.get(), SoundCategory.PLAYERS, 1.0F, 1.0F);
         }
         if (living instanceof PlayerEntity) {
@@ -63,6 +60,18 @@ public class WingsBottleItem extends Item {
             }
         }
         return stack;
+    }
+
+    public static boolean giveWing(ServerPlayerEntity player, FlightApparatus wings) {
+        boolean changed = Flights.get(player).filter(flight -> {
+            if (flight.getWing() != wings) {
+                flight.setWing(wings, Flight.PlayerSet.ofAll());
+                return true;
+            }
+            return false;
+        }).isPresent();
+        player.addEffect(new EffectInstance(WingsEffects.WINGS.get(), Integer.MAX_VALUE, 0, true, false));
+        return changed;
     }
 
     @Override

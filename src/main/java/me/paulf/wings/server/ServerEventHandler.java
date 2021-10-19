@@ -4,11 +4,17 @@ import me.paulf.wings.WingsMod;
 import me.paulf.wings.server.asm.GetLivingHeadLimitEvent;
 import me.paulf.wings.server.asm.PlayerFlightCheckEvent;
 import me.paulf.wings.server.asm.PlayerFlownEvent;
+import me.paulf.wings.server.command.WingsArgument;
+import me.paulf.wings.server.command.WingsCommand;
 import me.paulf.wings.server.flight.Flight;
 import me.paulf.wings.server.flight.Flights;
 import me.paulf.wings.server.item.WingsItems;
+import net.minecraft.command.Commands;
+import net.minecraft.command.arguments.EntityArgument;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.passive.BatEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.stats.Stats;
@@ -16,13 +22,20 @@ import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvents;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.event.ForgeEventFactory;
+import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.EntityMountEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+
+import java.util.Collection;
+
+import static net.minecraft.command.Commands.argument;
+import static net.minecraft.command.Commands.literal;
 
 @Mod.EventBusSubscriber(modid = WingsMod.ID)
 public final class ServerEventHandler {
@@ -108,5 +121,10 @@ public final class ServerEventHandler {
                 event.disableSoftLimit();
             }
         });
+    }
+
+    @SubscribeEvent
+    public static void onRegisterCommands(RegisterCommandsEvent event) {
+        WingsCommand.register(event.getDispatcher());
     }
 }
