@@ -35,9 +35,14 @@ public abstract class Proxy {
         CapabilityManager.INSTANCE.register(Flight.class, SimpleStorage.ofVoid(), FlightDefault::new);
         CapabilityManager.INSTANCE.register(InSomniable.class, SimpleStorage.ofVoid(), InSomniable::new);
         event.enqueueWork(() -> {
-            BiConsumer<IItemProvider, RegistryObject<Item>> reg = (item, obj) -> BrewingRecipeRegistry.addRecipe(
-                new PotionMix(Potions.SLOW_FALLING, Ingredient.of(item), new ItemStack(obj.get()))
-            );
+            BiConsumer<IItemProvider, RegistryObject<Item>> reg = (item, obj) -> {
+                BrewingRecipeRegistry.addRecipe(
+                    new PotionMix(Potions.SLOW_FALLING, Ingredient.of(item), new ItemStack(obj.get()))
+                );
+                BrewingRecipeRegistry.addRecipe(
+                    new PotionMix(Potions.LONG_SLOW_FALLING, Ingredient.of(item), new ItemStack(obj.get()))
+                );
+            };
             reg.accept(Items.FEATHER, WingsItems.ANGEL_WINGS_BOTTLE);
             reg.accept(WingsItems.BAT_BLOOD_BOTTLE.get(), WingsItems.BAT_WINGS_BOTTLE);
             reg.accept(Items.BLUE_DYE, WingsItems.BLUE_BUTTERFLY_WINGS_BOTTLE);
