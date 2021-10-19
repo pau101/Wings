@@ -30,6 +30,11 @@ public class WingsBottleItem extends Item {
     }
 
     @Override
+    public boolean isFoil(ItemStack stack) {
+        return true;
+    }
+
+    @Override
     public ItemStack finishUsingItem(ItemStack stack, World world, LivingEntity living) {
         if (living instanceof ServerPlayerEntity) {
             ServerPlayerEntity player = (ServerPlayerEntity) living;

@@ -46,7 +46,7 @@ public abstract class Proxy {
             reg.accept(Items.FEATHER, WingsItems.ANGEL_WINGS_BOTTLE);
             reg.accept(WingsItems.BAT_BLOOD_BOTTLE.get(), WingsItems.BAT_WINGS_BOTTLE);
             reg.accept(Items.BLUE_DYE, WingsItems.BLUE_BUTTERFLY_WINGS_BOTTLE);
-            reg.accept(Items.DRAGON_BREATH, WingsItems.DRAGON_WINGS_BOTTLE);
+            reg.accept(Items.LEATHER, WingsItems.DRAGON_WINGS_BOTTLE);
             reg.accept(Items.BONE, WingsItems.EVIL_WINGS_BOTTLE);
             reg.accept(Items.OXEYE_DAISY, WingsItems.FAIRY_WINGS_BOTTLE);
             reg.accept(Items.BLAZE_POWDER, WingsItems.FIRE_WINGS_BOTTLE);
