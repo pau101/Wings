@@ -1,7 +1,6 @@
 package me.paulf.wings.client.apparatus;
 
 import me.paulf.wings.client.flight.Animator;
-import me.paulf.wings.client.flight.AnimatorAvian;
 import me.paulf.wings.client.model.ModelWings;
 import me.paulf.wings.server.apparatus.FlightApparatus;
 import net.minecraft.util.ResourceLocation;

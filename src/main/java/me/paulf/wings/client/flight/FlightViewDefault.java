@@ -2,7 +2,6 @@ package me.paulf.wings.client.flight;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
-import me.paulf.wings.WingsMod;
 import me.paulf.wings.client.apparatus.WingForm;
 import me.paulf.wings.client.flight.state.State;
 import me.paulf.wings.client.flight.state.StateIdle;
@@ -12,28 +11,34 @@ import net.minecraft.entity.Pose;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.ResourceLocation;
 
-import java.util.Optional;
 import java.util.function.Consumer;
 
 public final class FlightViewDefault implements FlightView {
+    private static final WingState ABSENT_ANIMATOR = new WingState() {
+        @Override
+        public WingState nextAbsent() {
+            return this;
+        }
+
+        @Override
+        public WingState next(WingForm<?> form) {
+            return PresentWingState.newState(form);
+        }
+
+        @Override
+        public void update(Flight flight, PlayerEntity player) {
+        }
+
+        @Override
+        public void ifFormPresent(Consumer<FormRenderer> consumer) {
+        }
+    };
+
     private final Flight flight;
-
-    private final WingState absentAnimator = new WingState(
-        WingForm.get(WingsMod.WINGS.get(WingsMod.Names.ANGEL))
-            .orElseThrow(IllegalStateException::new),
-        new Strategy() {
-            @Override
-            public void update(PlayerEntity player) {
-            }
-
-            @Override
-            public void ifFormPresent(Consumer<FormRenderer> consumer) {
-            }
-        });
 
     private final PlayerEntity player;
 
-    private WingState animator = this.absentAnimator;
+    private WingState animator = ABSENT_ANIMATOR;
 
     public FlightViewDefault(PlayerEntity player, Flight flight) {
         this.player = player;
@@ -50,7 +55,7 @@ public final class FlightViewDefault implements FlightView {
         this.animator = WingForm.get(this.flight.getWing())
             .map(view -> this.animator.next(view))
             .orElseGet(this.animator::nextAbsent);
-        this.animator.update(this.player);
+        this.animator.update(this.flight, this.player);
     }
 
     @Override
@@ -61,45 +66,59 @@ public final class FlightViewDefault implements FlightView {
     }
 
     private interface Strategy {
-        void update(PlayerEntity player);
+        void update(Flight flight, PlayerEntity player);
 
         void ifFormPresent(Consumer<FormRenderer> consumer);
     }
 
-    private final class WingState {
+    interface WingState {
+        WingState nextAbsent();
+
+        WingState next(WingForm<?> form);
+
+        void update(Flight flight, PlayerEntity player);
+
+        void ifFormPresent(Consumer<FormRenderer> consumer);
+    }
+
+    private static final class PresentWingState implements WingState {
         private final WingForm<?> wing;
 
         private final Strategy behavior;
 
-        private WingState(WingForm<?> wing, Strategy behavior) {
+        private PresentWingState(WingForm<?> wing, Strategy behavior) {
             this.wing = wing;
             this.behavior = behavior;
         }
 
-        private WingState nextAbsent() {
-            return FlightViewDefault.this.absentAnimator;
+        @Override
+        public WingState nextAbsent() {
+            return ABSENT_ANIMATOR;
         }
 
-        private WingState next(WingForm<?> form) {
+        @Override
+        public WingState next(WingForm<?> form) {
             if (this.wing.equals(form)) {
                 return this;
             }
-            return this.newState(form);
+            return PresentWingState.newState(form);
         }
 
-        private <T extends Animator> WingState newState(WingForm<T> shape) {
-            return new WingState(shape, new WingStrategy<>(shape));
+        @Override
+        public void update(Flight flight, PlayerEntity player) {
+            this.behavior.update(flight, player);
         }
 
-        private void update(PlayerEntity player) {
-            this.behavior.update(player);
-        }
-
-        private void ifFormPresent(Consumer<FormRenderer> consumer) {
+        @Override
+        public void ifFormPresent(Consumer<FormRenderer> consumer) {
             this.behavior.ifFormPresent(consumer);
         }
 
-        private class WingStrategy<T extends Animator> implements Strategy {
+        public static <T extends Animator> WingState newState(WingForm<T> shape) {
+            return new PresentWingState(shape, new WingStrategy<>(shape));
+        }
+
+        private static class WingStrategy<T extends Animator> implements Strategy {
             private final WingForm<T> shape;
 
             private final T animator;
@@ -113,10 +132,10 @@ public final class FlightViewDefault implements FlightView {
             }
 
             @Override
-            public void update(PlayerEntity player) {
+            public void update(Flight flight, PlayerEntity player) {
                 this.animator.update();
                 State state = this.state.update(
-                    FlightViewDefault.this.flight,
+                    flight,
                     player.getX() - player.xo,
                     player.getY() - player.yo,
                     player.getZ() - player.zo,
