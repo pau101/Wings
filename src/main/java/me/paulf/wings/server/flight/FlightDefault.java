@@ -167,7 +167,7 @@ public final class FlightDefault implements Flight {
 
     @Override
     public void tick(PlayerEntity player) {
-        if (this.hasEffect(player)) {
+        if (this.hasEffect(player) || !player.isEffectiveAi()) {
             this.onWornUpdate(player);
         } else if (!player.level.isClientSide) {
             this.setWing(FlightApparatus.NONE, PlayerSet.ofAll());

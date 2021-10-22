@@ -3,7 +3,7 @@ package me.paulf.wings.client.flight;
 import me.paulf.wings.WingsMod;
 import me.paulf.wings.server.flight.AttachFlightCapabilityEvent;
 import me.paulf.wings.util.CapabilityHolder;
-import net.minecraft.client.entity.player.ClientPlayerEntity;
+import net.minecraft.client.entity.player.AbstractClientPlayerEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -38,7 +38,7 @@ public final class FlightViews {
     @SubscribeEvent
     public static void onAttachCapabilities(AttachFlightCapabilityEvent event) {
         Entity entity = event.getObject();
-        if (entity instanceof ClientPlayerEntity) {
+        if (entity instanceof AbstractClientPlayerEntity) {
             event.addCapability(
                 new ResourceLocation(WingsMod.ID, "flight_view"),
                 HOLDER.state().providerBuilder(new FlightViewDefault((PlayerEntity) entity, event.getInstance())).build()

@@ -9,7 +9,7 @@ buildscript {
 }
 
 apply plugin: 'net.minecraftforge.gradle'
-version = '2.0.0'
+version = '2.0.1'
 group = 'me.paulf.wings'
 archivesBaseName = 'wings'
 

@@ -3,6 +3,7 @@ package me.paulf.wings.client;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import me.paulf.wings.WingsMod;
 import me.paulf.wings.client.audio.WingsSound;
+import me.paulf.wings.client.flight.FlightView;
 import me.paulf.wings.client.flight.FlightViews;
 import me.paulf.wings.server.asm.AnimatePlayerModelEvent;
 import me.paulf.wings.server.asm.ApplyPlayerRotationsEvent;
@@ -11,6 +12,7 @@ import me.paulf.wings.server.asm.GetCameraEyeHeightEvent;
 import me.paulf.wings.server.flight.Flights;
 import me.paulf.wings.util.Mth;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.entity.player.AbstractClientPlayerEntity;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.client.renderer.entity.model.PlayerModel;
 import net.minecraft.entity.Entity;
@@ -112,9 +114,9 @@ public final class ClientEventHandler {
     @SubscribeEvent
     public static void onPlayerTick(TickEvent.PlayerTickEvent event) {
         PlayerEntity entity = event.player;
-        if (event.phase == TickEvent.Phase.END && entity instanceof ClientPlayerEntity) {
-            ClientPlayerEntity player = (ClientPlayerEntity) entity;
-            FlightViews.get(player).ifPresent(flight -> flight.tick());
+        if (event.phase == TickEvent.Phase.END && entity instanceof AbstractClientPlayerEntity) {
+            AbstractClientPlayerEntity player = (AbstractClientPlayerEntity) entity;
+            FlightViews.get(player).ifPresent(FlightView::tick);
         }
     }
 }
