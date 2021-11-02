@@ -58,24 +58,26 @@ public final class ClientProxy extends Proxy {
             .build()
         );
         modBus.<FMLClientSetupEvent>addListener(e -> {
-            Minecraft mc = Minecraft.getInstance();
-            EntityRendererManager manager = mc.getEntityRenderDispatcher();
-            Stream.concat(manager.getSkinMap().values().stream(), manager.renderers.values().stream())
-                .filter(LivingRenderer.class::isInstance)
-                .map(r -> (LivingRenderer<?, ?>) r)
-                .filter(render -> render.getModel() instanceof BipedModel<?>)
-                .unordered()
-                .distinct()
-                .forEach(render -> {
-                    ModelRenderer body = ((BipedModel<?>) render.getModel()).body;
-                    @SuppressWarnings("unchecked") LivingRenderer<LivingEntity, BipedModel<LivingEntity>> livingRender = (LivingRenderer<LivingEntity, BipedModel<LivingEntity>>) render;
-                    livingRender.addLayer(new LayerWings(livingRender, (player, stack) -> {
-                        if (player.isCrouching()) {
-                            stack.translate(0.0D, 0.2D, 0.0D);
-                        }
-                        body.translateAndRotate(stack);
-                    }));
-                });
+            e.enqueueWork(() -> {
+                Minecraft mc = Minecraft.getInstance();
+                EntityRendererManager manager = mc.getEntityRenderDispatcher();
+                Stream.concat(manager.getSkinMap().values().stream(), manager.renderers.values().stream())
+                    .filter(LivingRenderer.class::isInstance)
+                    .map(r -> (LivingRenderer<?, ?>) r)
+                    .filter(render -> render.getModel() instanceof BipedModel<?>)
+                    .unordered()
+                    .distinct()
+                    .forEach(render -> {
+                        ModelRenderer body = ((BipedModel<?>) render.getModel()).body;
+                        @SuppressWarnings("unchecked") LivingRenderer<LivingEntity, BipedModel<LivingEntity>> livingRender = (LivingRenderer<LivingEntity, BipedModel<LivingEntity>>) render;
+                        livingRender.addLayer(new LayerWings(livingRender, (player, stack) -> {
+                            if (player.isCrouching()) {
+                                stack.translate(0.0D, 0.2D, 0.0D);
+                            }
+                            body.translateAndRotate(stack);
+                        }));
+                    });
+            });
             WingForm.register(WingsMod.ANGEL_WINGS, this.createAvianWings(WingsMod.WINGS.getKey(WingsMod.ANGEL_WINGS)));
             WingForm.register(WingsMod.BAT_WINGS, this.createAvianWings(WingsMod.WINGS.getKey(WingsMod.BAT_WINGS)));
             WingForm.register(WingsMod.BLUE_BUTTERFLY_WINGS, this.createInsectoidWings(WingsMod.WINGS.getKey(WingsMod.BLUE_BUTTERFLY_WINGS)));
