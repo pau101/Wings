@@ -44,6 +44,7 @@ public abstract class Proxy {
                 );
             };
             reg.accept(Items.FEATHER, WingsItems.ANGEL_WINGS_BOTTLE);
+			reg.accept(Items.RED_DYE, WingsItems.PARROT_WINGS_BOTTLE);
             reg.accept(WingsItems.BAT_BLOOD_BOTTLE.get(), WingsItems.BAT_WINGS_BOTTLE);
             reg.accept(Items.BLUE_DYE, WingsItems.BLUE_BUTTERFLY_WINGS_BOTTLE);
             reg.accept(Items.LEATHER, WingsItems.DRAGON_WINGS_BOTTLE);
