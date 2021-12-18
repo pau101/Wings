@@ -30,6 +30,7 @@ public final class WingsMod {
 
     public static final FlightApparatus NONE_WINGS = Registry.register(WINGS, Names.NONE, FlightApparatus.NONE);
     public static final FlightApparatus ANGEL_WINGS = Registry.register(WINGS, Names.ANGEL, new SimpleFlightApparatus(WingsItemsConfig.ANGEL));
+	public static final FlightApparatus PARROT_WINGS = Registry.register(WINGS, Names.PARROT, new SimpleFlightApparatus(WingsItemsConfig.PARROT));
     public static final FlightApparatus BAT_WINGS = Registry.register(WINGS, Names.BAT, new SimpleFlightApparatus(WingsItemsConfig.BAT));
     public static final FlightApparatus BLUE_BUTTERFLY_WINGS = Registry.register(WINGS, Names.BLUE_BUTTERFLY, new SimpleFlightApparatus(WingsItemsConfig.BLUE_BUTTERFLY));
     public static final FlightApparatus DRAGON_WINGS = Registry.register(WINGS, Names.DRAGON, new SimpleFlightApparatus(WingsItemsConfig.DRAGON));
@@ -74,6 +75,7 @@ public final class WingsMod {
         public static final ResourceLocation
             NONE = create("none"),
             ANGEL = create("angel_wings"),
+			PARROT = create("parrot_wings"),
             SLIME = create("slime_wings"),
             BLUE_BUTTERFLY = create("blue_butterfly_wings"),
             MONARCH_BUTTERFLY = create("monarch_butterfly_wings"),
