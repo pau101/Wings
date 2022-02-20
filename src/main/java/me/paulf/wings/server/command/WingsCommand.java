@@ -23,7 +23,7 @@ public class WingsCommand {
     private static final SimpleCommandExceptionType ERROR_TAKE_FAILED = new SimpleCommandExceptionType(new TranslationTextComponent("commands.wings.take.failed"));
 
     public static void register(CommandDispatcher<CommandSource> dispatcher) {
-        dispatcher.register(literal("wings")
+        dispatcher.register(literal("wings").requires(cs -> cs.hasPermission(2))
             .then(literal("give")
                 .then(argument("targets", EntityArgument.players())
                     .then(argument("wings", WingsArgument.wings())
