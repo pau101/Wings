@@ -85,7 +85,7 @@ public final class WingsMod {
         public static final ResourceLocation
             NONE = create("none"),
             ANGEL = create("angel_wings"),
-			PARROT = create("parrot_wings"),
+            PARROT = create("parrot_wings"),
             SLIME = create("slime_wings"),
             BLUE_BUTTERFLY = create("blue_butterfly_wings"),
             MONARCH_BUTTERFLY = create("monarch_butterfly_wings"),

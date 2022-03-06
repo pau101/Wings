@@ -79,7 +79,7 @@ public final class ClientProxy extends Proxy {
                     });
             });
             WingForm.register(WingsMod.ANGEL_WINGS, this.createAvianWings(WingsMod.WINGS.getKey(WingsMod.ANGEL_WINGS)));
-			WingForm.register(WingsMod.PARROT_WINGS, this.createAvianWings(WingsMod.WINGS.getKey(WingsMod.PARROT_WINGS)));
+            WingForm.register(WingsMod.PARROT_WINGS, this.createAvianWings(WingsMod.WINGS.getKey(WingsMod.PARROT_WINGS)));
             WingForm.register(WingsMod.BAT_WINGS, this.createAvianWings(WingsMod.WINGS.getKey(WingsMod.BAT_WINGS)));
             WingForm.register(WingsMod.BLUE_BUTTERFLY_WINGS, this.createInsectoidWings(WingsMod.WINGS.getKey(WingsMod.BLUE_BUTTERFLY_WINGS)));
             WingForm.register(WingsMod.DRAGON_WINGS, this.createAvianWings(WingsMod.WINGS.getKey(WingsMod.DRAGON_WINGS)));

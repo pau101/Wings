@@ -18,6 +18,7 @@
   "commands.wings.take.success.multiple": "Removed wings from %s targets",
   "commands.wings.give.failed": "Unable to apply wings (target already has specified wings)",
   "commands.wings.take.failed": "Target doesn't have wings to remove",
+  "wings.wingsNotFound": "No such wings: %s",
   "wings.dreamcatcher.jiu": "JiU's Wings",
   "wings.dreamcatcher.sua": "SuA's Wings",
   "wings.dreamcatcher.siyeon": "Siyeon's Wings",

@@ -19,6 +19,7 @@
   "commands.wings.take.success.multiple": "Alas quitadas de objetivos %s",
   "commands.wings.give.failed": "Imposible aplicar alas (el objetivo ya tiene las alas especificadas)",
   "commands.wings.take.failed": "El objetivo no tiene alas que remover",
+  "wings.wingsNotFound": "Alas desconocidas: %s",
   "wings.dreamcatcher.jiu": "Alas de JiU",
   "wings.dreamcatcher.sua": "Alas de SuA",
   "wings.dreamcatcher.siyeon": "Alas de Siyeon",
