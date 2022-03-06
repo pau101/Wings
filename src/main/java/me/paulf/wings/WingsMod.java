@@ -48,8 +48,18 @@ public final class WingsMod {
         WingsItems.REG.register(bus);
         WingsSounds.REG.register(bus);
         WingsEffects.REG.register(bus);
-        this.proxy = DistExecutor.safeRunForDist(() -> ClientProxy::new, () -> ServerProxy::new);
+        this.proxy = DistExecutor.safeRunForDist(() -> ProxyInit::createClient, () -> ProxyInit::createServer);
         this.proxy.init(bus);
+    }
+
+    static class ProxyInit {
+        static Proxy createClient() {
+            return new ClientProxy();
+        }
+
+        static Proxy createServer() {
+            return new ServerProxy();
+        }
     }
 
     public void addFlightListeners(PlayerEntity player, Flight instance) {
