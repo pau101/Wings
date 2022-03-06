@@ -16,6 +16,11 @@ public final class WingsItemsConfig {
 //	@Config.LangKey("config.wings.items.entry.angel")
 //	@Config.RequiresMcRestart
     public static final ConfigWingSettings ANGEL = new ConfigWingSettings(WingsMod.Names.ANGEL);
+	
+	    //	@Config.LangKey("config.wings.items.entry.parrot")
+//	@Config.LangKey("config.wings.items.entry.parrot")
+//	@Config.RequiresMcRestart
+    public static final ConfigWingSettings PARROT = new ConfigWingSettings(WingsMod.Names.PARROT);
 
     //	@Config.LangKey("config.wings.items.entry.slime")
 //	@Config.RequiresMcRestart
@@ -50,7 +55,7 @@ public final class WingsItemsConfig {
     public static final ConfigWingSettings DRAGON = new ConfigWingSettings(WingsMod.Names.DRAGON);
 
     public static ImmutableMap<ResourceLocation, WingSettings> createWingAttributes() {
-        return Stream.of(ANGEL, SLIME, BLUE_BUTTERFLY, MONARCH_BUTTERFLY, FIRE, BAT, FAIRY, EVIL, DRAGON)
+        return Stream.of(ANGEL, PARROT, SLIME, BLUE_BUTTERFLY, MONARCH_BUTTERFLY, FIRE, BAT, FAIRY, EVIL, DRAGON)
             .collect(ImmutableMap.toImmutableMap(ConfigWingSettings::getKey, ConfigWingSettings::toImmutable));
     }
 }
